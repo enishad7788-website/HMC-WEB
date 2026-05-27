@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMC 24-27</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            color: #fff;
+        }
+
+        .profile-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            max-width: 400px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0 auto;
+        }
+
+        /* Glassmorphic Container */
+        .links-panel {
+            background: rgba(255, 255, 255, 0.11);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* ????????? ?????? ????????????? */
+        .section {
+            display: none;
+        }
+
+        /* ?????? ??????????? ?????? ?????? ????????? ??????? */
+        .section.active {
+            display: block;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 14px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 800;
+            font-style: italic;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Home & Back Button Styles */
+        .home-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .home-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Footer Icons */
+        .footer-icons {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-icon {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-icon:hover {
+            color: #fff;
+        }
+
+        .credits {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <img class="profile-img" src="https://via.placeholder.com/150" alt="Group Profile">
+        <h1 id="main-title">HMC 24-27</h1>
+        <p class="description" id="main-desc">Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!</p>
+    </div>
+
+    <div class="links-panel">
+        
+        <div id="home-section" class="section active">
+            <div class="btn" onclick="showSection('exam-names-section', 'Exam Results')">
+                <span>Exam Result</span>
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <a href="#" target="_blank" class="btn">
+                <span>Attendance</span>
+                <i class="fa-solid fa-calendar-check"></i>
+            </a>
+            <div class="btn" onclick="showSection('timetable-section', 'Time Table')">
+                <span>Time Table</span>
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="btn" onclick="showSection('notes-section', 'Notes')">
+                <span>Study Material / Notes</span>
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div class="btn" onclick="showSection('hallticket-section', 'Hall Ticket')">
+                <span>Hall Ticket</span>
+                <i class="fa-solid fa-id-card"></i>
+            </div>
+            <a href="#" target="_blank" class="btn">
+                <span>Internal Mark</span>
+                <i class="fa-solid fa-file-invoice"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>Embase</span>
+                <i class="fa-solid fa-database"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>Student Portal</span>
+                <i class="fa-solid fa-user-graduate"></i>
+            </a>
+        </div>
+
+        <div id="exam-names-section" class="section">
+            <div class="btn" onclick="showSection('sem-result-section', 'Nishad E')">
+                <span>Nishad E</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Nishad P')">
+                <span>Nishad P</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Shamil V')">
+                <span>Shamil V</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Jishan M')">
+                <span>Jishan M</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Rishal C')">
+                <span>Rishal C</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Sidan PP')">
+                <span>Sidan PP</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Abhinav K')">
+                <span>Abhinav K</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Hisham KK')">
+                <span>Hisham KK</span>
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
+            </div>
+        </div>
+
+        <div id="sem-result-section" class="section">
+            <a href="#" target="_blank" class="btn">
+                <span>1st Sem Result</span>
+                <i class="fa-solid fa-sheet-plastic"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>2nd Sem Result</span>
+                <i class="fa-solid fa-sheet-plastic"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>3rd Sem Result</span>
+                <i class="fa-solid fa-sheet-plastic"></i>
+            </a>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('exam-names-section', 'Exam Results')"><i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </div>
+
+        <div id="timetable-section" class="section">
+            <a href="#" target="_blank" class="btn">
+                <span>Class Time Table</span>
+                <i class="fa-solid fa-table-list"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>Sem Exam Time Table</span>
+                <i class="fa-solid fa-calendar-days"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>Internal Exam Time Table</span>
+                <i class="fa-solid fa-pen-ruler"></i>
+            </a>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
+            </div>
+        </div>
+
+        <div id="notes-section" class="section">
+            <a href="#" target="_blank" class="btn">
+                <span>English Blue Book</span>
+                <i class="fa-solid fa-book"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>English Yellow Book</span>
+                <i class="fa-solid fa-book"></i>
+            </a>
+            <a href="#" target="_blank" class="btn">
+                <span>Hindi Book</span>
+                <i class="fa-solid fa-book"></i>
+            </a>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
+            </div>
+        </div>
+
+        <div id="hallticket-section" class="section">
+            <a href="#" target="_blank" class="btn"><span>Nishad E</span> <i class="fa-solid fa-file-pdf"></i></a>
+            <a href="#" target="_blank" class="btn"><span>Nishad P</span> <i class="fa-solid fa-file-pdf"></i></a>
+            <a href="#" target="_blank" class="btn"><span>Shamil V</span> <i class="fa-solid fa-file-pdf"></i></a>
+            <a href="#" target="_blank" class="btn"><span>Hisham KK</span> <i class="fa-solid fa-file-pdf"></i></a>
+            <a href="#" target="_blank" class="btn"><span>Rishal C</span> <i class="fa-solid fa-file-pdf"></i></a>
+            <a href="#" target="_blank" class="btn"><span>Abhinav K</span> <i class="fa-solid fa-file-pdf"></i></a>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-icons">
+        <a href="#" class="footer-icon"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="footer-icon"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+
+    <div class="credits">(  2026 Muhammed Nishad E. All rights reserved. )</div>
+
+    <script>
+        function showSection(sectionId, titleText) {
+            // ????? ??????????? ????? ???? ???????
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            // ???????? ?????? ?????? ?????????
+            document.getElementById(sectionId).classList.add('active');
+            
+            // ??????? ??????? ???????
+            document.getElementById('main-title').innerText = titleText;
+            
+            // ??? ???? ?????????? ???????????? ???? ???????
+            const desc = document.getElementById('main-desc');
+            if(sectionId === 'home-section') {
+                desc.style.display = 'block';
+            } else {
+                desc.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

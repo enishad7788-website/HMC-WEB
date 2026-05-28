@@ -183,7 +183,7 @@
     <span>Attendance</span>
     <i class="fa-solid fa-calendar-check"></i>
 </a>
-            <div class="btn" onclick="alert('Time Table is not available right now!')">
+           <div class="btn" onclick="showSection('timetable-section', 'Time Table')">
     <span>Time Table</span>
     <i class="fa-solid fa-clock"></i>
 </div>
@@ -274,19 +274,21 @@
     </div>
 </div>
 
-        <div id="timetable-section" class="section">
-            <a href="#" target="_blank" class="btn">
-                <span>Class Time Table</span>
-                <i class="fa-solid fa-table-list"></i>
-            </a>
-            <a href="#" target="_blank" class="btn">
-                <span>Sem Exam Time Table</span>
-                <i class="fa-solid fa-calendar-days"></i>
-            </a>
-            <a href="#" target="_blank" class="btn">
-                <span>Internal Exam Time Table</span>
-                <i class="fa-solid fa-pen-ruler"></i>
-            </a>
+      <div id="timetable-section" class="section">
+           <div class="btn" onclick="alert('Class Time Table is not available!')">
+    <span>Class Time Table</span>
+    <i class="fa-solid fa-table-list"></i>
+</div>
+
+<div class="btn" onclick="alert('Sem Exam Time Table is not available!')">
+    <span>Sem Exam Time Table</span>
+    <i class="fa-solid fa-calendar-days"></i>
+</div>
+
+<div class="btn" onclick="alert('Internal Exam Time Table is not available!')">
+    <span>Internal Exam Time Table</span>
+    <i class="fa-solid fa-pen-ruler"></i>
+</div>
             <div class="home-btn-container">
                 <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
             </div>

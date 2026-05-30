@@ -164,14 +164,56 @@
     </style>
 </head>
 <body>
+    <div id="login-container" class="links-panel" style="max-width: 440px; margin: 40px auto; text-align: center; display: block;">
+    
+    <div class="profile-container" style="margin-bottom: 20px;">
+        <img src="main profile.jpg" alt="Group Profile" class="profile-img">
+        <h2 style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;">
+            HM College of Science and Technology Manjeri
+        </h2>
+        <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); margin-top: 5px;">Alukkal, Malappuram, 676122</p>
+    </div>
+    
+    <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); margin: 15px 10px; line-height: 1.5; font-weight: 600;">
+        Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!
+    </p>
+    
+    <div style="margin-top: 25px;">
+        <h3 style="font-style: italic; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; letter-spacing: 1px;">Login</h3>
+        
+        <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 20px; margin-bottom: 14px;">
+            <i class="fa-solid fa-user" style="color: rgba(255, 255, 255, 0.7); margin-right: 15px; font-size: 1.1rem;"></i>
+            <input type="text" id="username-field" placeholder="USERNAME" style="background: none; border: none; color: #fff; width: 100%; outline: none; font-weight: 600; font-style: italic;">
+        </div>
+        
+        <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 20px; margin-bottom: 14px;">
+            <i class="fa-solid fa-lock" style="color: rgba(255, 255, 255, 0.7); margin-right: 15px; font-size: 1.1rem;"></i>
+            <input type="password" id="password-field" placeholder="PASSWORD" style="background: none; border: none; color: #fff; width: 100%; outline: none; font-weight: 600; font-style: italic;">
+        </div>
+        
+        <div id="login-error-msg" style="color: #ff4d4d; font-size: 0.85rem; margin-bottom: 15px; display: none; font-weight: bold; font-style: italic; text-transform: uppercase;">
+            Incorrect Password! Try Again.
+        </div>
+        
+        <div class="btn" onclick="checkLogin()" style="justify-content: center; background: rgba(255, 255, 255, 0.3); border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer;">
+            <span>Login</span>
+            <i class="fa-solid fa-right-to-bracket" style="margin-left: 10px;"></i>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); font-weight: 700; font-style: italic; text-transform: uppercase;">
+            <span style="cursor: pointer;" onclick="alert('Contact class admin to get the common password!')">Forgot Password?</span>
+            <span style="cursor: pointer;" onclick="alert('Accounts cannot be created manually. Use the common password!')">Create New Account</span>
+        </div>
+    </div>
+</div>
 
-    <div class="profile-container">
+    <div class="profile-container" id="main-profile" style="display: none !important;">
         <img class="profile-img" src="main profile.jpg" alt="Group Profile">
         <h1 id="main-title">HMC 24-27</h1>
         <p class="description" id="main-desc">Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!</p>
     </div>
 
-    <div class="links-panel">
+    <div class="links-panel" id="main-links-panel" style="display: none;">
         
         <div id="home-section" class="section active">
             <div class="btn" onclick="showSection('exam-names-section', 'Exam Results')">
@@ -514,6 +556,18 @@
                 if (homeSection) homeSection.style.display = 'block';
             }
         };
+        function checkLogin() {
+    const passwordInput = document.getElementById('password-field').value;
+    const errorMsg = document.getElementById('login-error-msg');
+    
+    if (passwordInput === 'HMC2427') {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
+        document.getElementById('main-links-panel').style.display = 'block';
+    } else {
+        errorMsg.style.display = 'block';
+    }
+}
     </script>
 </body>
 </html>

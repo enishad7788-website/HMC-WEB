@@ -71,12 +71,10 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
 
-        /* ????????? ?????? ????????????? */
         .section {
             display: none;
         }
 
-        /* ?????? ??????????? ?????? ?????? ????????? ??????? */
         .section.active {
             display: block;
         }
@@ -181,33 +179,33 @@
                 <i class="fa-solid fa-graduation-cap"></i>
             </div>
             <a href="#" class="btn" onclick="alert('Attendance data is not available right now!')">
-    <span>Attendance</span>
-    <i class="fa-solid fa-calendar-check"></i>
-</a>
-           <div class="btn" onclick="showSection('timetable-section', 'Time Table')">
-    <span>Time Table</span>
-    <i class="fa-solid fa-clock"></i>
-</div>
+                <span>Attendance</span>
+                <i class="fa-solid fa-calendar-check"></i>
+            </a>
+            <div class="btn" onclick="showSection('timetable-section', 'Time Table')">
+                <span>Time Table</span>
+                <i class="fa-solid fa-clock"></i>
+            </div>
             <div class="btn" onclick="alert('Study Material / Notes are not available right now!')">
-    <span>Study Material / Notes</span>
-    <i class="fa-solid fa-book-open"></i>
-</div>
+                <span>Study Material / Notes</span>
+                <i class="fa-solid fa-book-open"></i>
+            </div>
             <div class="btn" onclick="alert('Hall Ticket is not available right now!')">
-    <span>Hall Ticket</span>
-    <i class="fa-solid fa-id-card"></i>
-</div>
+                <span>Hall Ticket</span>
+                <i class="fa-solid fa-id-card"></i>
+            </div>
             <a href="#" class="btn" onclick="alert('Internal Mark data is not available right now!')">
-    <span>Internal Mark</span>
-    <i class="fa-solid fa-file-invoice"></i>
-</a>
+                <span>Internal Mark</span>
+                <i class="fa-solid fa-file-invoice"></i>
+            </a>
             <a href="https://hmcmanjeri.embase.in/" target="_blank" class="btn">
-    <span>Embase</span>
-    <i class="fa-solid fa-database"></i>
-</a>
+                <span>Embase</span>
+                <i class="fa-solid fa-database"></i>
+            </a>
             <a href="https://student.uoc.ac.in/" target="_blank" class="btn">
-    <span>Student Portal</span>
-    <i class="fa-solid fa-user-graduate"></i>
-</a>
+                <span>Student Portal</span>
+                <i class="fa-solid fa-user-graduate"></i>
+            </a>
         </div>
 
         <div id="exam-names-section" class="section">
@@ -248,50 +246,46 @@
             </div>
         </div>
 
-     <div id="sem-result-section" class="section" style="display: none;">
-    <h2>Select Semester</h2>
-    <div class="links-panel">
-        
-        <a href="#" id="sem1-link" target="_blank" class="btn">
-            <span>1st Sem Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </a>
-
-        <a href="#" id="sem2-link" target="_blank" class="btn">
-            <span>2nd Sem Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </a>
-
-        <a href="#" id="sem3-link" target="_blank" class="btn">
-            <span>3rd Sem Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </a>
-
-    </div>
-    <div class="home-btn-container">
-        <button class="home-btn" onclick="showSection('exam-names-section')">
-            <i class="fa-solid fa-arrow-left"></i> Back
-        </button>
-    </div>
-</div>
-
-      <div id="timetable-section" class="section">
-           <div class="btn" onclick="alert('Class Time Table is not available!')">
-    <span>Class Time Table</span>
-    <i class="fa-solid fa-table-list"></i>
-</div>
-
-<div class="btn" onclick="alert('Sem Exam Time Table is not available!')">
-    <span>Sem Exam Time Table</span>
-    <i class="fa-solid fa-calendar-days"></i>
-</div>
-
-<div class="btn" onclick="alert('Internal Exam Time Table is not available!')">
-    <span>Internal Exam Time Table</span>
-    <i class="fa-solid fa-pen-ruler"></i>
-</div>
+        <div id="sem-result-section" class="section">
+            <h2>Select Semester</h2>
+            <div style="margin-top: 15px;">
+                <a href="#" id="sem1-link" target="_blank" class="btn">
+                    <span>1st Sem Result</span>
+                    <i class="fa-solid fa-sheet-plastic"></i>
+                </a>
+                <a href="#" id="sem2-link" target="_blank" class="btn">
+                    <span>2nd Sem Result</span>
+                    <i class="fa-solid fa-sheet-plastic"></i>
+                </a>
+                <a href="#" id="sem3-link" target="_blank" class="btn">
+                    <span>3rd Sem Result</span>
+                    <i class="fa-solid fa-sheet-plastic"></i>
+                </a>
+            </div>
             <div class="home-btn-container">
-                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
+                <button class="home-btn" onclick="showSection('exam-names-section')">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+
+        <div id="timetable-section" class="section">
+            <div class="btn" onclick="alert('Class Time Table is not available right now!')">
+                <span>Class Time Table</span>
+                <i class="fa-solid fa-table-list"></i>
+            </div>
+            <div class="btn" onclick="alert('Sem Exam Time Table is not available right now!')">
+                <span>Sem Exam Time Table</span>
+                <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <div class="btn" onclick="alert('Internal Exam Time Table is not available right now!')">
+                <span>Internal Exam Time Table</span>
+                <i class="fa-solid fa-pen-ruler"></i>
+            </div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
             </div>
         </div>
 
@@ -329,79 +323,96 @@
 
     <div class="footer-icons">
         <a href="https://www.instagram.com/nii.sh.ad?igsh=eXUwOXFxbGdmczZp" target="_blank" class="footer-icon">
-    <i class="fa-brands fa-instagram"></i>
-</a>
+            <i class="fa-brands fa-instagram"></i>
+        </a>
         <a href="mailto:enishad007@gmail.com" class="footer-icon">
-    <i class="fa-solid fa-envelope"></i>
-</a>
+            <i class="fa-solid fa-envelope"></i>
+        </a>
     </div>
 
-    <div class="credits">(  2026 Muhammed Nishad E All rights reserved )</div>
+    <div class="credits">( 2026 Muhammed Nishad E All rights reserved )</div>
 
     <script>
-function showSection(sectionId, titleText) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(sec => sec.style.display = 'none');
+        function showSection(sectionId, titleText) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.style.display = 'none');
 
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.style.display = 'block';
-    }
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.style.display = 'block';
+            }
 
-    // Dynamic drive links setup based on student name
-    if (sectionId === 'sem-result-section' && titleText) {
-        const driveLinks = {
-            "Nishad E": {
-                sem1: "https://drive.google.com/file/d/1pILyiq-sYDpNG5ryWn_fMJfy4_DL4oIh/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/1_AQYYATSHGXSVDOlXOcN3Tn4vKkUh8cK/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/1aqWSD1pk8ANyGbhebuBjjDpbC1vEINJT/view?usp=drivesdk"
-            },
-            "Nishad P": {
-                sem1: "https://drive.google.com/file/d/1ju7jgQsc8UQxf33BKBevdp3cThELRfVo/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/1fsQmhtg9__qgRjEILF_WcDVCbDPGwkRc/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/18iO-EOkeYhm55ThWSHA2MVktvcg1eTDL/view?usp=drivesdk"
-            },
-            "Shamil V": {
-                sem1: "https://drive.google.com/file/d/1l7-U36yBDOs2oAjjUGmtCW0vgRRXf39n/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/1fGO3_j5JoH8XPgn5E9kJTsM72FLODuY5/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/1BdNevZmDpnb0ya8kMHpsKMq3y4Ey_psI/view?usp=drivesdk"
-            },
-            "Jishan M": {
-                sem1: "https://drive.google.com/file/d/1aX04FXP5zEh38SqAzZg9aC0WQUcwd7FB/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/1azsbP4OaX0pUIHs8QnWm7RrM1ry-eaju/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/1o6lPziz_1elxuH7n4Gnt_pK3-AcD5nqn/view?usp=drivesdk"
-            },
-            "Rishal C": {
-                sem1: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/1n-fiYb9sivPkHY9Xz2kTtXcCFd5M4XIP/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/1yI-cQ7UQTsxhX6E9Mi30fldqOmSpwnsC/view?usp=drivesdk"
-            },
-            "Sidan PP": {
-                sem1: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk"
-            },
-            "Abhinav K": {
-                sem1: "https://drive.google.com/file/d/1W_J2PvXkSmG5o5wASey08OvgWZFoNFal/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/1xMIr3_sQCqsRUf8u_PzA6qbv-E-NI8Re/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/1sejmrvIjc1UO2Jp7nIz4exJMAb6wA2NB/view?usp=drivesdk"
-            },
-            "Hisham KK": {
-                sem1: "https://drive.google.com/file/d/1jsW0sKcEkvgopW__5Gcs-9gbMytQjOxp/view?usp=drivesdk",
-                sem2: "https://drive.google.com/file/d/16l6DurnBGQji9nOq4Jn7AtIhMxgiqAx6/view?usp=drivesdk",
-                sem3: "https://drive.google.com/file/d/1uL9jWGsb4jjZ65jfjyisnFH5OQAs6Z-H/view?usp=drivesdk"
+            if (sectionId === 'home-section') {
+                history.pushState({ section: 'home-section' }, '', window.location.pathname);
+            } else {
+                history.pushState({ section: sectionId }, '', '#' + sectionId);
+            }
+
+            if (sectionId === 'sem-result-section' && titleText) {
+                const driveLinks = {
+                    "Nishad E": {
+                        sem1: "https://drive.google.com/file/d/1pILyiq-sYDpNG5ryWn_fMJfy4_DL4oIh/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/1_AQYYATSHGXSVDOlXOcN3Tn4vKkUh8cK/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/1aqWSD1pk8ANyGbhebuBjjDpbC1vEINJT/view?usp=drivesdk"
+                    },
+                    "Nishad P": {
+                        sem1: "https://drive.google.com/file/d/1ju7jgQsc8UQxf33BKBevdp3cThELRfVo/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/1fsQmhtg9__qgRjEILF_WcDVCbDPGwkRc/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/18iO-EOkeYhm55ThWSHA2MVktvcg1eTDL/view?usp=drivesdk"
+                    },
+                    "Shamil V": {
+                        sem1: "https://drive.google.com/file/d/1l7-U36yBDOs2oAjjUGmtCW0vgRRXf39n/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/1fGO3_j5JoH8XPgn5E9kJTsM72FLODuY5/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/1BdNevZmDpnb0ya8kMHpsKMq3y4Ey_psI/view?usp=drivesdk"
+                    },
+                    "Jishan M": {
+                        sem1: "https://drive.google.com/file/d/1aX04FXP5zEh38SqAzZg9aC0WQUcwd7FB/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/1azsbP4OaX0pUIHs8QnWm7RrM1ry-eaju/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/1o6lPziz_1elxuH7n4Gnt_pK3-AcD5nqn/view?usp=drivesdk"
+                    },
+                    "Rishal C": {
+                        sem1: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/1n-fiYb9sivPkHY9Xz2kTtXcCFd5M4XIP/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/1yI-cQ7UQTsxhX6E9Mi30fldqOmSpwnsC/view?usp=drivesdk"
+                    },
+                    "Sidan PP": {
+                        sem1: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/1LRStkA03ISu9ES4psy69rdhU53s7gcPH/view?usp=drivesdk"
+                    },
+                    "Abhinav K": {
+                        sem1: "https://drive.google.com/file/d/1W_J2PvXkSmG5o5wASey08OvgWZFoNFal/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/1xMIr3_sQCqsRUf8u_PzA6qbv-E-NI8Re/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/1sejmrvIjc1UO2Jp7nIz4exJMAb6wA2NB/view?usp=drivesdk"
+                    },
+                    "Hisham KK": {
+                        sem1: "https://drive.google.com/file/d/1jsW0sKcEkvgopW__5Gcs-9gbMytQjOxp/view?usp=drivesdk",
+                        sem2: "https://drive.google.com/file/d/16l6DurnBGQji9nOq4Jn7AtIhMxgiqAx6/view?usp=drivesdk",
+                        sem3: "https://drive.google.com/file/d/1uL9jWGsb4jjZ65jfjyisnFH5OQAs6Z-H/view?usp=drivesdk"
+                    }
+                };
+
+                const studentData = driveLinks[titleText];
+                if (studentData) {
+                    document.getElementById('sem1-link').href = studentData.sem1;
+                    document.getElementById('sem2-link').href = studentData.sem2;
+                    document.getElementById('sem3-link').href = studentData.sem3;
+                }
+            }
+        }
+
+        window.onpopstate = function(event) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.style.display = 'none');
+
+            if (event.state && event.state.section) {
+                const activeSection = document.getElementById(event.state.section);
+                if (activeSection) activeSection.style.display = 'block';
+            } else {
+                const homeSection = document.getElementById('home-section');
+                if (homeSection) homeSection.style.display = 'block';
             }
         };
-
-        const studentData = driveLinks[titleText];
-
-        if (studentData) {
-            document.getElementById('sem1-link').href = studentData.sem1;
-            document.getElementById('sem2-link').href = studentData.sem2;
-            document.getElementById('sem3-link').href = studentData.sem3;
-        }
-    }
-}
     </script>
 </body>
 </html>

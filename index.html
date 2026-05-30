@@ -40,7 +40,36 @@
     width: 100%;
     box-sizing: border-box;
 }
-
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    h1, #main-title {
+        font-size: 1.5rem !important;
+        line-height: 1.2;
+    }
+    
+    p, #main-desc, .description {
+        font-size: 0.9rem !important;
+    }
+    
+    .profile-img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    
+    .links-panel, #main-links-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 10px !important;
+    }
+    
+    .btn {
+        font-size: 0.95rem !important;
+        padding: 12px !important;
+    }
+}
 input, .btn {
     width: 100%;
     box-sizing: border-box; 
@@ -584,7 +613,9 @@ input, .btn {
         document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
         document.getElementById('main-links-panel').style.display = 'block';
         
-        document.body.style.display = 'block';
+        document.body.style.display = 'flex';
+        document.body.style.flexDirection = 'column';
+        document.body.style.alignItems = 'center';
         document.body.style.height = 'auto';
     } else {
         errorMsg.style.display = 'block';

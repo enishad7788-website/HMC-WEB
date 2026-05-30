@@ -205,10 +205,13 @@ input, .btn {
             <input type="text" id="username-field" placeholder="USERNAME" style="background: none; border: none; color: #fff; width: 100%; outline: none; font-weight: 600; font-style: italic;">
         </div>
         
-        <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 20px; margin-bottom: 14px;">
-            <i class="fa-solid fa-lock" style="color: rgba(255, 255, 255, 0.7); margin-right: 15px; font-size: 1.1rem;"></i>
-            <input type="password" id="password-field" placeholder="PASSWORD" style="background: none; border: none; color: #fff; width: 100%; outline: none; font-weight: 600; font-style: italic;">
-        </div>
+        <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; margin-bottom: 20px; position: relative;">
+    <i class="fa-solid fa-lock" style="color: rgba(255, 255, 255, 0.7); margin-left: 15px; margin-right: 15px;"></i>
+    <input type="password" id="password-field" placeholder="PASSWORD" style="background: none; border: none; color: #fff; padding: 12px 40px 12px 0; width: 100%; font-size: 1rem; outline: none;">
+    <button type="button" id="toggle-password" style="position: absolute; right: 15px; background: transparent; border: none; color: rgba(255, 255, 255, 0.6); cursor: pointer; font-size: 1rem; outline: none; padding: 0; box-shadow: none;">
+    <i id="eye-icon" class="fa-solid fa-eye"></i>
+</button>
+</div>
         
         <div id="login-error-msg" style="color: #ff4d4d; font-size: 0.85rem; margin-bottom: 15px; display: none; font-weight: bold; font-style: italic; text-transform: uppercase;">
             Incorrect Password! Try Again.
@@ -575,11 +578,11 @@ input, .btn {
                 if (homeSection) homeSection.style.display = 'block';
             }
         };
-        function checkLogin() {
+       function checkLogin() {
     const passwordInput = document.getElementById('password-field').value;
     const errorMsg = document.getElementById('login-error-msg');
     
-    if (passwordInput === 'HMC2427') {
+    if (passwordInput.toUpperCase() === 'HMC2427') {
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
         document.getElementById('main-links-panel').style.display = 'block';
@@ -592,6 +595,20 @@ input, .btn {
         errorMsg.style.display = 'block';
     }
 }
+
+document.getElementById('toggle-password').addEventListener('click', function () {
+    const passwordField = document.getElementById('password-field');
+    const eyeIcon = document.getElementById('eye-icon');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        eyeIcon.className = 'fa-solid fa-eye-slash';
+    } else {
+        passwordField.type = 'password';
+        eyeIcon.className = 'fa-solid fa-eye';
+    }
+});
+
     </script>
 </body>
 </html>

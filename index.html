@@ -580,10 +580,21 @@ input, .btn {
             }
         };
        function checkLogin() {
-    const passwordInput = document.getElementById('password-field').value;
+    const passwordInput = document.getElementById('password-field').value.trim().toUpperCase();
     const errorMsg = document.getElementById('login-error-msg');
     
-    if (passwordInput.toUpperCase() === 'HMC2427') {
+    const allowedPasswords = [
+        'NISHAD', 
+        'SHAMIL', 
+        'SIDAN', 
+        'JISHAN', 
+        'RISHAL ', 
+        'HISHAM', 
+        'ABHINAV', 
+        'HMC2024'
+    ];
+    
+    if (allowedPasswords.includes(passwordInput)) {
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
         document.getElementById('main-links-panel').style.display = 'block';
@@ -596,6 +607,7 @@ input, .btn {
         errorMsg.style.display = 'block';
     }
 }
+
 
 document.getElementById('toggle-password').addEventListener('click', function () {
     const passwordField = document.getElementById('password-field');

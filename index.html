@@ -213,9 +213,8 @@ input, .btn {
 </button>
 </div>
         
-        <div id="login-error-msg" style="color: #ff4d4d; font-size: 0.85rem; margin-bottom: 15px; display: none; font-weight: bold; font-style: italic; text-transform: uppercase;">
-            Incorrect Password! Try Again.
-        </div>
+        <div id="login-error-msg" style="color: #ff4d4d; font-size: 0.85rem; margin-bottom: 15px; display: none;">Incorrect Password! Try Again.</div>
+<div id="login-success-msg" style="color: #4caf50; font-size: 0.85rem; margin-bottom: 15px; display: none;">Login Successful! Redirecting...</div>
         
         <div class="btn" onclick="checkLogin()" style="justify-content: center; background: rgba(255, 255, 255, 0.3); border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer;">
             <span>Login</span>
@@ -579,35 +578,42 @@ input, .btn {
                 if (homeSection) homeSection.style.display = 'block';
             }
         };
-       function checkLogin() {
+     function checkLogin() {
     const passwordInput = document.getElementById('password-field').value.trim().toUpperCase();
     const errorMsg = document.getElementById('login-error-msg');
+    const successMsg = document.getElementById('login-success-msg');
     
     const allowedPasswords = [
-        'NISHAD', 
-        'SHAMIL', 
-        'SIDAN', 
-        'JISHAN', 
-        'RISHAL ', 
-        'HISHAM', 
-        'ABHINAV', 
-        'HMC2024'
+        'NISHAD', 
+        'SHAMIL', 
+        'SIDAN', 
+        'JISHAN', 
+        'RISHAL ', 
+        'HISHAM', 
+        'ABHINAV', 
+        'HMC2024'
     ];
     
     if (allowedPasswords.includes(passwordInput)) {
-        document.getElementById('login-container').style.display = 'none';
-        document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
-        document.getElementById('main-links-panel').style.display = 'block';
+        errorMsg.style.display = 'none';
+        successMsg.style.display = 'block';
         
-        document.body.style.display = 'flex';
-        document.body.style.flexDirection = 'column';
-        document.body.style.alignItems = 'center';
-        document.body.style.height = 'auto';
+        setTimeout(function() {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
+            document.getElementById('main-links-panel').style.display = 'block';
+            
+            document.body.style.display = 'flex';
+            document.body.style.flexDirection = 'column';
+            document.body.style.alignItems = 'center';
+            document.body.style.height = 'auto';
+        }, 1000);
+        
     } else {
         errorMsg.style.display = 'block';
+        successMsg.style.display = 'none';
     }
 }
-
 
 document.getElementById('toggle-password').addEventListener('click', function () {
     const passwordField = document.getElementById('password-field');

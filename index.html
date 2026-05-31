@@ -14,37 +14,49 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
+        .section {
+            display: none;
+            width: 100%;
+        }
+
+        .section.active {
+            display: block;
+        }
+
         body {
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
-    padding: 20px;
-    min-height: 100vh;
-    box-sizing: border-box;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.links-panel {
-    width: 100%;
-    max-width: 440px;
-    margin: 20px auto;
-    box-sizing: border-box;
-}
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-.section {
-    width: 100%;
-    box-sizing: border-box;
-}
+        .links-panel {
+            width: 100%;
+            max-width: 440px;
+            margin: 20px auto;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.11);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
 
-input, .btn {
-    width: 100%;
-    box-sizing: border-box; 
-}
+        input, .btn {
+            width: 100%;
+            box-sizing: border-box; 
+        }
 
         .profile-container {
             text-align: center;
@@ -77,28 +89,6 @@ input, .btn {
             margin: 0 auto;
         }
 
-        /* Glassmorphic Container */
-        .links-panel {
-            background: rgba(255, 255, 255, 0.11);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 25px;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Button Styles */
         .btn {
             display: flex;
             justify-content: space-between;
@@ -132,7 +122,6 @@ input, .btn {
             color: rgba(255, 255, 255, 0.9);
         }
 
-        /* Home & Back Button Styles */
         .home-btn-container {
             display: flex;
             justify-content: center;
@@ -158,7 +147,6 @@ input, .btn {
             background: rgba(255, 255, 255, 0.35);
         }
 
-        /* Footer Icons */
         .footer-icons {
             margin-top: 30px;
             display: flex;
@@ -184,50 +172,48 @@ input, .btn {
 </head>
 <body>
     <div id="login-container" class="links-panel" style="max-width: 440px; margin: 40px auto; text-align: center; display: block;">
-    
-    <div class="profile-container" style="margin-bottom: 20px;">
-        <img src="main profile.jpg" alt="Group Profile" class="profile-img">
-        <h2 style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;">
-            HM College of Science and Technology Manjeri
-        </h2>
-        <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); margin-top: 5px;">Alukkal, Malappuram, 676122</p>
-    </div>
-    
-    <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); margin: 15px 10px; line-height: 1.5; font-weight: 600;">
-        Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!
-    </p>
-    
-    <div style="margin-top: 25px;">
-        <h3 style="font-style: italic; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; letter-spacing: 1px;">Login</h3>
-        
-        <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 20px; margin-bottom: 14px;">
-            <i class="fa-solid fa-user" style="color: rgba(255, 255, 255, 0.7); margin-right: 15px; font-size: 1.1rem;"></i>
-            <input type="text" id="username-field" placeholder="USERNAME" style="background: none; border: none; color: #fff; width: 100%; outline: none; font-weight: 600; font-style: italic;">
+        <div class="profile-container" style="margin-bottom: 20px;">
+            <img src="main profile.jpg" alt="Group Profile" class="profile-img">
+            <h2 style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;">
+                HM College of Science and Technology Manjeri
+            </h2>
+            <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); margin-top: 5px;">Alukkal, Malappuram, 676122</p>
         </div>
         
-        <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; margin-bottom: 20px; position: relative;">
-    <i class="fa-solid fa-lock" style="color: rgba(255, 255, 255, 0.7); margin-left: 15px; margin-right: 15px;"></i>
-    <input type="password" id="password-field" placeholder="PASSWORD" style="background: none; border: none; color: #fff; padding: 12px 40px 12px 0; width: 100%; font-size: 1rem; outline: none;">
-    <button type="button" id="toggle-password" style="position: absolute; right: 15px; background: transparent; border: none; color: rgba(255, 255, 255, 0.6); cursor: pointer; font-size: 1rem; outline: none; padding: 0; box-shadow: none;">
-    <i id="eye-icon" class="fa-solid fa-eye"></i>
-</button>
-</div>
+        <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); margin: 15px 10px; line-height: 1.5; font-weight: 600;">
+            Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!
+        </p>
         
-        <div id="login-error-msg" style="color: #ff4d4d; font-size: 0.85rem; margin-bottom: 15px; display: none;">Incorrect Password! Try Again.</div>
-<div id="login-success-msg" style="color: #4caf50; font-size: 0.85rem; margin-bottom: 15px; display: none;">Login Successful! Redirecting...</div>
-        
-        <div class="btn" onclick="checkLogin()" style="justify-content: center; background: rgba(255, 255, 255, 0.3); border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer;">
-            <span>Login</span>
-            <i class="fa-solid fa-right-to-bracket" style="margin-left: 10px;"></i>
+        <div style="margin-top: 25px;">
+            <h3 style="font-style: italic; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; letter-spacing: 1px;">Login</h3>
+            
+            <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 20px; margin-bottom: 14px;">
+                <i class="fa-solid fa-user" style="color: rgba(255, 255, 255, 0.7); margin-right: 15px; font-size: 1.1rem;"></i>
+                <input type="text" id="username-field" placeholder="USERNAME" style="background: none; border: none; color: #fff; width: 100%; outline: none; font-weight: 600; font-style: italic;">
+            </div>
+            
+            <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; margin-bottom: 20px; position: relative;">
+                <i class="fa-solid fa-lock" style="color: rgba(255, 255, 255, 0.7); margin-left: 15px; margin-right: 15px;"></i>
+                <input type="password" id="password-field" placeholder="PASSWORD" style="background: none; border: none; color: #fff; padding: 12px 40px 12px 0; width: 100%; font-size: 1rem; outline: none;">
+                <button type="button" id="toggle-password" style="position: absolute; right: 15px; background: transparent; border: none; color: rgba(255, 255, 255, 0.6); cursor: pointer; font-size: 1rem; outline: none; padding: 0; box-shadow: none;">
+                    <i id="eye-icon" class="fa-solid fa-eye"></i>
+                </button>
+            </div>
+            
+            <div id="login-error-msg" style="color: #ff4d4d; font-size: 0.85rem; margin-bottom: 15px; display: none;">Incorrect Password! Try Again.</div>
+            <div id="login-success-msg" style="color: #4caf50; font-size: 0.85rem; margin-bottom: 15px; display: none;">Login Successful! Redirecting...</div>
+            
+            <div class="btn" onclick="checkLogin()" style="justify-content: center; background: rgba(255, 255, 255, 0.3); border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer;">
+                <span>Login</span>
+                <i class="fa-solid fa-right-to-bracket" style="margin-left: 10px;"></i>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.75rem;">
+                <a href="https://wa.me/919633769063?text=I%20forgot%20my%20HMC%20website%20password.%20Please%20help." target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; cursor: pointer;">FORGOT PASSWORD?</a>
+                <a href="https://wa.me/919633769063?text=Hello%20Admin%2C%20I%20want%20to%20create%20a%20new%20account%20on%20the%20HMC%20website." target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; cursor: pointer;">CREATE NEW ACCOUNT</a>
+            </div>
         </div>
-        
-        <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.75rem;">
-    <a href="https://wa.me/919633769063?text=I%20forgot%20my%20HMC%20website%20password.%20Please%20help." target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; cursor: pointer;">FORGOT PASSWORD?</a>
-
-    <a href="https://wa.me/919633769063?text=Hello%20Admin%2C%20I%20want%20to%20create%20a%20new%20account%20on%20the%20HMC%20website." target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; cursor: pointer;">CREATE NEW ACCOUNT</a>
-</div>
     </div>
-</div>
 
     <div class="profile-container" id="main-profile" style="display: none !important;">
         <img class="profile-img" src="main profile.jpg" alt="Group Profile">
@@ -242,10 +228,10 @@ input, .btn {
                 <span>Exam Result</span>
                 <i class="fa-solid fa-graduation-cap"></i>
             </div>
-            <div class="btn" onclick="showSection('supp-names-section')">
-    <span>Supplementary Exam Result</span>
-    <i class="fa-solid fa-file-invoice"></i>
-</div>
+            <div class="btn" onclick="showSection('supp-names-section', 'Supplementary Exam Result')">
+                <span>Supplementary Exam Result</span>
+                <i class="fa-solid fa-file-invoice"></i>
+            </div>
             <a href="#" class="btn" onclick="alert('Attendance data is not available right now!')">
                 <span>Attendance</span>
                 <i class="fa-solid fa-calendar-check"></i>
@@ -258,7 +244,7 @@ input, .btn {
                 <span>Study Material / Notes</span>
                 <i class="fa-solid fa-book-open"></i>
             </div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')">
+            <div class="btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')">
                 <span>Hall Ticket</span>
                 <i class="fa-solid fa-id-card"></i>
             </div>
@@ -276,225 +262,159 @@ input, .btn {
             </a>
         </div>
 
-        <div id="exam-names-section" class="section">
-            <div class="btn" onclick="showSection('sem-result-section', 'Nishad E')">
-                <span>Nishad E</span>
-                <i class="fa-solid fa-user"></i>
+        <div id="hall-ticket-options-section" class="section">
+            <div class="btn" onclick="showSection('sem-hall-ticket-students', 'Sem Exam Students')">
+                <span>Sem Exam Hall Ticket</span>
+                <i class="fa-solid fa-graduation-cap"></i>
             </div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Nishad P')">
-                <span>Nishad P</span>
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Shamil V')">
-                <span>Shamil V</span>
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Jishan M')">
-                <span>Jishan M</span>
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Rishal C')">
-                <span>Rishal C</span>
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Sidan PP')">
-                <span>Sidan PP</span>
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Abhinav K')">
-                <span>Abhinav K</span>
-                <i class="fa-solid fa-user"></i>
-            </div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Hisham KK')">
-                <span>Hisham KK</span>
-                <i class="fa-solid fa-user"></i>
+            <div class="btn" onclick="showSection('supp-hall-ticket-students', 'Supplementary Students')">
+                <span>Supplementary Hall Ticket</span>
+                <i class="fa-solid fa-file-invoice"></i>
             </div>
             <div class="home-btn-container">
-                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
-            </div>
-        </div>
-        <div id="supp-names-section" class="section">
-    <div class="btn" onclick="showSection('abhinav-supp-section')">
-        <span>Abhinav K</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-
-    <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-        <span>Nishad E</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-    <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-        <span>Nishad P</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-    <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-        <span>Shamil V</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-    <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-        <span>Jishan M</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-    <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-        <span>Rishal C</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-    <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-        <span>Sidan PP</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-    <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-        <span>Hisham KK</span>
-        <i class="fa-solid fa-user"></i>
-    </div>
-    
-    <div class="home-btn-container">
-        <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')">
-            <i class="fa-solid fa-house"></i>
-        </button>
-    </div>
-</div>
-<div id="abhinav-supp-section" class="section">
-    <h2>Abhinav K - Supplementary Result</h2>
-    <div style="margin-top: 15px;">
-        <a href="https://drive.google.com/file/d/1kZxhH5FCOZuN4MKFJdQzg8KrBbq6pJEL/view?usp=drivesdk" target="_blank" class="btn">
-            <span>1st Sem Supp Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </a>
-        
-        <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-            <span>2nd Sem Supp Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </div>
-        <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-            <span>3rd Sem Supp Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </div>
-        <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-            <span>4th Sem Supp Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </div>
-        <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-            <span>5th Sem Supp Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </div>
-        <div class="btn" onclick="alert('You Dont Have Any Back Paper!')">
-            <span>6th Sem Supp Result</span>
-            <i class="fa-solid fa-sheet-plastic"></i>
-        </div>
-    </div>
-    
-    <div class="home-btn-container">
-        <button class="home-btn" onclick="showSection('supp-names-section')">
-            <i class="fa-solid fa-arrow-left"></i> Back
-        </button>
-    </div>
-</div>
-
-       <div id="sem-result-section" class="section">
-            <h2>Select Semester</h2>
-            <div style="margin-top: 15px;">
-                <a href="#" id="sem1-link" target="_blank" class="btn">
-                    <span>1st Sem Result</span>
-                    <i class="fa-solid fa-sheet-plastic"></i>
-                </a>
-                <a href="#" id="sem2-link" target="_blank" class="btn">
-                    <span>2nd Sem Result</span>
-                    <i class="fa-solid fa-sheet-plastic"></i>
-                </a>
-                <a href="#" id="sem3-link" target="_blank" class="btn">
-                    <span>3rd Sem Result</span>
-                    <i class="fa-solid fa-sheet-plastic"></i>
-                </a>
-                <div class="btn" onclick="alert('4th Sem Result is Coming Soon...')">
-                    <span>4th Sem Result</span>
-                    <i class="fa-solid fa-sheet-plastic"></i>
-                </div>
-                <div class="btn" onclick="alert('5th Sem Result is Coming Soon...')">
-                    <span>5th Sem Result</span>
-                    <i class="fa-solid fa-sheet-plastic"></i>
-                </div>
-                <div class="btn" onclick="alert('6th Sem Result is Coming Soon...')">
-                    <span>6th Sem Result</span>
-                    <i class="fa-solid fa-sheet-plastic"></i>
-                </div>
-            </div>
-            <div class="home-btn-container">
-                <button class="home-btn" onclick="showSection('exam-names-section')">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </button>
             </div>
         </div>
 
+        <div id="sem-hall-ticket-students" class="section">
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>NISHAD E</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>NSHAD P</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>RISHAL</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>SHAMIL</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>SIDAN</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>ABHINAV</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>HISHAM</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>JISHAN</span><i class="fa-solid fa-user"></i></div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+
+        <div id="supp-hall-ticket-students" class="section">
+            <a href="https://drive.google.com/file/d/1-d71qctc3f9hr3RG_TPHGes5LJ6S7BR9/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
+                <div class="btn"><span>NISHAD E</span><i class="fa-solid fa-file-pdf"></i></div>
+            </a>
+            <a href="https://drive.google.com/file/d/1VMCU7Zz_96kGrhIZAQWosr4YqM38zpj6/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
+                <div class="btn"><span>NISHAD P</span><i class="fa-solid fa-file-pdf"></i></div>
+            </a>
+            <a href="https://drive.google.com/file/d/1KdSjFG77YQBl87YFRsH28WVF7c4oH3km/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
+                <div class="btn"><span>SHAMIL V</span><i class="fa-solid fa-file-pdf"></i></div>
+            </a>
+            <a href="https://drive.google.com/file/d/1aMBVkQra-fpMya9egrFoyYOaP9a_tE9W/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
+                <div class="btn"><span>HISHAM KK</span><i class="fa-solid fa-file-pdf"></i></div>
+            </a>
+            <a href="https://drive.google.com/file/d/1kcrA0Otu12Lj-MXTit0DSBiZoKXz4Uyb/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
+                <div class="btn"><span>RISHAL C</span><i class="fa-solid fa-file-pdf"></i></div>
+            </a>
+            <a href="https://drive.google.com/file/d/1t5PRQHWkC_RkgwW4MBxPvcwhigdHdgrx/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
+                <div class="btn"><span>ABHINAV K</span><i class="fa-solid fa-file-pdf"></i></div>
+            </a>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')">
+                <span>JISHAN M</span><i class="fa-solid fa-user-slash"></i>
+            </div>
+            <div class="btn" onclick="alert('Hall Ticket is not available right now!')">
+                <span>SIDAN</span><i class="fa-solid fa-user-slash"></i>
+            </div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+
+        <div id="exam-names-section" class="section">
+            <div class="btn" onclick="showSection('sem-result-section', 'Nishad E')"><span>Nishad E</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Nishad P')"><span>Nishad P</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Shamil V')"><span>Shamil V</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Jishan M')"><span>Jishan M</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Rishal C')"><span>Rishal C</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Sidan PP')"><span>Sidan PP</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Abhinav K')"><span>Abhinav K</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="showSection('sem-result-section', 'Hisham KK')"><span>Hisham KK</span><i class="fa-solid fa-user"></i></div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
+            </div>
+        </div>
+
+        <div id="supp-names-section" class="section">
+            <div class="btn" onclick="showSection('abhinav-supp-section', 'Abhinav K')"><span>Abhinav K</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Nishad E</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Nishad P</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Shamil V</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Jishan M</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Rishal C</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Sidan PP</span><i class="fa-solid fa-user"></i></div>
+            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Hisham KK</span><i class="fa-solid fa-user"></i></div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
+            </div>
+        </div>
+
+        <div id="abhinav-supp-section" class="section">
+            <h2>Abhinav K - Supplementary Result</h2>
+            <div style="margin-top: 15px;">
+                <a href="https://drive.google.com/file/d/1kZxhH5FCOZuN4MKFJdQzg8KrBbq6pJEL/view?usp=drivesdk" target="_blank" class="btn">
+                    <span>1st Sem Supp Result</span>
+                    <i class="fa-solid fa-sheet-plastic"></i>
+                </a>
+                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>2nd Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>3rd Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>4th Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>5th Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>6th Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+            </div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('supp-names-section', 'Supplementary Exam Result')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            </div>
+        </div>
+
+        <div id="sem-result-section" class="section">
+            <h2>Select Semester</h2>
+            <div style="margin-top: 15px;">
+                <a href="#" id="sem1-link" target="_blank" class="btn"><span>1st Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></a>
+                <a href="#" id="sem2-link" target="_blank" class="btn"><span>2nd Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></a>
+                <a href="#" id="sem3-link" target="_blank" class="btn"><span>3rd Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></a>
+                <div class="btn" onclick="alert('4th Sem Result is Coming Soon...')"><span>4th Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+                <div class="btn" onclick="alert('5th Sem Result is Coming Soon...')"><span>5th Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+                <div class="btn" onclick="alert('6th Sem Result is Coming Soon...')"><span>6th Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
+            </div>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('exam-names-section', 'Exam Results')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            </div>
+        </div>
+
         <div id="timetable-section" class="section">
-    <div class="btn" onclick="alert('Class Time Table is not available right now!')">
-        <span>Class Time Table</span>
-        <i class="fa-solid fa-table-list"></i>
-    </div>
-    
-    <div class="btn" onclick="alert('Sem Exam Time Table is not available right now!')">
-        <span>Sem Exam Time Table</span>
-        <i class="fa-solid fa-calendar-days"></i>
-    </div>
-    
-    <div class="btn" rgba="" onclick="alert('Internal Exam Time Table is not available right now!')">
-        <span>Internal Exam Time Table</span>
-        <i class="fa-solid fa-pen-ruler"></i>
-    </div>
-
-    <a href="https://drive.google.com/file/d/1nfNP2t0mQSpvyOwOhoU7SGhXTkbNilPM/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
-    <div class="btn" style="justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.15);">
-        <span>Supplementary Exam Time Table</span>
-        <i class="fa-solid fa-file-invoice-dollar"></i>
-    </div>
-</a>
-
-    <div class="home-btn-container">
-        <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')">
-            <i class="fa-solid fa-arrow-left"></i> Back
-        </button>
-    </div>
-</div>
+            <div class="btn" onclick="alert('Class Time Table is not available right now!')"><span>Class Time Table</span><i class="fa-solid fa-table-list"></i></div>
+            <div class="btn" onclick="alert('Sem Exam Time Table is not available right now!')"><span>Sem Exam Time Table</span><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="btn" onclick="alert('Internal Exam Time Table is not available right now!')"><span>Internal Exam Time Table</span><i class="fa-solid fa-pen-ruler"></i></div>
+            <a href="https://drive.google.com/file/d/1nfNP2t0mQSpvyOwOhoU7SGhXTkbNilPM/view?usp=drivesdk" target="_blank" style="text-decoration: none; width: 100%;">
+                <div class="btn" style="justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.15);">
+                    <span>Supplementary Exam Time Table</span>
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+            </a>
+            <div class="home-btn-container">
+                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            </div>
+        </div>
 
         <div id="notes-section" class="section">
-            <a href="#" target="_blank" class="btn">
-                <span>English Blue Book</span>
-                <i class="fa-solid fa-book"></i>
-            </a>
-            <a href="#" target="_blank" class="btn">
-                <span>English Yellow Book</span>
-                <i class="fa-solid fa-book"></i>
-            </a>
-            <a href="#" target="_blank" class="btn">
-                <span>Hindi Book</span>
-                <i class="fa-solid fa-book"></i>
-            </a>
+            <a href="#" target="_blank" class="btn"><span>English Blue Book</span><i class="fa-solid fa-book"></i></a>
+            <a href="#" target="_blank" class="btn"><span>English Yellow Book</span><i class="fa-solid fa-book"></i></a>
+            <a href="#" target="_blank" class="btn"><span>Hindi Book</span><i class="fa-solid fa-book"></i></a>
             <div class="home-btn-container">
                 <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
             </div>
         </div>
-
-        <div id="hallticket-section" class="section">
-            <a href="#" target="_blank" class="btn"><span>Nishad E</span> <i class="fa-solid fa-file-pdf"></i></a>
-            <a href="#" target="_blank" class="btn"><span>Nishad P</span> <i class="fa-solid fa-file-pdf"></i></a>
-            <a href="#" target="_blank" class="btn"><span>Shamil V</span> <i class="fa-solid fa-file-pdf"></i></a>
-            <a href="#" target="_blank" class="btn"><span>Hisham KK</span> <i class="fa-solid fa-file-pdf"></i></a>
-            <a href="#" target="_blank" class="btn"><span>Rishal C</span> <i class="fa-solid fa-file-pdf"></i></a>
-            <a href="#" target="_blank" class="btn"><span>Abhinav K</span> <i class="fa-solid fa-file-pdf"></i></a>
-            <div class="home-btn-container">
-                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button>
-            </div>
-        </div>
-
     </div>
 
     <div class="footer-icons">
-        <a href="https://www.instagram.com/nii.sh.ad?igsh=eXUwOXFxbGdmczZp" target="_blank" class="footer-icon">
-            <i class="fa-brands fa-instagram"></i>
-        </a>
-        <a href="mailto:enishad007@gmail.com" class="footer-icon">
-            <i class="fa-solid fa-envelope"></i>
-        </a>
+        <a href="https://www.instagram.com/nii.sh.ad?igsh=eXUwOXFxbGdmczZp" target="_blank" class="footer-icon"><i class="fa-brands fa-instagram"></i></a>
+        <a href="mailto:enishad007@gmail.com" class="footer-icon"><i class="fa-solid fa-envelope"></i></a>
     </div>
 
     <div class="credits">( 2026 Muhammed Nishad E All rights reserved )</div>
@@ -502,17 +422,28 @@ input, .btn {
     <script>
         function showSection(sectionId, titleText) {
             const sections = document.querySelectorAll('.section');
-            sections.forEach(sec => sec.style.display = 'none');
+            sections.forEach(sec => {
+                sec.style.display = 'none';
+                sec.classList.remove('active');
+            });
 
             const activeSection = document.getElementById(sectionId);
             if (activeSection) {
                 activeSection.style.display = 'block';
+                activeSection.classList.add('active');
             }
 
             if (sectionId === 'home-section') {
                 history.pushState({ section: 'home-section' }, '', window.location.pathname);
             } else {
                 history.pushState({ section: sectionId }, '', '#' + sectionId);
+            }
+
+            if (titleText) {
+                const mainTitle = document.getElementById('main-title');
+                if (mainTitle) {
+                    mainTitle.innerText = titleText;
+                }
             }
 
             if (sectionId === 'sem-result-section' && titleText) {
@@ -570,66 +501,75 @@ input, .btn {
 
         window.onpopstate = function(event) {
             const sections = document.querySelectorAll('.section');
-            sections.forEach(sec => sec.style.display = 'none');
+            sections.forEach(sec => {
+                sec.style.display = 'none';
+                sec.classList.remove('active');
+            });
 
             if (event.state && event.state.section) {
                 const activeSection = document.getElementById(event.state.section);
-                if (activeSection) activeSection.style.display = 'block';
+                if (activeSection) {
+                    activeSection.style.display = 'block';
+                    activeSection.classList.add('active');
+                }
             } else {
                 const homeSection = document.getElementById('home-section');
-                if (homeSection) homeSection.style.display = 'block';
+                if (homeSection) {
+                    homeSection.style.display = 'block';
+                    homeSection.classList.add('active');
+                }
             }
         };
-     function checkLogin() {
-    const passwordInput = document.getElementById('password-field').value.trim().toUpperCase();
-    const errorMsg = document.getElementById('login-error-msg');
-    const successMsg = document.getElementById('login-success-msg');
-    
-    const allowedPasswords = [
-        'NISHAD', 
-        'SHAMIL', 
-        'SIDAN', 
-        'JISHAN', 
-        'RISHAL ', 
-        'HISHAM', 
-        'ABHINAV', 
-        'HMC2024'
-    ];
-    
-    if (allowedPasswords.includes(passwordInput)) {
-        errorMsg.style.display = 'none';
-        successMsg.style.display = 'block';
-        
-        setTimeout(function() {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
-            document.getElementById('main-links-panel').style.display = 'block';
+
+        function checkLogin() {
+            const passwordInput = document.getElementById('password-field').value.trim().toUpperCase();
+            const errorMsg = document.getElementById('login-error-msg');
+            const successMsg = document.getElementById('login-success-msg');
             
-            document.body.style.display = 'flex';
-            document.body.style.flexDirection = 'column';
-            document.body.style.alignItems = 'center';
-            document.body.style.height = 'auto';
-        }, 1000);
-        
-    } else {
-        errorMsg.style.display = 'block';
-        successMsg.style.display = 'none';
-    }
-}
+            const allowedPasswords = [
+                'NISHAD', 
+                'SHAMIL', 
+                'SIDAN', 
+                'JISHAN', 
+                'RISHAL ', 
+                'HISHAM', 
+                'ABHINAV', 
+                'HMC2024'
+            ];
+            
+            if (allowedPasswords.includes(passwordInput)) {
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'block';
+                
+                setTimeout(function() {
+                    document.getElementById('login-container').style.display = 'none';
+                    document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
+                    document.getElementById('main-links-panel').style.display = 'block';
+                    
+                    document.body.style.display = 'flex';
+                    document.body.style.flexDirection = 'column';
+                    document.body.style.alignItems = 'center';
+                    document.body.style.height = 'auto';
+                }, 1000);
+                
+            } else {
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+            }
+        }
 
-document.getElementById('toggle-password').addEventListener('click', function () {
-    const passwordField = document.getElementById('password-field');
-    const eyeIcon = document.getElementById('eye-icon');
-    
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        eyeIcon.className = 'fa-solid fa-eye-slash';
-    } else {
-        passwordField.type = 'password';
-        eyeIcon.className = 'fa-solid fa-eye';
-    }
-});
-
+        document.getElementById('toggle-password').addEventListener('click', function () {
+            const passwordField = document.getElementById('password-field');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.className = 'fa-solid fa-eye-slash';
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.className = 'fa-solid fa-eye';
+            }
+        });
     </script>
 </body>
 </html>

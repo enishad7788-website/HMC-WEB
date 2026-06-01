@@ -13,6 +13,9 @@
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
+a, a * {
+    text-decoration: none !important;
+}
 
         .section {
             display: none;
@@ -447,6 +450,17 @@
     <div class="credits">( 2026 Muhammed Nishad E All rights reserved )</div>
 
     <script>
+        const sectionTitles = {
+            'home-section': 'HMC 24-27',
+            'hall-ticket-options-section': 'Hall Ticket Options',
+            'sem-hall-ticket-students': 'Sem Exam Students',
+            'supp-hall-ticket-students': 'Supplementary Students',
+            'exam-names-section': 'Exam Results',
+            'supp-names-section': 'Supplementary Exam Result',
+            'timetable-section': 'Time Table',
+            'notes-section': 'Study Material / Notes'
+        };
+
         function showSection(sectionId, titleText) {
             const sections = document.querySelectorAll('.section');
             sections.forEach(sec => {
@@ -460,17 +474,17 @@
                 activeSection.classList.add('active');
             }
 
+            let finalTitle = titleText || sectionTitles[sectionId] || 'HMC 24-27';
+            
             if (sectionId === 'home-section') {
-                history.pushState({ section: 'home-section' }, '', window.location.pathname);
+                history.pushState({ section: 'home-section', title: finalTitle }, '', window.location.pathname);
             } else {
-                history.pushState({ section: sectionId }, '', '#' + sectionId);
+                history.pushState({ section: sectionId, title: finalTitle }, '', '#' + sectionId);
             }
 
-            if (titleText) {
-                const mainTitle = document.getElementById('main-title');
-                if (mainTitle) {
-                    mainTitle.innerText = titleText;
-                }
+            const mainTitle = document.getElementById('main-title');
+            if (mainTitle) {
+                mainTitle.innerText = finalTitle;
             }
 
             if (sectionId === 'sem-result-section' && titleText) {
@@ -533,17 +547,25 @@
                 sec.classList.remove('active');
             });
 
+            const mainTitle = document.getElementById('main-title');
+
             if (event.state && event.state.section) {
                 const activeSection = document.getElementById(event.state.section);
                 if (activeSection) {
                     activeSection.style.display = 'block';
                     activeSection.classList.add('active');
                 }
+                if (mainTitle && event.state.title) {
+                    mainTitle.innerText = event.state.title;
+                }
             } else {
                 const homeSection = document.getElementById('home-section');
                 if (homeSection) {
                     homeSection.style.display = 'block';
                     homeSection.classList.add('active');
+                }
+                if (mainTitle) {
+                    mainTitle.innerText = 'HMC 24-27';
                 }
             }
         };
@@ -561,7 +583,7 @@
                 'RISHAL ', 
                 'HISHAM', 
                 'ABHINAV', 
-                'HMC2024'
+                'NNNNN'
             ];
             
             if (allowedPasswords.includes(passwordInput)) {
@@ -579,6 +601,8 @@
                     document.body.style.flexDirection = 'column';
                     document.body.style.alignItems = 'center';
                     document.body.style.height = 'auto';
+                    
+                    history.replaceState({ section: 'home-section', title: 'HMC 24-27' }, '', window.location.pathname);
                 }, 1000);
                 
             } else {
@@ -586,6 +610,22 @@
                 successMsg.style.display = 'none';
             }
         }
+
+        // പാസ്‌വേഡ് ഫീൽഡിൽ 'Enter' കീ പ്രസ് ചെയ്താൽ ലോഗിൻ ചെയ്യാനുള്ള EventListener
+        document.getElementById('password-field').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // പേജ് ഡിഫോൾട്ടായി റീഫ്രഷ് ആകുന്നത് തടയാൻ
+                checkLogin();
+            }
+        });
+
+        // യൂസർ നെയിം ഫീൽഡിൽ നിന്ന് എന്റർ അടിച്ചാൽ പാസ്‌വേഡ് ഫീൽഡിലേക്ക് ഫോക്കസ് മാറാൻ (കൂടുതൽ എളുപ്പത്തിന്)
+        document.getElementById('username-field').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('password-field').focus();
+            }
+        });
 
         document.getElementById('toggle-password').addEventListener('click', function () {
             const passwordField = document.getElementById('password-field');

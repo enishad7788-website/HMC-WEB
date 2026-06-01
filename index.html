@@ -287,21 +287,22 @@
             </a>
         </div>
 
-        <div id="hall-ticket-options-section" class="section">
-            <div class="btn" onclick="showSection('sem-hall-ticket-students', 'Sem Exam Students')">
-                <span>Sem Exam Hall Ticket</span>
-                <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-            <div class="btn" onclick="showSection('supp-hall-ticket-students', 'Supplementary Students')">
-                <span>Supplementary Hall Ticket</span>
-                <i class="fa-solid fa-file-invoice"></i>
-            </div>
-            <div class="home-btn-container">
-                <button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')">
-                    <i class="fa-solid fa-arrow-left"></i> Back
-                </button>
-            </div>
-        </div>
+        <<div id="hall-ticket-options-section" class="section">
+    <div class="btn" onclick="showSection('sem-hall-ticket-students', 'Sem Exam Students')">
+        <span>Sem Exam Hall Ticket</span>
+        <i class="fa-solid fa-graduation-cap"></i>
+    </div>
+    <div class="btn" onclick="showSection('supp-hall-ticket-students', 'Supplementary Students')">
+        <span>Supplementary Hall Ticket</span>
+        <i class="fa-solid fa-file-invoice"></i>
+    </div>
+    
+    <div class="home-btn-container" style="margin-top: 15px;">
+        <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
 
         <div id="sem-hall-ticket-students" class="section">
             <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>NISHAD E</span><i class="fa-solid fa-user"></i></div>
@@ -366,7 +367,7 @@
     </div>
 
     <div class="home-btn-container" style="margin-top: 20px;">
-        <button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')">
+        <button class="home-btn" onclick="showSection('hall-ticket-options-section')">
             <i class="fa-solid fa-arrow-left"></i> Back
         </button>
     </div>

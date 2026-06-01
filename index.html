@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HMC 24-27</title>
-    <link rel="icon" href="logo.jpg" type="image/jpeg">
+    <link class="profile-img" rel="icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -13,9 +13,11 @@
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-a, a * {
-    text-decoration: none !important;
-}
+
+        /* Prevent blue underline on all anchor links and their children */
+        a, a * {
+            text-decoration: none !important;
+        }
 
         .section {
             display: none;
@@ -43,8 +45,10 @@ a, a * {
             box-sizing: border-box;
         }
 
-        .links-panel {
+        /* Fixed the width to look perfect on both PC and Mobile like before */
+        .links-panel, #login-container {
             width: 100%;
+            max-width: 430px; /* Restored the original standard narrow width */
             box-sizing: border-box;
             background: rgba(255, 255, 255, 0.11);
             backdrop-filter: blur(10px);
@@ -52,6 +56,8 @@ a, a * {
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            padding: 30px 25px;
+            margin: 20px auto;
         }
 
         input, .btn {
@@ -170,25 +176,14 @@ a, a * {
             color: rgba(255, 255, 255, 0.5);
         }
 
-        @media (min-width: 768px) {
-            body {
-                padding: 40px 20px;
-            }
-            .links-panel, #login-container {
-                max-width: 650px !important;
-                padding: 35px 45px !important;
-                margin: 40px auto !important;
-            }
-        }
-
-        @media (max-width: 767px) {
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
             body {
                 padding: 15px;
             }
             .links-panel, #login-container {
-                max-width: 100% !important;
-                padding: 20px 25px !important;
-                margin: 15px auto !important;
+                padding: 20px 20px;
+                margin: 10px auto;
             }
             h1 {
                 font-size: 1.7rem;
@@ -204,13 +199,13 @@ a, a * {
     <div id="login-container" class="links-panel" style="text-align: center; display: block;">
         <div class="profile-container" style="margin-bottom: 20px;">
             <img src="main profile.jpg" alt="Group Profile" class="profile-img">
-            <h2 style="font-size: 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;">
+            <h2 style="font-size: 1.4rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;">
                 HM College of Science and Technology Manjeri
             </h2>
             <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); margin-top: 5px;">Alukkal, Malappuram, 676122</p>
         </div>
         
-        <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); margin: 15px 10px; line-height: 1.5; font-weight: 600;">
+        <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); margin: 15px 5px; line-height: 1.5; font-weight: 600;">
             Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!
         </p>
         
@@ -302,7 +297,7 @@ a, a * {
                 <i class="fa-solid fa-file-invoice"></i>
             </div>
             <div class="home-btn-container">
-                <button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')">
+                <button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')">
                     <i class="fa-solid fa-arrow-left"></i> Back
                 </button>
             </div>
@@ -325,22 +320,22 @@ a, a * {
         </div>
 
         <div id="supp-hall-ticket-students" class="section">
-            <a href="https://drive.google.com/file/d/1-d71qctc3f9hr3RG_TPHGes5LJ6S7BR9/view?usp=drivesdk" target="_blank; width: 100%;">
+            <a href="https://drive.google.com/file/d/1tURY9gE7SMEWyx8TFaRIKg9ldiyJzUCy/view?usp=drivesdk" target="_blank" style="width: 100%;">
                 <div class="btn"><span>NISHAD E</span><i class="fa-solid fa-file-pdf"></i></div>
             </a>
-            <a href="https://drive.google.com/file/d/1VMCU7Zz_96kGrhIZAQWosr4YqM38zpj6/view?usp=drivesdk" target="_blank; width: 100%;">
+            <a href="https://drive.google.com/file/d/1oqzNC16ZcKoArkMIpqstbEGmBAnq894R/view?usp=drivesdk" target="_blank" style="width: 100%;">
                 <div class="btn"><span>NISHAD P</span><i class="fa-solid fa-file-pdf"></i></div>
             </a>
-            <a href="https://drive.google.com/file/d/1KdSjFG77YQBl87YFRsH28WVF7c4oH3km/view?usp=drivesdk" target="_blank; width: 100%;">
+            <a href="https://drive.google.com/file/d/18gAqd1nP_o7c1Lb7PiZUFvuaAa9Gvb2w/view?usp=drivesdk" target="_blank" style="width: 100%;">
                 <div class="btn"><span>SHAMIL V</span><i class="fa-solid fa-file-pdf"></i></div>
             </a>
-            <a href="https://drive.google.com/file/d/1aMBVkQra-fpMya9egrFoyYOaP9a_tE9W/view?usp=drivesdk" target="_blank; width: 100%;">
+            <a href="https://drive.google.com/file/d/1jwvcfTv_BBZu-vu0SkJ37Lx1AbRB4Yjx/view?usp=drivesdk" target="_blank" style="width: 100%;">
                 <div class="btn"><span>HISHAM KK</span><i class="fa-solid fa-file-pdf"></i></div>
             </a>
-            <a href="https://drive.google.com/file/d/1kcrA0Otu12Lj-MXTit0DSBiZoKXz4Uyb/view?usp=drivesdk" target="_blank; width: 100%;">
+            <a href="https://drive.google.com/file/d/1So-8GfEItrZK44Y41WVKMb9_HQ7AbsSL/view?usp=drivesdk" target="_blank" style="width: 100%;">
                 <div class="btn"><span>RISHAL C</span><i class="fa-solid fa-file-pdf"></i></div>
             </a>
-            <a href="https://drive.google.com/file/d/1t5PRQHWkC_RkgwW4MBxPvcwhigdHdgrx/view?usp=drivesdk" target="_blank; width: 100%;">
+            <a href="https://drive.google.com/file/d/1naMo3gKLR3Md79JjxEhGlmPdoohIRgmi/view?usp=drivesdk" target="_blank" style="width: 100%;">
                 <div class="btn"><span>ABHINAV K</span><i class="fa-solid fa-file-pdf"></i></div>
             </a>
             <div class="btn" onclick="alert('Hall Ticket is not available right now!')">
@@ -421,7 +416,8 @@ a, a * {
             <div class="btn" onclick="alert('Class Time Table is not available right now!')"><span>Class Time Table</span><i class="fa-solid fa-table-list"></i></div>
             <div class="btn" onclick="alert('Sem Exam Time Table is not available right now!')"><span>Sem Exam Time Table</span><i class="fa-solid fa-calendar-days"></i></div>
             <div class="btn" onclick="alert('Internal Exam Time Table is not available right now!')"><span>Internal Exam Time Table</span><i class="fa-solid fa-pen-ruler"></i></div>
-            <a href="https://drive.google.com/file/d/1nfNP2t0mQSpvyOwOhoU7SGhXTkbNilPM/view?usp=drivesdk" target="_blank; width: 100%;">
+            
+            <a href="https://drive.google.com/file/d/1nfNP2t0mQSpvyOwOhoU7SGhXTkbNilPM/view?usp=drivesdk" target="_blank" style="width: 100%;">
                 <div class="btn" style="justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.15);">
                     <span>Supplementary Exam Time Table</span>
                     <i class="fa-solid fa-file-invoice-dollar"></i>
@@ -583,7 +579,7 @@ a, a * {
                 'RISHAL ', 
                 'HISHAM', 
                 'ABHINAV', 
-                'NNNNN'
+                'HMC2024'
             ];
             
             if (allowedPasswords.includes(passwordInput)) {
@@ -611,15 +607,14 @@ a, a * {
             }
         }
 
-        // പാസ്‌വേഡ് ഫീൽഡിൽ 'Enter' കീ പ്രസ് ചെയ്താൽ ലോഗിൻ ചെയ്യാനുള്ള EventListener
+        // Handle login submission via 'Enter' key on password field
         document.getElementById('password-field').addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
-                event.preventDefault(); // പേജ് ഡിഫോൾട്ടായി റീഫ്രഷ് ആകുന്നത് തടയാൻ
+                event.preventDefault();
                 checkLogin();
             }
         });
 
-        // യൂസർ നെയിം ഫീൽഡിൽ നിന്ന് എന്റർ അടിച്ചാൽ പാസ്‌വേഡ് ഫീൽഡിലേക്ക് ഫോക്കസ് മാറാൻ (കൂടുതൽ എളുപ്പത്തിന്)
         document.getElementById('username-field').addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();

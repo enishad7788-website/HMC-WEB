@@ -193,9 +193,155 @@
                 height: 75px;
             }
         }
+
+        /* Profile Menu Styles (Matching the existing Glassmorphism theme) */
+        .profile-menu-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none; /* Hidden until unlocked */
+        }
+
+        .profile-trigger {
+            background: rgba(255, 255, 255, 0.11);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-trigger:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .profile-trigger i {
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            width: 240px;
+            background: rgba(255, 255, 255, 0.11);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-dropdown.active {
+            display: flex;
+        }
+
+        .dropdown-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .dropdown-avatar i {
+            font-size: 1.4rem;
+            color: #fff;
+        }
+
+        .dropdown-name {
+            font-weight: 800;
+            font-style: italic;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .dropdown-email {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .dropdown-divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            margin-bottom: 12px;
+        }
+
+        .dropdown-logout-btn {
+            width: 100%;
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+            border-radius: 12px;
+            padding: 12px;
+            color: #ff6b6b;
+            font-weight: 800;
+            font-style: italic;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-logout-btn:hover {
+            background: rgba(220, 53, 69, 0.35);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
+    <!-- Profile Menu Container -->
+    <div id="profile-menu-container" class="profile-menu-container">
+        <div id="profile-trigger" class="profile-trigger" onclick="toggleProfileDropdown(event)">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div id="profile-dropdown" class="profile-dropdown">
+            <div class="dropdown-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="dropdown-name" id="user-display-name">Student</div>
+            <div class="dropdown-email" id="user-display-email"></div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-logout-btn" onclick="logoutUser()">
+                <span>Log Out</span>
+                <i class="fa-solid fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+
     <div id="login-container" class="links-panel" style="text-align: center; display: block;">
         <div class="profile-container" style="margin-bottom: 20px;">
             <img src="main profile.jpg" alt="Group Profile" class="profile-img">
@@ -242,10 +388,7 @@
             <a href="https://hmcmanjeri.embase.in/" target="_blank" class="btn"><span>Embase</span><i class="fa-solid fa-database"></i></a>
             <a href="https://student.uoc.ac.in/" target="_blank" class="btn"><span>Student Portal</span><i class="fa-solid fa-user-graduate"></i></a>
             
-            <div class="btn" onclick="logoutUser()" style="background: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.4); margin-top: 15px; justify-content: center;">
-                <span style="color: #ff6b6b;">Log Out</span>
-                <i class="fa-solid fa-sign-out-alt" style="color: #ff6b6b; margin-left: 10px;"></i>
-            </div>
+
         </div>
 
         <div id="hall-ticket-options-section" class="section">
@@ -482,48 +625,76 @@
             document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
             document.getElementById('main-links-panel').style.setProperty('display', 'block', 'important');
             
+            // Show top-right profile button
+            const profileMenu = document.getElementById('profile-menu-container');
+            if (profileMenu) {
+                profileMenu.style.display = 'block';
+            }
+            
+            // Display user details in the dropdown
+            const displayName = localStorage.getItem('hmc_user_name') || 'Student';
+            const displayEmail = localStorage.getItem('hmc_user_email') || '';
+            document.getElementById('user-display-name').innerText = displayName;
+            document.getElementById('user-display-email').innerText = displayEmail;
+
             document.body.style.display = 'flex';
             document.body.style.flexDirection = 'column';
             document.body.style.alignItems = 'center';
             document.body.style.height = 'auto';
         }
 
-        // Check Firebase Login tokens and state on DOM loading
-window.addEventListener('DOMContentLoaded', (event) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // 1. If redirected with login parameter, save session token and unlock
-    if (urlParams.get('login') === 'success') {
-        localStorage.setItem('hmc_user_authenticated', 'true');
-        unlockDashboard();
-        
-        // Clean URL to avoid issues
-        try {
-            history.replaceState({ section: 'home-section', title: 'HMC 24-27' }, '', window.location.pathname);
-        } catch(e) { 
-            console.log("Running locally"); 
+        // Toggle profile dropdown menu
+        function toggleProfileDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('profile-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('active');
+            }
         }
-    } 
-    // 2. If already logged in previously, auto unlock dashboard directly
-    else if (localStorage.getItem('hmc_user_authenticated') === 'true') {
-        unlockDashboard();
-    }
-    // 3. Not logged in: Show the login container
-    else {
-        document.getElementById('login-container').style.display = 'block';
-    }
-});
 
-function unlockDashboard() {
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
-    document.getElementById('main-links-panel').style.setProperty('display', 'block', 'important');
-}
+        // Close dropdown when clicking anywhere else
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('profile-dropdown');
+            const container = document.getElementById('profile-menu-container');
+            if (container && !container.contains(event.target)) {
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
 
-function logoutUser() {
-    localStorage.removeItem('hmc_user_authenticated');
-    window.location.href = window.location.pathname; // Reloads clean login panel view
-}
+        // Check Firebase Login tokens and state on DOM loading
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // 1. If redirected with login parameter, save session token and unlock
+            if (urlParams.get('login') === 'success') {
+                localStorage.setItem('hmc_user_authenticated', 'true');
+                unlockDashboard();
+                
+                // Clean URL to avoid issues
+                try {
+                    history.replaceState({ section: 'home-section', title: 'HMC 24-27' }, '', window.location.pathname);
+                } catch(e) { 
+                    console.log("Running locally"); 
+                }
+            } 
+            // 2. If already logged in previously, auto unlock dashboard directly
+            else if (localStorage.getItem('hmc_user_authenticated') === 'true') {
+                unlockDashboard();
+            }
+            // 3. Not logged in: Show the login container
+            else {
+                document.getElementById('login-container').style.display = 'block';
+            }
+        });
+
+        function logoutUser() {
+            localStorage.removeItem('hmc_user_authenticated');
+            localStorage.removeItem('hmc_user_name');
+            localStorage.removeItem('hmc_user_email');
+            window.location.href = window.location.pathname; // Reloads clean login panel view
+        }
     </script>
 </body>
 </html>

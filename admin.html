@@ -13,8 +13,11 @@
         th { background-color: #007bff; color: white; }
         .btn-approve { background-color: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
         .btn-approve:hover { background-color: #218838; }
+        .btn-reject { background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-left: 8px; }
+        .btn-reject:hover { background-color: #c82333; }
         .status-pending { color: #dc3545; font-weight: bold; }
         .status-approved { color: #28a745; font-weight: bold; }
+        .status-rejected { color: #bd2130; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -63,15 +66,32 @@
             const student = userDoc.data();
             const row = document.createElement('tr');
 
+            let statusText = 'Pending Approval';
+            let statusClass = 'status-pending';
+            let actionButtons = '';
+
+            if (student.approved === true) {
+                statusText = 'Approved';
+                statusClass = 'status-approved';
+                actionButtons = `<button class="btn-reject" onclick="rejectStudent('${userDoc.id}')">Reject</button>`;
+            } else if (student.approved === 'rejected') {
+                statusText = 'Rejected';
+                statusClass = 'status-rejected';
+                actionButtons = '';
+            } else {
+                statusText = 'Pending Approval';
+                statusClass = 'status-pending';
+                actionButtons = `
+                    <button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>
+                    <button class="btn-reject" onclick="rejectStudent('${userDoc.id}')">Reject</button>
+                `;
+            }
+
             row.innerHTML = `
                 <td>${student.name}</td>
                 <td>${student.email}</td>
-                <td class="${student.approved ? 'status-approved' : 'status-pending'}">
-                    ${student.approved ? 'Approved' : 'Pending Approval'}
-                </td>
-                <td>
-                    ${student.approved ? '' : `<button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>`}
-                </td>
+                <td class="${statusClass}">${statusText}</td>
+                <td>${actionButtons}</td>
             `;
             tableBody.appendChild(row);
         });
@@ -87,6 +107,20 @@
         }).catch((error) => {
             alert("Error: " + error.message);
         });
+    }
+
+    // Reject Student Function
+    window.rejectStudent = function(uid) {
+        if (confirm("Are you sure you want to reject this student?")) {
+            const userRef = doc(db, "users", uid);
+            updateDoc(userRef, {
+                approved: "rejected"
+            }).then(() => {
+                alert("Student account rejected successfully!");
+            }).catch((error) => {
+                alert("Error: " + error.message);
+            });
+        }
     }
 </script>
 

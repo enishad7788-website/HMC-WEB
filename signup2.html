@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMC Portal - Student Registration</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        #login-container {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.11);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            padding: 30px 25px;
+            text-align: center;
+            color: white;
+        }
+
+        /* Glassmorphism Inputs */
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05); 
+            color: white; 
+            box-sizing: border-box;
+            outline: none;
+            font-size: 16px;
+            backdrop-filter: blur(5px);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input:focus {
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        #togglePassword {
+            position: absolute;
+            right: 15px;
+            top: 25px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(40, 167, 69, 0.6);
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-container">
+    <h2 style="margin-bottom: 20px; font-style: italic;">Student Sign Up</h2>
+    <input type="text" id="studentName" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    
+    <div class="password-container">
+        <input type="password" id="password" placeholder="Password" required style="padding-right: 45px;">
+        <i class="fa-solid fa-eye" id="togglePassword"></i>
+    </div>
+    
+    <button id="btnSignup" class="btn">Register</button>
+    <p style="margin-top: 15px; font-size: 0.8rem;">Already have an account? <a href="login2.html" style="color: #4caf50; text-decoration: none;">Login here</a></p>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCC0CEWZA2vyzIJK5xpZrEGxeikp7cchvA",
+        authDomain: "hmc-web-7c65f.firebaseapp.com",
+        projectId: "hmc-web-7c65f",
+        storageBucket: "hmc-web-7c65f.firebasestorage.app",
+        messagingSenderId: "360307989861",
+        appId: "1:360307989861:web:970da58dff8e4ea669d58c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Password Eye Button Logic
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    // Enter Key Registration Logic
+    document.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            document.getElementById('btnSignup').click();
+        }
+    });
+
+    // Firebase Registration Logic
+    document.getElementById('btnSignup').addEventListener('click', () => {
+        const name = document.getElementById('studentName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (name === "" || email === "" || password === "") {
+            alert("Please fill all the fields!");
+            return;
+        }
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                
+                setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    name: name,
+                    email: email,
+                    approved: false
+                }).then(() => {
+                    alert("Registration successful! Wait for Admin Approval.");
+                    window.location.href = "login2.html"; 
+                });
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+    });
+</script>
+
+</body>
+</html>

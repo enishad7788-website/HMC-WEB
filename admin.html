@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMC Portal - Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        .btn-approve { background-color: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-approve:hover { background-color: #218838; }
+        .status-pending { color: #dc3545; font-weight: bold; }
+        .status-approved { color: #28a745; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>HMC Admin Panel - Student Approvals</h2>
+    <p>Manage new student registrations and grant access to the dashboard.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="studentTable">
+            </tbody>
+    </table>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCC0CEWZA2vyzIJK5xpZrEGxeikp7cchvA",
+        authDomain: "hmc-web-7c65f.firebaseapp.com",
+        projectId: "hmc-web-7c65f",
+        storageBucket: "hmc-web-7c65f.firebasestorage.app",
+        messagingSenderId: "360307989861",
+        appId: "1:360307989861:web:970da58dff8e4ea669d58c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Fetch all users from Firestore
+    onSnapshot(collection(db, "users"), (snapshot) => {
+        const tableBody = document.getElementById('studentTable');
+        tableBody.innerHTML = ""; // Clear old data
+
+        snapshot.forEach((userDoc) => {
+            const student = userDoc.data();
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${student.name}</td>
+                <td>${student.email}</td>
+                <td class="${student.approved ? 'status-approved' : 'status-pending'}">
+                    ${student.approved ? 'Approved' : 'Pending Approval'}
+                </td>
+                <td>
+                    ${student.approved ? '' : `<button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>`}
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    });
+
+    // Approve Student Function
+    window.approveStudent = function(uid) {
+        const userRef = doc(db, "users", uid);
+        updateDoc(userRef, {
+            approved: true
+        }).then(() => {
+            alert("Student account approved successfully!");
+        }).catch((error) => {
+            alert("Error: " + error.message);
+        });
+    }
+</script>
+
+</body>
+</html>

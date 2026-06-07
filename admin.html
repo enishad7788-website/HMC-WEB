@@ -77,7 +77,7 @@
             } else if (student.approved === 'rejected') {
                 statusText = 'Rejected';
                 statusClass = 'status-rejected';
-                actionButtons = '';
+                actionButtons = `<button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>`;
             } else {
                 statusText = 'Pending Approval';
                 statusClass = 'status-pending';

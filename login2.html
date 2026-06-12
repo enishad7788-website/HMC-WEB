@@ -98,6 +98,9 @@
         <input type="password" id="loginPassword" placeholder="Password" required style="padding-right: 45px;">
         <i class="fa-solid fa-eye" id="togglePassword"></i>
     </div>
+    <div style="text-align: right; margin-top: 5px;">
+        <a href="#" id="btnForgotPassword" style="color: #4caf50; font-size: 0.8rem; text-decoration: none; font-weight: 600;">Forgot Password?</a>
+    </div>
     
     <button id="btnLogin" class="btn">Login</button>
     <p style="margin-top: 15px; font-size: 0.8rem;">Don't have an account? <a href="signup2.html" style="color: #4caf50; text-decoration: none;">Sign up here</a></p>
@@ -105,7 +108,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -138,6 +141,32 @@
             document.getElementById('btnLogin').click();
         }
     });
+
+    // Forgot Password Logic
+    document.getElementById('btnForgotPassword').addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        if (!email) {
+            const userEmail = prompt("Please enter your email address to reset your password:");
+            if (userEmail && userEmail.trim()) {
+                resetPassword(userEmail.trim());
+            }
+        } else {
+            if (confirm(`Send password reset link to ${email}?`)) {
+                resetPassword(email);
+            }
+        }
+    });
+
+    function resetPassword(email) {
+        sendPasswordResetEmail(auth, email)
+            .then(() => {
+                alert("Password reset email sent! Please check your inbox (and spam folder).");
+            })
+            .catch((error) => {
+                alert("Error sending password reset email: " + error.message);
+            });
+    }
 
     // Firebase Login Logic
     document.getElementById('btnLogin').addEventListener('click', () => {

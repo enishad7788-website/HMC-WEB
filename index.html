@@ -7,6 +7,11 @@
     <link class="profile-img" rel="icon" href="logo.jpg" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -194,6 +199,12 @@
             }
         }
 
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll; /* Smooth scrolling on mobile devices */
+            }
+        }
+
         /* Profile Menu Styles (Matching the existing Glassmorphism theme) */
         .profile-menu-container {
             position: fixed;
@@ -325,13 +336,20 @@
 <body>
     <!-- Profile Menu Container -->
     <div id="profile-menu-container" class="profile-menu-container">
-        <div id="profile-trigger" class="profile-trigger" onclick="toggleProfileDropdown(event)">
-            <i class="fa-solid fa-user"></i>
+        <div id="profile-trigger" class="profile-trigger" onclick="toggleProfileDropdown(event)" style="overflow: hidden; padding: 0;">
+            <i class="fa-solid fa-user" id="trigger-icon"></i>
+            <img id="trigger-img" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
         </div>
         <div id="profile-dropdown" class="profile-dropdown">
-            <div class="dropdown-avatar">
-                <i class="fa-solid fa-user"></i>
+            <div class="dropdown-avatar" id="dropdown-avatar" onclick="triggerProfilePicUpload()" style="cursor: pointer; position: relative; overflow: hidden;" title="Click to upload profile photo">
+                <i class="fa-solid fa-user" id="avatar-icon"></i>
+                <img id="avatar-img" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                <div style="position: absolute; bottom: 0; right: 0; left: 0; background: rgba(0,0,0,0.5); padding: 2px 0; font-size: 0.6rem; color: white; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
             </div>
+            <input type="file" id="profile-pic-input" accept="image/*" style="display: none;" onchange="handleProfilePicChange(event)">
+            
             <div class="dropdown-name" id="user-display-name">Student</div>
             <div class="dropdown-email" id="user-display-email"></div>
             <div class="dropdown-divider"></div>
@@ -358,13 +376,17 @@
         <div style="margin-top: 25px;">
             <h3 style="font-style: italic; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; letter-spacing: 1px;">Portal Login</h3>
             
-            <a href="login2.html" class="btn" style="justify-content: center; background: rgba(40, 167, 69, 0.4); border: 1px solid rgba(40, 167, 69, 0.6); margin-bottom: 20px;">
+            <a href="login2.html" class="btn" style="justify-content: center; background: rgba(40, 167, 69, 0.4); border: 1px solid rgba(40, 167, 69, 0.6); margin-bottom: 12px;">
                 <span>Login with Existing Account</span>
                 <i class="fa-solid fa-right-to-bracket" style="margin-left: 10px;"></i>
             </a>
+
+            <a href="signup2.html" class="btn" style="justify-content: center; background: rgba(0, 123, 255, 0.4); border: 1px solid rgba(0, 123, 255, 0.6); margin-bottom: 20px;">
+                <span>Create New Account</span>
+                <i class="fa-solid fa-user-plus" style="margin-left: 10px;"></i>
+            </a>
             
-            <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 0.75rem; flex-wrap: wrap; gap: 10px;">
-                <a href="signup2.html" style="color: #4caf50; font-weight: bold; text-decoration: none; cursor: pointer; text-transform: uppercase;">✨ Create New Account</a>
+            <div style="display: flex; justify-content: center; margin-top: 25px; font-size: 0.75rem; flex-wrap: wrap; gap: 10px;">
                 <a href="https://wa.me/919633769063?text=I%20forgot%20my%20HMC%20website%20password.%20Please%20help." target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; cursor: pointer;">NEED HELP?</a>
             </div>
         </div>
@@ -375,8 +397,14 @@
         <h1 id="main-title">HMC 24-27</h1>
         <p class="description" id="main-desc">Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!</p>
     </div>
-
     <div class="links-panel" id="main-links-panel" style="display: none !important;">
+        <!-- Search Bar -->
+        <div id="search-container" style="margin-bottom: 18px; position: relative;">
+            <input type="text" id="search-input" placeholder="Search buttons, students, results..." 
+                   style="width: 100%; padding: 12px 40px 12px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.08); color: white; outline: none; font-size: 0.95rem; backdrop-filter: blur(5px); box-sizing: border-box;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.6); pointer-events: none;"></i>
+        </div>
+
         <div id="home-section" class="section active">
             <div class="btn" onclick="showSection('exam-names-section', 'Exam Results')"><span>Exam Result</span><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="btn" onclick="showSection('supp-names-section', 'Supplementary Exam Result')"><span>Supplementary Exam Result</span><i class="fa-solid fa-file-invoice"></i></div>
@@ -385,10 +413,9 @@
             <div class="btn" onclick="alert('Study Material / Notes are not available right now!')"><span>Study Material / Notes</span><i class="fa-solid fa-book-open"></i></div>
             <div class="btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><span>Hall Ticket</span><i class="fa-solid fa-id-card"></i></div>
             <a href="#" class="btn" onclick="alert('Internal Mark data is not available right now!')"><span>Internal Mark</span><i class="fa-solid fa-file-invoice"></i></a>
+            <div class="btn" onclick="alert('NOT AVAILABLE RIGHT NOW')"><span>INTERNSHIP DETAILS</span><i class="fa-solid fa-briefcase"></i></div>
             <a href="https://hmcmanjeri.embase.in/" target="_blank" class="btn"><span>Embase</span><i class="fa-solid fa-database"></i></a>
             <a href="https://student.uoc.ac.in/" target="_blank" class="btn"><span>Student Portal</span><i class="fa-solid fa-user-graduate"></i></a>
-            
-
         </div>
 
         <div id="hall-ticket-options-section" class="section">
@@ -498,7 +525,24 @@
 
     <div class="credits">( 2026 Muhammed Nishad E All rights reserved )</div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCC0CEWZA2vyzIJK5xpZrEGxeikp7cchvA",
+            authDomain: "hmc-web-7c65f.firebaseapp.com",
+            projectId: "hmc-web-7c65f",
+            storageBucket: "hmc-web-7c65f.firebasestorage.app",
+            messagingSenderId: "360307989861",
+            appId: "1:360307989861:web:970da58dff8e4ea669d58c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         const sectionTitles = {
             'home-section': 'HMC 24-27',
             'hall-ticket-options-section': 'Hall Ticket Options',
@@ -534,6 +578,15 @@
             const mainTitle = document.getElementById('main-title');
             if (mainTitle) {
                 mainTitle.innerText = finalTitle;
+            }
+
+            // Clear search input on section switch
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.value = '';
+                // Reset visibility of all buttons/elements
+                const elements = document.querySelectorAll('.section .btn, .section div[style*="margin-bottom"]');
+                elements.forEach(el => el.style.display = '');
             }
 
             if (sectionId === 'sem-result-section' && titleText) {
@@ -617,6 +670,14 @@
                     mainTitle.innerText = 'HMC 24-27';
                 }
             }
+
+            // Clear search when popping state
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.value = '';
+                const elements = document.querySelectorAll('.section .btn, .section div[style*="margin-bottom"]');
+                elements.forEach(el => el.style.display = '');
+            }
         };
 
         // Helper function to show main dashboard content panel
@@ -637,9 +698,17 @@
             document.getElementById('user-display-name').innerText = displayName;
             document.getElementById('user-display-email').innerText = displayEmail;
 
+            // Load saved profile picture if available in local storage
+            const savedPic = localStorage.getItem('hmc_user_profile_pic');
+            if (savedPic) {
+                updateAvatarUI(savedPic);
+            }
+
             document.body.style.display = 'flex';
             document.body.style.flexDirection = 'column';
             document.body.style.alignItems = 'center';
+            document.body.style.justifyContent = 'flex-start'; // Scroll bug fix
+            document.body.style.paddingTop = '60px'; // Scroll bug fix
             document.body.style.height = 'auto';
         }
 
@@ -693,8 +762,120 @@
             localStorage.removeItem('hmc_user_authenticated');
             localStorage.removeItem('hmc_user_name');
             localStorage.removeItem('hmc_user_email');
+            localStorage.removeItem('hmc_user_profile_pic');
             window.location.href = window.location.pathname; // Reloads clean login panel view
         }
+
+        // Listen to Auth state and load profile photo from Firestore
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, load their document from firestore to check for profile photo
+                getDoc(doc(db, "users", user.uid)).then((docSnap) => {
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
+                        if (userData.profilePic) {
+                            localStorage.setItem('hmc_user_profile_pic', userData.profilePic);
+                            updateAvatarUI(userData.profilePic);
+                        }
+                    }
+                }).catch(err => console.log("Error loading user profile photo:", err));
+            }
+        });
+
+        // Trigger profile picture upload file selector
+        function triggerProfilePicUpload() {
+            const fileInput = document.getElementById('profile-pic-input');
+            if (fileInput) {
+                fileInput.click();
+            }
+        }
+
+        // Handle profile picture select
+        function handleProfilePicChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Check size (limit to 1.5MB for Firestore Base64)
+            if (file.size > 1.5 * 1024 * 1024) {
+                alert("Please select an image smaller than 1.5 MB.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64String = e.target.result;
+                
+                // 1. Update local storage
+                localStorage.setItem('hmc_user_profile_pic', base64String);
+
+                // 2. Update UI
+                updateAvatarUI(base64String);
+
+                // 3. Upload to Firestore
+                const user = auth.currentUser;
+                if (user) {
+                    updateDoc(doc(db, "users", user.uid), {
+                        profilePic: base64String
+                    }).then(() => {
+                        console.log("Profile picture updated in database successfully!");
+                    }).catch(err => {
+                        alert("Database sync failed: " + err.message);
+                    });
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Update avatar image elements in DOM
+        function updateAvatarUI(imageSrc) {
+            const triggerIcon = document.getElementById('trigger-icon');
+            const triggerImg  = document.getElementById('trigger-img');
+            const avatarIcon  = document.getElementById('avatar-icon');
+            const avatarImg   = document.getElementById('avatar-img');
+
+            if (triggerIcon && triggerImg) {
+                triggerIcon.style.display = 'none';
+                triggerImg.src = imageSrc;
+                triggerImg.style.display = 'block';
+            }
+            if (avatarIcon && avatarImg) {
+                avatarIcon.style.display = 'none';
+                avatarImg.src = imageSrc;
+                avatarImg.style.display = 'block';
+            }
+        }
+
+        // Search Filter logic
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                const activeSection = document.querySelector('.section.active');
+                if (!activeSection) return;
+
+                // Elements to filter are buttons (class="btn") or wrapper divs for buttons
+                const elements = activeSection.querySelectorAll('.btn, div[style*="margin-bottom"]');
+                elements.forEach(el => {
+                    const text = el.innerText || el.textContent || '';
+                    if (text.toLowerCase().includes(query)) {
+                        el.style.display = '';
+                    } else {
+                        // Skip back button
+                        if (el.classList.contains('home-btn-container') || el.querySelector('.home-btn')) {
+                            return;
+                        }
+                        el.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Expose functions globally for inline HTML event handlers
+        window.showSection = showSection;
+        window.toggleProfileDropdown = toggleProfileDropdown;
+        window.logoutUser = logoutUser;
+        window.triggerProfilePicUpload = triggerProfilePicUpload;
+        window.handleProfilePicChange = handleProfilePicChange;
     </script>
 </body>
 </html>

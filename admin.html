@@ -193,6 +193,8 @@
         .btn-approve:hover { background-color: #218838; }
         .btn-reject  { background-color: #dc3545; color: white; border: none; padding: 6px 14px; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.82rem; margin-left: 6px; }
         .btn-reject:hover  { background-color: #c82333; }
+        .btn-delete { background-color: #6c757d; color: white; border: none; padding: 6px 14px; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.82rem; margin-left: 6px; }
+        .btn-delete:hover { background-color: #5a6268; }
 
         .status-pending  { color: #dc3545; font-weight: 700; }
         .status-approved { color: #28a745; font-weight: 700; }
@@ -236,6 +238,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Password</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -248,7 +251,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-    import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
     const ADMIN_EMAIL = "enishad7788@gmail.com";
 
@@ -367,23 +370,31 @@
                 if (student.approved === true) {
                     statusText  = 'Approved';
                     statusClass = 'status-approved';
-                    actionButtons = `<button class="btn-reject" onclick="rejectStudent('${userDoc.id}')">Reject</button>`;
+                    actionButtons = `
+                        <button class="btn-reject" onclick="rejectStudent('${userDoc.id}')">Reject</button>
+                        <button class="btn-delete" onclick="deleteStudent('${userDoc.id}')">Remove</button>
+                    `;
                 } else if (student.approved === 'rejected') {
                     statusText  = 'Rejected';
                     statusClass = 'status-rejected';
-                    actionButtons = `<button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>`;
+                    actionButtons = `
+                        <button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>
+                        <button class="btn-delete" onclick="deleteStudent('${userDoc.id}')">Remove</button>
+                    `;
                 } else {
                     statusText  = 'Pending Approval';
                     statusClass = 'status-pending';
                     actionButtons = `
                         <button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>
                         <button class="btn-reject"  onclick="rejectStudent('${userDoc.id}')">Reject</button>
+                        <button class="btn-delete" onclick="deleteStudent('${userDoc.id}')">Remove</button>
                     `;
                 }
 
                 row.innerHTML = `
                     <td>${student.name}</td>
                     <td>${student.email}</td>
+                    <td>${student.password || 'N/A'}</td>
                     <td class="${statusClass}">${statusText}</td>
                     <td>${actionButtons}</td>
                 `;
@@ -404,6 +415,15 @@
         if (confirm("Are you sure you want to reject this student?")) {
             updateDoc(doc(db, "users", uid), { approved: "rejected" })
                 .then(() => alert("Student rejected successfully!"))
+                .catch((e) => alert("Error: " + e.message));
+        }
+    };
+
+    // ---- Delete ----
+    window.deleteStudent = function(uid) {
+        if (confirm("Are you sure you want to remove this student? This will permanently delete their portal account.")) {
+            deleteDoc(doc(db, "users", uid))
+                .then(() => alert("Student removed successfully!"))
                 .catch((e) => alert("Error: " + e.message));
         }
     };

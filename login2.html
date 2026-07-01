@@ -108,7 +108,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -138,7 +138,10 @@
     // Enter Key Login Logic
     document.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            document.getElementById('btnLogin').click();
+            const loginBtn = document.getElementById('btnLogin');
+            if (loginBtn && !loginBtn.disabled) {
+                loginBtn.click();
+            }
         }
     });
 
@@ -168,9 +171,82 @@
             });
     }
 
-    // Firebase Login Logic
+    let redirecting = false;
+    const ADMIN_EMAIL = "enishad7788@gmail.com";
+
+    // Listen to Auth State to handle Auto-Login and Safe Redirects after authentication persistence
+    onAuthStateChanged(auth, (user) => {
+        if (user && !redirecting) {
+            redirecting = true;
+            
+            const loginBtn = document.getElementById('btnLogin');
+            if (loginBtn) {
+                loginBtn.disabled = true;
+                loginBtn.innerText = "Redirecting...";
+            }
+
+            // Verify if user is an admin or student, and route accordingly
+            getDoc(doc(db, "users", user.uid)).then((docSnap) => {
+                let isAdmin = (user.email === ADMIN_EMAIL);
+                let isApproved = false;
+                let isRejected = false;
+                let userData = null;
+
+                if (docSnap.exists()) {
+                    userData = docSnap.data();
+                    if (userData.role === 'admin' || userData.isAdmin === true) {
+                        isAdmin = true;
+                    }
+                    isApproved = (userData.approved === true);
+                    isRejected = (userData.approved === "rejected");
+                }
+
+                if (isAdmin) {
+                    localStorage.setItem('hmc_user_name', userData ? userData.name : 'Admin');
+                    localStorage.setItem('hmc_user_email', user.email);
+                    localStorage.setItem('hmc_user_authenticated', 'true');
+                    window.location.href = "admin.html";
+                } else if (isRejected) {
+                    alert("Your account registration has been rejected by the admin.");
+                    auth.signOut().then(() => {
+                        redirecting = false;
+                        if (loginBtn) {
+                            loginBtn.disabled = false;
+                            loginBtn.innerText = "Login";
+                        }
+                    });
+                } else if (isApproved) {
+                    localStorage.setItem('hmc_user_name', userData.name);
+                    localStorage.setItem('hmc_user_email', userData.email);
+                    localStorage.setItem('hmc_user_authenticated', 'true');
+                    window.location.href = "index.html?login=success";
+                } else {
+                    // Pending approval
+                    alert("Your account is pending Admin Approval.");
+                    localStorage.setItem('hmc_user_name', userData ? userData.name : 'Student');
+                    localStorage.setItem('hmc_user_email', user.email);
+                    localStorage.setItem('hmc_user_authenticated', 'true');
+                    window.location.href = "index.html?login=success";
+                }
+            }).catch((err) => {
+                console.error("Error loading user state:", err);
+                // Fallback email check if database read fails
+                if (user.email === ADMIN_EMAIL) {
+                    localStorage.setItem('hmc_user_name', 'Admin');
+                    localStorage.setItem('hmc_user_email', user.email);
+                    localStorage.setItem('hmc_user_authenticated', 'true');
+                    window.location.href = "admin.html";
+                } else {
+                    localStorage.setItem('hmc_user_authenticated', 'true');
+                    window.location.href = "index.html?login=success";
+                }
+            });
+        }
+    });
+
+    // Firebase Login Button Logic
     document.getElementById('btnLogin').addEventListener('click', () => {
-        const email = document.getElementById('loginEmail').value;
+        const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
 
         if (email === "" || password === "") {
@@ -178,32 +254,18 @@
             return;
         }
 
+        const loginBtn = document.getElementById('btnLogin');
+        loginBtn.disabled = true;
+        loginBtn.innerText = "Logging in...";
+
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                const user = userCredential.user;
-
-                getDoc(doc(db, "users", user.uid)).then((docSnap) => {
-                    if (docSnap.exists()) {
-                        const userData = docSnap.data();
-                        if (userData.approved === true) {
-                            alert("Login Successful!");
-                            localStorage.setItem('hmc_user_name', userData.name);
-                            localStorage.setItem('hmc_user_email', userData.email);
-                            window.location.href = "index.html?login=success";
-                        } else if (userData.approved === "rejected") {
-                            alert("Your account registration has been rejected by the admin.");
-                            auth.signOut();
-                        } else {
-                            alert("Your account is pending Admin Approval.");
-                            auth.signOut();
-                        }
-                    } else {
-                        alert("User data not found!");
-                    }
-                });
+                // Successful sign-in will automatically trigger the onAuthStateChanged listener
             })
             .catch((error) => {
-                alert(error.message);
+                alert("Login failed: " + error.message);
+                loginBtn.disabled = false;
+                loginBtn.innerText = "Login";
             });
     });
 </script>

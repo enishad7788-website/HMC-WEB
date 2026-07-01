@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HMC 24-27</title>
-    <link class="profile-img" rel="icon" href="logo.jpg" type="image/jpeg">
+    <link class="profile-img" rel="icon" href="logo.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         html, body {
@@ -360,35 +360,21 @@
         </div>
     </div>
 
-    <div id="login-container" class="links-panel" style="text-align: center; display: block;">
+    <div id="pending-container" class="links-panel" style="text-align: center; display: none;">
         <div class="profile-container" style="margin-bottom: 20px;">
             <img src="main profile.jpg" alt="Group Profile" class="profile-img">
-            <h2 style="font-size: 1.4rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4;">
-                HM College of Science and Technology Manjeri
+            <h2 style="font-size: 1.3rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4; color: #ffc107; margin-top: 15px;">
+                Waiting for Approval
             </h2>
-            <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); margin-top: 5px;">Alukkal, Malappuram, 676122</p>
+            <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); margin-top: 15px; line-height: 1.6; font-weight: 500;">
+                Your account registration is currently pending administrator approval. Please check back later or contact your class administrator.
+            </p>
         </div>
-        
-        <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.85); margin: 15px 5px; line-height: 1.5; font-weight: 600;">
-            Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!
-        </p>
-        
         <div style="margin-top: 25px;">
-            <h3 style="font-style: italic; text-transform: uppercase; margin-bottom: 20px; font-weight: 800; letter-spacing: 1px;">Portal Login</h3>
-            
-            <a href="login2.html" class="btn" style="justify-content: center; background: rgba(40, 167, 69, 0.4); border: 1px solid rgba(40, 167, 69, 0.6); margin-bottom: 12px;">
-                <span>Login with Existing Account</span>
-                <i class="fa-solid fa-right-to-bracket" style="margin-left: 10px;"></i>
-            </a>
-
-            <a href="signup2.html" class="btn" style="justify-content: center; background: rgba(0, 123, 255, 0.4); border: 1px solid rgba(0, 123, 255, 0.6); margin-bottom: 20px;">
-                <span>Create New Account</span>
-                <i class="fa-solid fa-user-plus" style="margin-left: 10px;"></i>
-            </a>
-            
-            <div style="display: flex; justify-content: center; margin-top: 25px; font-size: 0.75rem; flex-wrap: wrap; gap: 10px;">
-                <a href="https://wa.me/919633769063?text=I%20forgot%20my%20HMC%20website%20password.%20Please%20help." target="_blank" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; cursor: pointer;">NEED HELP?</a>
-            </div>
+            <button class="btn" onclick="logoutUser()" style="justify-content: center; background: rgba(220, 53, 69, 0.45); border: 1px solid rgba(220, 53, 69, 0.6); width: 100%;">
+                <span>Sign Out</span>
+                <i class="fa-solid fa-right-from-bracket" style="margin-left: 10px;"></i>
+            </button>
         </div>
     </div>
 
@@ -408,12 +394,12 @@
         <div id="home-section" class="section active">
             <div class="btn" onclick="showSection('exam-names-section', 'Exam Results')"><span>Exam Result</span><i class="fa-solid fa-graduation-cap"></i></div>
             <div class="btn" onclick="showSection('supp-names-section', 'Supplementary Exam Result')"><span>Supplementary Exam Result</span><i class="fa-solid fa-file-invoice"></i></div>
-            <a href="#" class="btn" onclick="alert('Attendance data is not available right now!')"><span>Attendance</span><i class="fa-solid fa-calendar-check"></i></a>
+            <div class="btn" onclick="showSection('attendance-section', 'Attendance')"><span>Attendance</span><i class="fa-solid fa-calendar-check"></i></div>
             <div class="btn" onclick="showSection('timetable-section', 'Time Table')"><span>Time Table</span><i class="fa-solid fa-clock"></i></div>
-            <div class="btn" onclick="alert('Study Material / Notes are not available right now!')"><span>Study Material / Notes</span><i class="fa-solid fa-book-open"></i></div>
+            <div class="btn" onclick="showSection('notes-section', 'Study Material / Notes')"><span>Study Material / Notes</span><i class="fa-solid fa-book-open"></i></div>
             <div class="btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><span>Hall Ticket</span><i class="fa-solid fa-id-card"></i></div>
-            <a href="#" class="btn" onclick="alert('Internal Mark data is not available right now!')"><span>Internal Mark</span><i class="fa-solid fa-file-invoice"></i></a>
-            <div class="btn" onclick="alert('NOT AVAILABLE RIGHT NOW')"><span>INTERNSHIP DETAILS</span><i class="fa-solid fa-briefcase"></i></div>
+            <div class="btn" onclick="showSection('internal-marks-section', 'Internal Mark')"><span>Internal Mark</span><i class="fa-solid fa-file-invoice"></i></div>
+            <div class="btn" onclick="showSection('internships-section', 'Internship Details')"><span>INTERNSHIP DETAILS</span><i class="fa-solid fa-briefcase"></i></div>
             <a href="https://hmcmanjeri.embase.in/" target="_blank" class="btn"><span>Embase</span><i class="fa-solid fa-database"></i></a>
             <a href="https://student.uoc.ac.in/" target="_blank" class="btn"><span>Student Portal</span><i class="fa-solid fa-user-graduate"></i></a>
         </div>
@@ -425,97 +411,73 @@
         </div>
 
         <div id="sem-hall-ticket-students" class="section">
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>NISHAD E</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>NSHAD P</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>RISHAL</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>SHAMIL</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>SIDAN</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>ABHINAV</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>HISHAM</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')"><span>JISHAN</span><i class="fa-solid fa-user"></i></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
+            <div id="sem-hall-ticket-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
         </div>
 
         <div id="supp-hall-ticket-students" class="section">
-            <div style="margin-bottom: 12px; width: 100%;"><a href="https://drive.google.com/file/d/1tURY9gE7SMEWyx8TFaRIKg9ldiyJzUCy/view?usp=drivesdk" target="_blank"><div class="btn"><span>NISHAD E</span><i class="fa-solid fa-file-pdf"></i></div></a></div>
-            <div style="margin-bottom: 12px; width: 100%;"><a href="https://drive.google.com/file/d/1oqzNC16ZcKoArkMIpqstbEGmBAnq894R/view?usp=drivesdk" target="_blank"><div class="btn"><span>NISHAD P</span><i class="fa-solid fa-file-pdf"></i></div></a></div>
-            <div style="margin-bottom: 12px; width: 100%;"><a href="https://drive.google.com/file/d/18gAqd1nP_o7c1Lb7PiZUFvuaAa9Gvb2w/view?usp=drivesdk" target="_blank"><div class="btn"><span>SHAMIL V</span><i class="fa-solid fa-file-pdf"></i></div></a></div>
-            <div style="margin-bottom: 12px; width: 100%;"><a href="https://drive.google.com/file/d/1jwvcfTv_BBZu-vu0SkJ37Lx1AbRB4Yjx/view?usp=drivesdk" target="_blank"><div class="btn"><span>HISHAM KK</span><i class="fa-solid fa-file-pdf"></i></div></a></div>
-            <div style="margin-bottom: 12px; width: 100%;"><a href="https://drive.google.com/file/d/1So-8GfEItrZK44Y41WVKMb9_HQ7AbsSL/view?usp=drivesdk" target="_blank"><div class="btn"><span>RISHAL C</span><i class="fa-solid fa-file-pdf"></i></div></a></div>
-            <div style="margin-bottom: 12px; width: 100%;"><a href="https://drive.google.com/file/d/1naMo3gKLR3Md79JjxEhGlmPdoohIRgmi/view?usp=drivesdk" target="_blank"><div class="btn"><span>ABHINAV K</span><i class="fa-solid fa-file-pdf"></i></div></a></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')" style="margin-bottom: 12px;"><span>JISHAN M</span><i class="fa-solid fa-user-slash"></i></div>
-            <div class="btn" onclick="alert('Hall Ticket is not available right now!')" style="margin-bottom: 12px;"><span>SIDAN</span><i class="fa-solid fa-user-slash"></i></div>
+            <div id="supp-hall-ticket-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
             <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
         </div>
 
         <div id="exam-names-section" class="section">
-            <div class="btn" onclick="showSection('sem-result-section', 'Nishad E')"><span>Nishad E</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Nishad P')"><span>Nishad P</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Shamil V')"><span>Shamil V</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Jishan M')"><span>Jishan M</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Rishal C')"><span>Rishal C</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Sidan PP')"><span>Sidan PP</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Abhinav K')"><span>Abhinav K</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="showSection('sem-result-section', 'Hisham KK')"><span>Hisham KK</span><i class="fa-solid fa-user"></i></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
+            <div id="exam-students-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
         </div>
 
         <div id="supp-names-section" class="section">
-            <div class="btn" onclick="showSection('abhinav-supp-section', 'Abhinav K')"><span>Abhinav K</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Nishad E</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Nishad P</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Shamil V</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Jishan M</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Rishal C</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Sidan PP</span><i class="fa-solid fa-user"></i></div>
-            <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>Hisham KK</span><i class="fa-solid fa-user"></i></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
+            <div id="supp-students-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
         </div>
 
-        <div id="abhinav-supp-section" class="section">
-            <h2>Abhinav K - Supplementary Result</h2>
-            <div style="margin-top: 15px;">
-                <a href="https://drive.google.com/file/d/1kZxhH5FCOZuN4MKFJdQzg8KrBbq6pJEL/view?usp=drivesdk" target="_blank" class="btn"><span>1st Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></a>
-                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>2nd Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>3rd Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>4th Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>5th Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-                <div class="btn" onclick="alert('You Dont Have Any Back Paper!')"><span>6th Sem Supp Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-            </div>
+        <div id="hall-ticket-view-section" class="section">
+            <h2 id="hall-ticket-view-title">Hall Tickets</h2>
+            <div id="hall-tickets-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
+            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
+        </div>
+
+        <div id="supp-result-section" class="section">
+            <h2 id="supp-result-title">Supplementary Result</h2>
+            <div id="supp-results-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
             <div class="home-btn-container"><button class="home-btn" onclick="showSection('supp-names-section', 'Supplementary Exam Result')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
         </div>
 
         <div id="sem-result-section" class="section">
-            <h2>Select Semester</h2>
-            <div style="margin-top: 15px;">
-                <a href="#" id="sem1-link" target="_blank" class="btn"><span>1st Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></a>
-                <a href="#" id="sem2-link" target="_blank" class="btn"><span>2nd Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></a>
-                <a href="#" id="sem3-link" target="_blank" class="btn"><span>3rd Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></a>
-                <div class="btn" onclick="alert('4th Sem Result is Coming Soon...')"><span>4th Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-                <div class="btn" onclick="alert('5th Sem Result is Coming Soon...')"><span>5th Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-                <div class="btn" onclick="alert('6th Sem Result is Coming Soon...')"><span>6th Sem Result</span><i class="fa-solid fa-sheet-plastic"></i></div>
-            </div>
+            <h2 id="sem-result-title">Select Semester</h2>
+            <div id="sem-results-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
             <div class="home-btn-container"><button class="home-btn" onclick="showSection('exam-names-section', 'Exam Results')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
         </div>
 
+        <div id="attendance-section" class="section">
+            <h2>Attendance Sheets</h2>
+            <div id="attendance-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
+            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
+        </div>
+
         <div id="timetable-section" class="section">
-            <div class="btn" onclick="alert('Class Time Table is not available right now!')"><span>Class Time Table</span><i class="fa-solid fa-table-list"></i></div>
-            <div class="btn" onclick="alert('Sem Exam Time Table is not available right now!')"><span>Sem Exam Time Table</span><i class="fa-solid fa-calendar-days"></i></div>
-            <div class="btn" onclick="alert('Internal Exam Time Table is not available right now!')"><span>Internal Exam Time Table</span><i class="fa-solid fa-pen-ruler"></i></div>
-            <a href="https://drive.google.com/file/d/1nfNP2t0mQSpvyOwOhoU7SGhXTkbNilPM/view?usp=drivesdk" target="_blank" style="width: 100%;">
-                <div class="btn" style="justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.15);">
-                    <span>Supplementary Exam Time Table</span><i class="fa-solid fa-file-invoice-dollar"></i>
-                </div>
-            </a>
+            <h2>Time Tables</h2>
+            <div id="timetable-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
             <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
         </div>
 
         <div id="notes-section" class="section">
-            <a href="#" target="_blank" class="btn"><span>English Blue Book</span><i class="fa-solid fa-book"></i></a>
-            <a href="#" target="_blank" class="btn"><span>English Yellow Book</span><i class="fa-solid fa-book"></i></a>
-            <a href="#" target="_blank" class="btn"><span>Hindi Book</span><i class="fa-solid fa-book"></i></a>
+            <h2>Study Materials</h2>
+            <div id="study-materials-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
             <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
         </div>
+
+        <div id="internal-marks-section" class="section">
+            <h2>Internal Marks</h2>
+            <div id="internal-marks-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
+            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
+        </div>
+
+        <div id="internships-section" class="section">
+            <h2>Internship Details</h2>
+            <div id="internship-details-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
+            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
+        </div>
+    </div>
     </div>
 
     <div class="footer-icons">
@@ -527,8 +489,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCC0CEWZA2vyzIJK5xpZrEGxeikp7cchvA",
@@ -551,10 +513,32 @@
             'exam-names-section': 'Exam Results',
             'supp-names-section': 'Supplementary Exam Result',
             'timetable-section': 'Time Table',
-            'notes-section': 'Study Material / Notes'
+            'notes-section': 'Study Material / Notes',
+            'attendance-section': 'Attendance',
+            'internal-marks-section': 'Internal Mark',
+            'internships-section': 'Internship Details'
         };
 
-        function showSection(sectionId, titleText) {
+        let allUsers = [];
+        let examResultsUids = new Set();
+        let suppResultsUids = new Set();
+        let semHallTicketLinks = {};
+        let suppHallTicketLinks = {};
+
+        let userDocUnsubscribe = null;
+        let usersUnsubscribe = null;
+        let examResultsUnsubscribe = null;
+        let suppResultsUnsubscribe = null;
+        let hallTicketsUnsubscribe = null;
+        let studyMaterialsUnsubscribe = null;
+        let timetableUnsubscribe = null;
+        let internshipUnsubscribe = null;
+        let attendanceUnsubscribe = null;
+        let internalMarksUnsubscribe = null;
+        let currentSectionResultsUnsubscribe = null;
+        let listenersInitialized = false;
+
+        function showSection(sectionId, titleText, studentUid) {
             const sections = document.querySelectorAll('.section');
             sections.forEach(sec => {
                 sec.style.display = 'none';
@@ -572,7 +556,7 @@
             if (sectionId === 'home-section') {
                 history.pushState({ section: 'home-section', title: finalTitle }, '', window.location.pathname);
             } else {
-                history.pushState({ section: sectionId, title: finalTitle }, '', '#' + sectionId);
+                history.pushState({ section: sectionId, title: finalTitle, studentUid: studentUid }, '', '#' + sectionId);
             }
 
             const mainTitle = document.getElementById('main-title');
@@ -589,57 +573,345 @@
                 elements.forEach(el => el.style.display = '');
             }
 
-            if (sectionId === 'sem-result-section' && titleText) {
-                const driveLinks = {
-                    "Nishad E": {
-                        sem1: "https://drive.google.com/file/d/16zHWNW_OQJs1bxemCH95Ags_G5A9iIXX/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/1rfS5-YB6hVmx9zyYaAqyHusF3Ok91Td_/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1yHnerayQovxUxToukvivzj7aDb1oITGQ/view?usp=drivesdk"
-                    },
-                    "Nishad P": {
-                        sem1: "https://drive.google.com/file/d/1-CI-oLgZLb43GYlk9jZxz_CSO5LEPgTq/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/12IFQ9CogDZg7poMNpsBY1CKSUE8UkPlV/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1vQlemyn-Q3wmQSDncTYQXvPDPNUNXh5i/view?usp=drivesdk"
-                    },
-                    "Shamil V": {
-                        sem1: "https://drive.google.com/file/d/1y4Cv53aKWH_8G1-F3-fwLXobdxo9N7ad/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/1oSUhdwVHfn9PpmT7kjbwULZG1PUPMDe2/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1RRxY7evJPFUNYSmcjBDDrsfH7YI-VwK-/view?usp=drivesdk"
-                    },
-                    "Jishan M": {
-                        sem1: "https://drive.google.com/file/d/1J_C2cPBsMHLyEOtkE5Q6cksucseQOGFE/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/1NCttVHJI-5APbzx-Il3o2GNzXAjUyiei/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1N_8JZC5yjbkG2OcBMhZESmpLiSltT4U5/view?usp=drivesdk"
-                    },
-                    "Rishal C": {
-                        sem1: "https://drive.google.com/file/d/1NNiUvyyD3rDY1gClJon_80lYgvhe2c6U/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/1Lo_8qccmbU3P_4Qk8L94-5xLuLT4svN0/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1IBC1NsgGCHUSH1G9suk60dm_4NDEa1lc/view?usp=drivesdk"
-                    },
-                    "Sidan PP": {
-                        sem1: "https://drive.google.com/file/d/1InFrFm__WcvK_StTgSVtq20OPHURKFY-/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/1ApEivAT6cd8_qqOUArqwuOCVCpEy_4J1/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1a9j2G9pVWscu3eGF2ypwiAX6vXECpz1w/view?usp=drivesdk"
-                    },
-                    "Abhinav K": {
-                        sem1: "https://drive.google.com/file/d/1UbdMC7cjYT25ev14uJ-TinecrkI_d2OZ/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/1b-FXm93olU8AvvaZ-Jxf0xR9z5azU-Gp/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1i8F_EoEdg3hEFYZAToR_7OF8CERP7LB-/view?usp=drivesdk"
-                    },
-                    "Hisham KK": {
-                        sem1: "https://drive.google.com/file/d/1Of1dSLFUGHp7NeXqQ8guHHymiP6Qznpd/view?usp=drivesdk",
-                        sem2: "https://drive.google.com/file/d/1CjVjh-c6TZTuFY-0sue6Fu_YF7JnXc20/view?usp=drivesdk",
-                        sem3: "https://drive.google.com/file/d/1u2yOGNDcYmAYAqkQr41tOdZfviVfRc4y/view?usp=drivesdk"
-                    }
-                };
-
-                const studentData = driveLinks[titleText];
-                if (studentData) {
-                    document.getElementById('sem1-link').href = studentData.sem1;
-                    document.getElementById('sem2-link').href = studentData.sem2;
-                    document.getElementById('sem3-link').href = studentData.sem3;
+            // Clean up any student results listener when switching away
+            if (sectionId !== 'sem-result-section' && sectionId !== 'supp-result-section') {
+                if (currentSectionResultsUnsubscribe) {
+                    currentSectionResultsUnsubscribe();
+                    currentSectionResultsUnsubscribe = null;
                 }
             }
+
+            if (sectionId === 'sem-result-section') {
+                if (currentSectionResultsUnsubscribe) {
+                    currentSectionResultsUnsubscribe();
+                    currentSectionResultsUnsubscribe = null;
+                }
+                const targetUid = studentUid || (auth.currentUser ? auth.currentUser.uid : null);
+                const listEl = document.getElementById('sem-results-list');
+                if (listEl) {
+                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>Loading semester results...</div>";
+                    if (targetUid) {
+                        currentSectionResultsUnsubscribe = onSnapshot(
+                            query(collection(db, "exam_results"), where("studentUid", "==", targetUid)),
+                            (snapshot) => {
+                                listEl.innerHTML = "";
+                                if (snapshot.empty) {
+                                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No semester results published for this student.</div>";
+                                    return;
+                                }
+                                const items = [];
+                                snapshot.forEach(docSnap => items.push(docSnap.data()));
+                                items.sort((a, b) => a.label.localeCompare(b.label));
+                                items.forEach(item => {
+                                    const btn = document.createElement('a');
+                                    btn.className = "btn";
+                                    btn.href = item.link;
+                                    btn.target = "_blank";
+                                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-graduation-cap"></i>`;
+                                    listEl.appendChild(btn);
+                                });
+                            },
+                            (err) => {
+                                console.error("Error listening to exam results:", err);
+                                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#ff6b6b; font-size:0.9rem;'>Error loading results from database.</div>";
+                            }
+                        );
+                    } else {
+                        listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No student selected.</div>";
+                    }
+                }
+            }
+
+            if (sectionId === 'supp-result-section') {
+                if (currentSectionResultsUnsubscribe) {
+                    currentSectionResultsUnsubscribe();
+                    currentSectionResultsUnsubscribe = null;
+                }
+                const targetUid = studentUid || (auth.currentUser ? auth.currentUser.uid : null);
+                const listEl = document.getElementById('supp-results-list');
+                if (listEl) {
+                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>Loading supplementary results...</div>";
+                    if (targetUid) {
+                        currentSectionResultsUnsubscribe = onSnapshot(
+                            query(collection(db, "supplementary_results"), where("studentUid", "==", targetUid)),
+                            (snapshot) => {
+                                listEl.innerHTML = "";
+                                if (snapshot.empty) {
+                                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No supplementary results published for this student.</div>";
+                                    return;
+                                }
+                                const items = [];
+                                snapshot.forEach(docSnap => items.push(docSnap.data()));
+                                items.sort((a, b) => a.label.localeCompare(b.label));
+                                items.forEach(item => {
+                                    const btn = document.createElement('a');
+                                    btn.className = "btn";
+                                    btn.href = item.link;
+                                    btn.target = "_blank";
+                                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-file-invoice"></i>`;
+                                    listEl.appendChild(btn);
+                                });
+                            },
+                            (err) => {
+                                console.error("Error listening to supplementary results:", err);
+                                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#ff6b6b; font-size:0.9rem;'>Error loading results from database.</div>";
+                            }
+                        );
+                    } else {
+                        listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No student selected.</div>";
+                    }
+                }
+            }
+        }
+
+        function updateStudentListsUI() {
+            const examList = document.getElementById('exam-students-list');
+            const suppList = document.getElementById('supp-students-list');
+            const semHTList = document.getElementById('sem-hall-ticket-list');
+            const suppHTList = document.getElementById('supp-hall-ticket-list');
+
+            if (examList) examList.innerHTML = "";
+            if (suppList) suppList.innerHTML = "";
+            if (semHTList) semHTList.innerHTML = "";
+            if (suppHTList) suppHTList.innerHTML = "";
+
+            allUsers.forEach((student) => {
+                const uid = student.uid;
+
+                // 1. Exam Results List (only if they have exam results assigned)
+                if (examList && examResultsUids.has(uid)) {
+                    const btn = document.createElement('div');
+                    btn.className = "btn";
+                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
+                    btn.onclick = () => showSection('sem-result-section', student.name, uid);
+                    examList.appendChild(btn);
+                }
+
+                // 2. Supplementary Results List (only if they have supplementary results assigned)
+                if (suppList && suppResultsUids.has(uid)) {
+                    const btn = document.createElement('div');
+                    btn.className = "btn";
+                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
+                    btn.onclick = () => showSection('supp-result-section', `${student.name} - Supplementary`, uid);
+                    suppList.appendChild(btn);
+                }
+
+                // 3. Sem Hall Ticket List (only if they have a sem hall ticket assigned)
+                if (semHTList && semHallTicketLinks[uid]) {
+                    const btn = document.createElement('a');
+                    btn.className = "btn";
+                    btn.href = semHallTicketLinks[uid];
+                    btn.target = "_blank";
+                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
+                    semHTList.appendChild(btn);
+                }
+
+                // 4. Supp Hall Ticket List (only if they have a supp hall ticket assigned)
+                if (suppHTList && suppHallTicketLinks[uid]) {
+                    const btn = document.createElement('a');
+                    btn.className = "btn";
+                    btn.href = suppHallTicketLinks[uid];
+                    btn.target = "_blank";
+                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-file-pdf"></i>`;
+                    suppHTList.appendChild(btn);
+                }
+            });
+
+            // If lists are empty, display a placeholder
+            if (examList && examList.children.length === 0) {
+                examList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No student exam results published yet.</div>`;
+            }
+            if (suppList && suppList.children.length === 0) {
+                suppList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No supplementary results published yet.</div>`;
+            }
+            if (semHTList && semHTList.children.length === 0) {
+                semHTList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No hall tickets published yet.</div>`;
+            }
+            if (suppHTList && suppHTList.children.length === 0) {
+                suppHTList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No supplementary hall tickets published yet.</div>`;
+            }
+        }
+
+        function initializeRealtimeListeners(currentUid) {
+            if (listenersInitialized) return;
+            listenersInitialized = true;
+
+            // 1. Users list
+            usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+                allUsers = [];
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.approved === true) {
+                        allUsers.push({ uid: docSnap.id, ...data });
+                    }
+                });
+                allUsers.sort((a, b) => {
+                    const orderA = a.displayOrder !== undefined ? Number(a.displayOrder) : 999999;
+                    const orderB = b.displayOrder !== undefined ? Number(b.displayOrder) : 999999;
+                    if (orderA !== orderB) return orderA - orderB;
+                    return a.name.localeCompare(b.name);
+                });
+                updateStudentListsUI();
+            }, (err) => console.error("Error listening to users:", err));
+
+            // 2. Exam results
+            examResultsUnsubscribe = onSnapshot(collection(db, "exam_results"), (snapshot) => {
+                examResultsUids = new Set();
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.studentUid) {
+                        examResultsUids.add(data.studentUid);
+                    }
+                });
+                updateStudentListsUI();
+            }, (err) => console.error("Error listening to exam_results:", err));
+
+            // 3. Supplementary results
+            suppResultsUnsubscribe = onSnapshot(collection(db, "supplementary_results"), (snapshot) => {
+                suppResultsUids = new Set();
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.studentUid) {
+                        suppResultsUids.add(data.studentUid);
+                    }
+                });
+                updateStudentListsUI();
+            }, (err) => console.error("Error listening to supplementary_results:", err));
+
+            // 4. Hall tickets
+            hallTicketsUnsubscribe = onSnapshot(collection(db, "hall_tickets"), (snapshot) => {
+                semHallTicketLinks = {};
+                suppHallTicketLinks = {};
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.studentUid && data.link) {
+                        if (data.label === "Sem Exam Hall Ticket") {
+                            semHallTicketLinks[data.studentUid] = data.link;
+                        } else if (data.label === "Supplementary Hall Ticket") {
+                            suppHallTicketLinks[data.studentUid] = data.link;
+                        }
+                    }
+                });
+                updateStudentListsUI();
+            }, (err) => console.error("Error listening to hall_tickets:", err));
+
+            // 5. Global: Study Materials
+            studyMaterialsUnsubscribe = onSnapshot(collection(db, "study_materials"), (snapshot) => {
+                const listEl = document.getElementById('study-materials-list');
+                if (!listEl) return;
+                listEl.innerHTML = "";
+                if (snapshot.empty) {
+                    listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No study materials published yet.</div>`;
+                    return;
+                }
+                const items = [];
+                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+                items.sort((a, b) => a.label.localeCompare(b.label));
+                items.forEach(item => {
+                    const btn = document.createElement('a');
+                    btn.className = "btn";
+                    btn.href = item.link;
+                    btn.target = "_blank";
+                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-book-open"></i>`;
+                    listEl.appendChild(btn);
+                });
+            }, (err) => console.error("Error listening to study_materials:", err));
+
+            // 6. Global: Time Table
+            timetableUnsubscribe = onSnapshot(collection(db, "time_table"), (snapshot) => {
+                const listEl = document.getElementById('timetable-list');
+                if (!listEl) return;
+                listEl.innerHTML = "";
+                if (snapshot.empty) {
+                    listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No time tables published yet.</div>`;
+                    return;
+                }
+                const items = [];
+                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+                items.sort((a, b) => a.label.localeCompare(b.label));
+                items.forEach(item => {
+                    const btn = document.createElement('a');
+                    btn.className = "btn";
+                    btn.href = item.link;
+                    btn.target = "_blank";
+                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-clock"></i>`;
+                    listEl.appendChild(btn);
+                });
+            }, (err) => console.error("Error listening to time_table:", err));
+
+            // 7. Global: Internship Details
+            internshipUnsubscribe = onSnapshot(collection(db, "internship_details"), (snapshot) => {
+                const listEl = document.getElementById('internship-details-list');
+                if (!listEl) return;
+                listEl.innerHTML = "";
+                if (snapshot.empty) {
+                    listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No internship details published yet.</div>`;
+                    return;
+                }
+                const items = [];
+                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+                items.sort((a, b) => a.label.localeCompare(b.label));
+                items.forEach(item => {
+                    const btn = document.createElement('a');
+                    btn.className = "btn";
+                    btn.href = item.link;
+                    btn.target = "_blank";
+                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-briefcase"></i>`;
+                    listEl.appendChild(btn);
+                });
+            }, (err) => console.error("Error listening to internship_details:", err));
+
+            // 8. Student-Specific: Attendance
+            attendanceUnsubscribe = onSnapshot(
+                query(collection(db, "attendance"), where("studentUid", "==", currentUid)),
+                (snapshot) => {
+                    const listEl = document.getElementById('attendance-list');
+                    if (!listEl) return;
+                    listEl.innerHTML = "";
+                    if (snapshot.empty) {
+                        listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No attendance sheets assigned to you.</div>`;
+                        return;
+                    }
+                    const items = [];
+                    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+                    items.sort((a, b) => a.label.localeCompare(b.label));
+                    items.forEach(item => {
+                        const btn = document.createElement('a');
+                        btn.className = "btn";
+                        btn.href = item.link;
+                        btn.target = "_blank";
+                        btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-calendar-check"></i>`;
+                        listEl.appendChild(btn);
+                    });
+                },
+                (err) => console.error("Error listening to attendance:", err)
+            );
+
+            // 9. Student-Specific: Internal Marks
+            internalMarksUnsubscribe = onSnapshot(
+                query(collection(db, "internal_marks"), where("studentUid", "==", currentUid)),
+                (snapshot) => {
+                    const listEl = document.getElementById('internal-marks-list');
+                    if (!listEl) return;
+                    listEl.innerHTML = "";
+                    if (snapshot.empty) {
+                        listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No internal marks sheets assigned to you.</div>`;
+                        return;
+                    }
+                    const items = [];
+                    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+                    items.sort((a, b) => a.label.localeCompare(b.label));
+                    items.forEach(item => {
+                        const btn = document.createElement('a');
+                        btn.className = "btn";
+                        btn.href = item.link;
+                        btn.target = "_blank";
+                        btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-clipboard-check"></i>`;
+                        listEl.appendChild(btn);
+                    });
+                },
+                (err) => console.error("Error listening to internal_marks:", err)
+            );
         }
 
         window.onpopstate = function(event) {
@@ -660,6 +932,16 @@
                 if (mainTitle && event.state.title) {
                     mainTitle.innerText = event.state.title;
                 }
+                if (event.state.section === 'sem-result-section') {
+                    showSection('sem-result-section', event.state.title, event.state.studentUid);
+                } else if (event.state.section === 'supp-result-section') {
+                    showSection('supp-result-section', event.state.title, event.state.studentUid);
+                } else {
+                    if (currentSectionResultsUnsubscribe) {
+                        currentSectionResultsUnsubscribe();
+                        currentSectionResultsUnsubscribe = null;
+                    }
+                }
             } else {
                 const homeSection = document.getElementById('home-section');
                 if (homeSection) {
@@ -668,6 +950,10 @@
                 }
                 if (mainTitle) {
                     mainTitle.innerText = 'HMC 24-27';
+                }
+                if (currentSectionResultsUnsubscribe) {
+                    currentSectionResultsUnsubscribe();
+                    currentSectionResultsUnsubscribe = null;
                 }
             }
 
@@ -682,7 +968,6 @@
 
         // Helper function to show main dashboard content panel
         function unlockDashboard() {
-            document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
             document.getElementById('main-links-panel').style.setProperty('display', 'block', 'important');
             
@@ -707,8 +992,8 @@
             document.body.style.display = 'flex';
             document.body.style.flexDirection = 'column';
             document.body.style.alignItems = 'center';
-            document.body.style.justifyContent = 'flex-start'; // Scroll bug fix
-            document.body.style.paddingTop = '60px'; // Scroll bug fix
+            document.body.style.justifyContent = 'flex-start';
+            document.body.style.paddingTop = '60px';
             document.body.style.height = 'auto';
         }
 
@@ -736,11 +1021,9 @@
         window.addEventListener('DOMContentLoaded', (event) => {
             const urlParams = new URLSearchParams(window.location.search);
             
-            // 1. If redirected with login parameter, save session token and unlock
+            // 1. If redirected with login parameter, save session token
             if (urlParams.get('login') === 'success') {
                 localStorage.setItem('hmc_user_authenticated', 'true');
-                unlockDashboard();
-                
                 // Clean URL to avoid issues
                 try {
                     history.replaceState({ section: 'home-section', title: 'HMC 24-27' }, '', window.location.pathname);
@@ -748,37 +1031,134 @@
                     console.log("Running locally"); 
                 }
             } 
-            // 2. If already logged in previously, auto unlock dashboard directly
-            else if (localStorage.getItem('hmc_user_authenticated') === 'true') {
-                unlockDashboard();
-            }
-            // 3. Not logged in: Show the login container
-            else {
-                document.getElementById('login-container').style.display = 'block';
+            // 2. If not logged in, redirect immediately to login2.html
+            else if (localStorage.getItem('hmc_user_authenticated') !== 'true') {
+                window.location.href = "login2.html";
             }
         });
 
         function logoutUser() {
+            // Clean up all active listeners
+            if (usersUnsubscribe) { usersUnsubscribe(); usersUnsubscribe = null; }
+            if (examResultsUnsubscribe) { examResultsUnsubscribe(); examResultsUnsubscribe = null; }
+            if (suppResultsUnsubscribe) { suppResultsUnsubscribe(); suppResultsUnsubscribe = null; }
+            if (hallTicketsUnsubscribe) { hallTicketsUnsubscribe(); hallTicketsUnsubscribe = null; }
+            if (studyMaterialsUnsubscribe) { studyMaterialsUnsubscribe(); studyMaterialsUnsubscribe = null; }
+            if (timetableUnsubscribe) { timetableUnsubscribe(); timetableUnsubscribe = null; }
+            if (internshipUnsubscribe) { internshipUnsubscribe(); internshipUnsubscribe = null; }
+            if (attendanceUnsubscribe) { attendanceUnsubscribe(); attendanceUnsubscribe = null; }
+            if (internalMarksUnsubscribe) { internalMarksUnsubscribe(); internalMarksUnsubscribe = null; }
+            if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
+            if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
+            listenersInitialized = false;
+
             localStorage.removeItem('hmc_user_authenticated');
             localStorage.removeItem('hmc_user_name');
             localStorage.removeItem('hmc_user_email');
             localStorage.removeItem('hmc_user_profile_pic');
-            window.location.href = window.location.pathname; // Reloads clean login panel view
+            
+            signOut(auth).then(() => {
+                window.location.href = "login2.html";
+            }).catch(err => {
+                window.location.href = "login2.html";
+            });
         }
 
-        // Listen to Auth state and load profile photo from Firestore
+        // Setup database listener for student dashboard validation
+        function setupStudentListener(user) {
+            if (userDocUnsubscribe) {
+                userDocUnsubscribe();
+                userDocUnsubscribe = null;
+            }
+
+            userDocUnsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    
+                    localStorage.setItem('hmc_user_name', userData.name);
+                    localStorage.setItem('hmc_user_email', userData.email);
+                    if (userData.profilePic) {
+                        localStorage.setItem('hmc_user_profile_pic', userData.profilePic);
+                        updateAvatarUI(userData.profilePic);
+                    }
+
+                    if (userData.approved === true) {
+                        document.getElementById('pending-container').style.display = 'none';
+                        unlockDashboard();
+                        initializeRealtimeListeners(user.uid);
+                    } else if (userData.approved === "rejected") {
+                        alert("Your account registration has been rejected by the admin.");
+                        logoutUser();
+                    } else {
+                        // Pending Approval: Hide dashboard and show pending page
+                        document.getElementById('main-profile').style.setProperty('display', 'none', 'important');
+                        document.getElementById('main-links-panel').style.setProperty('display', 'none', 'important');
+                        const profileMenu = document.getElementById('profile-menu-container');
+                        if (profileMenu) profileMenu.style.display = 'none';
+                        
+                        document.getElementById('pending-container').style.display = 'block';
+                        
+                        document.body.style.display = 'flex';
+                        document.body.style.flexDirection = 'column';
+                        document.body.style.alignItems = 'center';
+                        document.body.style.justifyContent = 'center';
+                        document.body.style.paddingTop = '20px';
+                        document.body.style.height = '100vh';
+                    }
+                } else {
+                    alert("User data not found in database.");
+                    logoutUser();
+                }
+            }, (err) => {
+                console.error("Error listening to user document:", err);
+            });
+        }
+
+        // Listen to Auth state, monitor approval status and initialize real-time listeners
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in, load their document from firestore to check for profile photo
+                // Check if the authenticated user is actually the admin first
+                let isAdmin = (user.email === "enishad7788@gmail.com");
                 getDoc(doc(db, "users", user.uid)).then((docSnap) => {
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
-                        if (userData.profilePic) {
-                            localStorage.setItem('hmc_user_profile_pic', userData.profilePic);
-                            updateAvatarUI(userData.profilePic);
+                        if (userData.role === 'admin' || userData.isAdmin === true) {
+                            isAdmin = true;
                         }
                     }
-                }).catch(err => console.log("Error loading user profile photo:", err));
+                    
+                    if (isAdmin) {
+                        // Redirect admin to admin.html to avoid signing them out on student validation failures
+                        window.location.href = "admin.html";
+                    } else {
+                        setupStudentListener(user);
+                    }
+                }).catch((err) => {
+                    console.error("Error verifying admin status:", err);
+                    if (isAdmin) {
+                        window.location.href = "admin.html";
+                    } else {
+                        setupStudentListener(user);
+                    }
+                });
+            } else {
+                if (usersUnsubscribe) { usersUnsubscribe(); usersUnsubscribe = null; }
+                if (examResultsUnsubscribe) { examResultsUnsubscribe(); examResultsUnsubscribe = null; }
+                if (suppResultsUnsubscribe) { suppResultsUnsubscribe(); suppResultsUnsubscribe = null; }
+                if (hallTicketsUnsubscribe) { hallTicketsUnsubscribe(); hallTicketsUnsubscribe = null; }
+                if (studyMaterialsUnsubscribe) { studyMaterialsUnsubscribe(); studyMaterialsUnsubscribe = null; }
+                if (timetableUnsubscribe) { timetableUnsubscribe(); timetableUnsubscribe = null; }
+                if (internshipUnsubscribe) { internshipUnsubscribe(); internshipUnsubscribe = null; }
+                if (attendanceUnsubscribe) { attendanceUnsubscribe(); attendanceUnsubscribe = null; }
+                if (internalMarksUnsubscribe) { internalMarksUnsubscribe(); internalMarksUnsubscribe = null; }
+                if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
+                if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
+                listenersInitialized = false;
+
+                if (localStorage.getItem('hmc_user_authenticated') === 'true') {
+                    localStorage.removeItem('hmc_user_authenticated');
+                }
+                window.location.href = "login2.html";
             }
         });
 
@@ -795,7 +1175,6 @@
             const file = event.target.files[0];
             if (!file) return;
 
-            // Check size (limit to 1.5MB for Firestore Base64)
             if (file.size > 1.5 * 1024 * 1024) {
                 alert("Please select an image smaller than 1.5 MB.");
                 return;
@@ -804,14 +1183,9 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64String = e.target.result;
-                
-                // 1. Update local storage
                 localStorage.setItem('hmc_user_profile_pic', base64String);
-
-                // 2. Update UI
                 updateAvatarUI(base64String);
 
-                // 3. Upload to Firestore
                 const user = auth.currentUser;
                 if (user) {
                     updateDoc(doc(db, "users", user.uid), {
@@ -853,14 +1227,12 @@
                 const activeSection = document.querySelector('.section.active');
                 if (!activeSection) return;
 
-                // Elements to filter are buttons (class="btn") or wrapper divs for buttons
                 const elements = activeSection.querySelectorAll('.btn, div[style*="margin-bottom"]');
                 elements.forEach(el => {
                     const text = el.innerText || el.textContent || '';
                     if (text.toLowerCase().includes(query)) {
                         el.style.display = '';
                     } else {
-                        // Skip back button
                         if (el.classList.contains('home-btn-container') || el.querySelector('.home-btn')) {
                             return;
                         }

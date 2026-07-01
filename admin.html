@@ -134,6 +134,7 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            z-index: 10;
         }
 
         .admin-navbar h1 {
@@ -171,18 +172,182 @@
 
         #btn-admin-logout:hover { background: #c82333; }
 
-        .admin-content {
-            max-width: 950px;
-            margin: 30px auto;
+        .admin-body {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 54px);
+            width: 100%;
+        }
+
+        .admin-sidebar {
+            width: 260px;
+            background: #2b3a4a;
+            color: #fff;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #b8c7ce;
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 0.92rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 123, 255, 0.15);
+            color: #fff;
+            border-left: 3px solid #007bff;
+        }
+
+        .admin-main-content {
+            flex: 1;
+            padding: 30px;
+            background: #f4f7f6;
+            overflow-y: auto;
+        }
+
+        .tab-panel {
+            display: none;
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: calc(100% - 40px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .admin-content h2 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 5px; }
-        .admin-content > p { color: #666; font-size: 0.88rem; margin-bottom: 20px; }
+        .tab-panel.active {
+            display: block;
+        }
+
+        .admin-panel-header {
+            margin-bottom: 22px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 12px;
+        }
+
+        .admin-panel-header h2 {
+            font-size: 1.35rem;
+            color: #333;
+        }
+
+        .admin-panel-header p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            background: white;
+            color: #333;
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        /* Dynamic lists */
+        .manage-list {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .manage-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .manage-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .manage-item span {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .manage-item a {
+            font-size: 0.78rem;
+            color: #007bff;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .btn-danger-sm {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 15px;
+        }
+
+        .btn-danger-sm:hover {
+            background: #bd2130;
+        }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e9ecef; font-size: 0.9rem; }
@@ -230,28 +395,255 @@
         </div>
     </div>
 
-    <div class="admin-content">
-        <h2>Student Approvals</h2>
-        <p>Manage new student registrations and grant or revoke access to the dashboard.</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="studentTable"></tbody>
-        </table>
+    <div class="admin-body">
+        <div class="admin-sidebar">
+            <button class="tab-btn active" onclick="switchTab('approvals')"><i class="fa-solid fa-users"></i> Student Approvals</button>
+            <button class="tab-btn" onclick="switchTab('exam-results')"><i class="fa-solid fa-graduation-cap"></i> Exam Results</button>
+            <button class="tab-btn" onclick="switchTab('supp-results')"><i class="fa-solid fa-file-invoice"></i> Supplementary</button>
+            <button class="tab-btn" onclick="switchTab('attendance')"><i class="fa-solid fa-calendar-check"></i> Attendance</button>
+            <button class="tab-btn" onclick="switchTab('time-table')"><i class="fa-solid fa-calendar-days"></i> Time Table</button>
+            <button class="tab-btn" onclick="switchTab('notes')"><i class="fa-solid fa-book-open"></i> Study Materials</button>
+            <button class="tab-btn" onclick="switchTab('hall-tickets')"><i class="fa-solid fa-id-card"></i> Hall Tickets</button>
+            <button class="tab-btn" onclick="switchTab('internal-marks')"><i class="fa-solid fa-clipboard-check"></i> Internal Marks</button>
+            <button class="tab-btn" onclick="switchTab('internships')"><i class="fa-solid fa-briefcase"></i> Internship Details</button>
+        </div>
+
+        <div class="admin-main-content">
+            <!-- 1. APPROVALS TAB -->
+            <div id="tab-approvals" class="tab-panel active">
+                <div class="admin-panel-header">
+                    <h2>Student Approvals & Ordering</h2>
+                    <p>Manage registrations, edit student names, and set display ordering.</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 90px;">Order</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTable"></tbody>
+                </table>
+            </div>
+
+            <!-- 2. EXAM RESULTS TAB -->
+            <div id="tab-exam-results" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Exam Results Management</h2>
+                    <p>Select a student to view and manage their semester exam results.</p>
+                </div>
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="exam-student-select" class="form-control" onchange="loadStudentSectionLinks('exam_results')">
+                        <option value="">Select a student...</option>
+                    </select>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+                    <div class="form-group">
+                        <label>Semester / Label</label>
+                        <select id="exam-label-input" class="form-control">
+                            <option value="1st Sem Result">1st Sem Result</option>
+                            <option value="2nd Sem Result">2nd Sem Result</option>
+                            <option value="3rd Sem Result">3rd Sem Result</option>
+                            <option value="4th Sem Result">4th Sem Result</option>
+                            <option value="5th Sem Result">5th Sem Result</option>
+                            <option value="6th Sem Result">6th Sem Result</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="exam-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addStudentSectionLink('exam_results')">Add Result Link</button>
+                
+                <div class="manage-list" id="exam_results-list"></div>
+            </div>
+
+            <!-- 3. SUPPLEMENTARY TAB -->
+            <div id="tab-supp-results" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Supplementary Results Management</h2>
+                    <p>Select a student to view and add/remove supplementary exam links.</p>
+                </div>
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="supp-student-select" class="form-control" onchange="loadStudentSectionLinks('supplementary_results')">
+                        <option value="">Select a student...</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+                    <div class="form-group">
+                        <label>Semester / File Label</label>
+                        <input type="text" id="supp-label-input" class="form-control" placeholder="e.g. 1st Sem Supp Result">
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="supp-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addStudentSectionLink('supplementary_results')">Add Supp Link</button>
+                <div class="manage-list" id="supplementary_results-list"></div>
+            </div>
+
+            <!-- 4. ATTENDANCE TAB -->
+            <div id="tab-attendance" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Attendance Management</h2>
+                    <p>Manage attendance record sheets for students.</p>
+                </div>
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="attendance-student-select" class="form-control" onchange="loadStudentSectionLinks('attendance')">
+                        <option value="">Select a student...</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+                    <div class="form-group">
+                        <label>Label</label>
+                        <input type="text" id="attendance-label-input" class="form-control" placeholder="e.g. June Attendance">
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="attendance-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addStudentSectionLink('attendance')">Add Attendance Link</button>
+                <div class="manage-list" id="attendance-list"></div>
+            </div>
+
+            <!-- 5. TIME TABLE TAB -->
+            <div id="tab-time-table" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Time Table Management</h2>
+                    <p>Add or remove time tables for classes or exams globally.</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Time Table Name / Type</label>
+                        <select id="time_table-label-input" class="form-control">
+                            <option value="Class Time Table">Class Time Table</option>
+                            <option value="Sem Exam Time Table">Sem Exam Time Table</option>
+                            <option value="Internal Exam Time Table">Internal Exam Time Table</option>
+                            <option value="Supplementary Exam Time Table">Supplementary Exam Time Table</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="time_table-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addGlobalSectionLink('time_table')">Add Time Table</button>
+                <div class="manage-list" id="time_table-list"></div>
+            </div>
+
+            <!-- 6. STUDY MATERIALS (NOTES) TAB -->
+            <div id="tab-notes" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Study Materials & Notes</h2>
+                    <p>Add/remove reference books or note links for all students.</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Material Name / Title</label>
+                        <input type="text" id="study_materials-label-input" class="form-control" placeholder="e.g. English Blue Book">
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="study_materials-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addGlobalSectionLink('study_materials')">Add Material Link</button>
+                <div class="manage-list" id="study_materials-list"></div>
+            </div>
+
+            <!-- 7. HALL TICKETS TAB -->
+            <div id="tab-hall-tickets" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Hall Ticket Management</h2>
+                    <p>Upload exam and supplementary hall tickets for students.</p>
+                </div>
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="hall_tickets-student-select" class="form-control" onchange="loadStudentSectionLinks('hall_tickets')">
+                        <option value="">Select a student...</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+                    <div class="form-group">
+                        <label>Type / Title</label>
+                        <select id="hall_tickets-label-input" class="form-control">
+                            <option value="Sem Exam Hall Ticket">Sem Exam Hall Ticket</option>
+                            <option value="Supplementary Hall Ticket">Supplementary Hall Ticket</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="hall_tickets-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addStudentSectionLink('hall_tickets')">Add Hall Ticket</button>
+                <div class="manage-list" id="hall_tickets-list"></div>
+            </div>
+
+            <!-- 8. INTERNAL MARKS TAB -->
+            <div id="tab-internal-marks" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Internal Marks Management</h2>
+                    <p>Configure student internal assessment sheets.</p>
+                </div>
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="internal_marks-student-select" class="form-control" onchange="loadStudentSectionLinks('internal_marks')">
+                        <option value="">Select a student...</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+                    <div class="form-group">
+                        <label>Label</label>
+                        <input type="text" id="internal_marks-label-input" class="form-control" placeholder="e.g. 1st Internal Mark Sheet">
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="internal_marks-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addStudentSectionLink('internal_marks')">Add Internal Mark Link</button>
+                <div class="manage-list" id="internal_marks-list"></div>
+            </div>
+
+            <!-- 9. INTERNSHIP DETAILS TAB -->
+            <div id="tab-internships" class="tab-panel">
+                <div class="admin-panel-header">
+                    <h2>Internship Details</h2>
+                    <p>Post globally accessible links for internship info and templates.</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Info Topic / Company Title</label>
+                        <input type="text" id="internship_details-label-input" class="form-control" placeholder="e.g. Internship Guidelines">
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="internship_details-link-input" class="form-control" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="addGlobalSectionLink('internship_details')">Add Internship Link</button>
+                <div class="manage-list" id="internship_details-list"></div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, setDoc, query, where, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
     const ADMIN_EMAIL = "enishad7788@gmail.com";
 
@@ -268,12 +660,30 @@
     const auth = getAuth(app);
     const db   = getFirestore(app);
 
+    // ---- Tab Switching ----
+    window.switchTab = function(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+        // Set active button
+        const btns = Array.from(document.querySelectorAll('.tab-btn'));
+        const clickedBtn = btns.find(btn => btn.getAttribute('onclick').includes(tabName));
+        if (clickedBtn) clickedBtn.classList.add('active');
+
+        // Show panel
+        const panel = document.getElementById(`tab-${tabName}`);
+        if (panel) panel.classList.add('active');
+    };
+
     // ---- UI Helpers ----
     function showPanel() {
         document.body.style.display = 'block';
         document.getElementById('admin-login').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'flex';
         loadStudents();
+        loadGlobalSectionLinks('time_table');
+        loadGlobalSectionLinks('study_materials');
+        loadGlobalSectionLinks('internship_details');
     }
 
     function showLogin() {
@@ -286,14 +696,36 @@
 
     // ---- Auth State ----
     onAuthStateChanged(auth, (user) => {
-        if (user && user.email === ADMIN_EMAIL) {
-            showPanel();
+        if (user) {
+            getDoc(doc(db, "users", user.uid)).then((docSnap) => {
+                let isAdmin = (user.email === ADMIN_EMAIL);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    if (userData.role === 'admin' || userData.isAdmin === true) {
+                        isAdmin = true;
+                    }
+                }
+                
+                if (isAdmin) {
+                    showPanel();
+                } else {
+                    signOut(auth).then(() => {
+                        setError("Access denied. You are not an admin.");
+                        showLogin();
+                    });
+                }
+            }).catch((err) => {
+                console.error("Error verifying admin role:", err);
+                if (user.email === ADMIN_EMAIL) {
+                    showPanel();
+                } else {
+                    signOut(auth).then(() => {
+                        setError("Access denied. Admin validation failed.");
+                        showLogin();
+                    });
+                }
+            });
         } else {
-            if (user) {
-                // Logged in but NOT admin email
-                signOut(auth);
-                setError("Access denied. You are not an admin.");
-            }
             showLogin();
         }
     });
@@ -309,7 +741,12 @@
 
     // ---- Enter key login ----
     document.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') document.getElementById('btn-admin-login').click();
+        if (e.key === 'Enter') {
+            const loginBtn = document.getElementById('btn-admin-login');
+            if (loginBtn && document.getElementById('admin-login').style.display !== 'none') {
+                loginBtn.click();
+            }
+        }
     });
 
     // ---- Login Button ----
@@ -324,14 +761,9 @@
 
         if (!email || !password) { setError("Please fill all fields."); return; }
 
-        if (email !== ADMIN_EMAIL) {
-            setError("Access denied. This email is not authorized.");
-            return;
-        }
-
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-                // onAuthStateChanged will handle showing the panel
+                // Handled by onAuthStateChanged
             })
             .catch((err) => {
                 if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
@@ -353,14 +785,66 @@
     let unsubscribe = null;
 
     function loadStudents() {
-        if (unsubscribe) unsubscribe(); // Prevent duplicate listeners
+        if (unsubscribe) unsubscribe();
 
         unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
             const tableBody = document.getElementById('studentTable');
             tableBody.innerHTML = "";
 
-            snapshot.forEach((userDoc) => {
-                const student = userDoc.data();
+            // Populate all student selects
+            const studentSelectIds = [
+                'exam-student-select',
+                'supp-student-select',
+                'attendance-student-select',
+                'hall_tickets-student-select',
+                'internal_marks-student-select'
+            ];
+
+            const activeSelections = {};
+            studentSelectIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) activeSelections[id] = el.value;
+            });
+
+            studentSelectIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerHTML = '<option value="">Select a student...</option>';
+                }
+            });
+
+            const sortedDocs = [];
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                sortedDocs.push({
+                    id: doc.id,
+                    ...data,
+                    displayOrder: data.displayOrder !== undefined ? Number(data.displayOrder) : 9999
+                });
+            });
+
+            // Sort by order number, then name
+            sortedDocs.sort((a, b) => {
+                if (a.displayOrder !== b.displayOrder) {
+                    return a.displayOrder - b.displayOrder;
+                }
+                return a.name.localeCompare(b.name);
+            });
+
+            sortedDocs.forEach((student) => {
+                // Populate selects with approved students
+                if (student.approved === true) {
+                    studentSelectIds.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            const opt = document.createElement('option');
+                            opt.value = student.id;
+                            opt.textContent = `${student.name} (${student.email})`;
+                            el.appendChild(opt);
+                        }
+                    });
+                }
+
                 const row = document.createElement('tr');
 
                 let statusText  = 'Pending Approval';
@@ -371,28 +855,34 @@
                     statusText  = 'Approved';
                     statusClass = 'status-approved';
                     actionButtons = `
-                        <button class="btn-reject" onclick="rejectStudent('${userDoc.id}')">Reject</button>
-                        <button class="btn-delete" onclick="deleteStudent('${userDoc.id}')">Remove</button>
+                        <button class="btn-reject" onclick="rejectStudent('${student.id}')">Reject</button>
+                        <button class="btn-delete" onclick="deleteStudent('${student.id}')">Remove</button>
                     `;
                 } else if (student.approved === 'rejected') {
                     statusText  = 'Rejected';
                     statusClass = 'status-rejected';
                     actionButtons = `
-                        <button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>
-                        <button class="btn-delete" onclick="deleteStudent('${userDoc.id}')">Remove</button>
+                        <button class="btn-approve" onclick="approveStudent('${student.id}')">Approve</button>
+                        <button class="btn-delete" onclick="deleteStudent('${student.id}')">Remove</button>
                     `;
                 } else {
                     statusText  = 'Pending Approval';
                     statusClass = 'status-pending';
                     actionButtons = `
-                        <button class="btn-approve" onclick="approveStudent('${userDoc.id}')">Approve</button>
-                        <button class="btn-reject"  onclick="rejectStudent('${userDoc.id}')">Reject</button>
-                        <button class="btn-delete" onclick="deleteStudent('${userDoc.id}')">Remove</button>
+                        <button class="btn-approve" onclick="approveStudent('${student.id}')">Approve</button>
+                        <button class="btn-reject"  onclick="rejectStudent('${student.id}')">Reject</button>
+                        <button class="btn-delete" onclick="deleteStudent('${student.id}')">Remove</button>
                     `;
                 }
 
                 row.innerHTML = `
-                    <td>${student.name}</td>
+                    <td>
+                        <input type="number" value="${student.displayOrder}" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" onchange="updateStudentOrder('${student.id}', this.value)">
+                    </td>
+                    <td>
+                        <span>${student.name}</span>
+                        <button class="btn-edit" onclick="editStudentName('${student.id}', '${student.name.replace(/'/g, "\\'")}')" style="background: none; border: none; color: #007bff; cursor: pointer; margin-left: 6px;" title="Edit Name"><i class="fa-solid fa-pen-to-square"></i></button>
+                    </td>
                     <td>${student.email}</td>
                     <td>${student.password || 'N/A'}</td>
                     <td class="${statusClass}">${statusText}</td>
@@ -400,17 +890,24 @@
                 `;
                 tableBody.appendChild(row);
             });
+
+            // Restore selection values
+            studentSelectIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && activeSelections[id]) {
+                    el.value = activeSelections[id];
+                }
+            });
         });
     }
 
-    // ---- Approve ----
+    // ---- Approve / Reject / Delete ----
     window.approveStudent = function(uid) {
         updateDoc(doc(db, "users", uid), { approved: true })
             .then(() => alert("Student approved successfully!"))
             .catch((e) => alert("Error: " + e.message));
     };
 
-    // ---- Reject ----
     window.rejectStudent = function(uid) {
         if (confirm("Are you sure you want to reject this student?")) {
             updateDoc(doc(db, "users", uid), { approved: "rejected" })
@@ -419,12 +916,204 @@
         }
     };
 
-    // ---- Delete ----
     window.deleteStudent = function(uid) {
         if (confirm("Are you sure you want to remove this student? This will permanently delete their portal account.")) {
             deleteDoc(doc(db, "users", uid))
                 .then(() => alert("Student removed successfully!"))
                 .catch((e) => alert("Error: " + e.message));
+        }
+    };
+
+    // ---- Display Order ----
+    window.updateStudentOrder = function(uid, orderVal) {
+        const orderNum = parseInt(orderVal) || 0;
+        updateDoc(doc(db, "users", uid), { displayOrder: orderNum })
+            .then(() => console.log("Order updated successfully"))
+            .catch((e) => alert("Error: " + e.message));
+    };
+
+    // ---- Edit Student Name ----
+    window.editStudentName = function(uid, currentName) {
+        const newName = prompt("Edit student name:", currentName);
+        if (newName !== null && newName.trim() !== "") {
+            updateDoc(doc(db, "users", uid), { name: newName.trim() })
+                .then(() => alert("Student name updated successfully!"))
+                .catch((e) => alert("Error updating name: " + e.message));
+        }
+    };
+
+    // ---- Student-Specific Section Management ----
+    window.addStudentSectionLink = function(collectionName) {
+        const sectionPrefix = collectionName.startsWith('exam') ? 'exam' : collectionName.startsWith('supp') ? 'supp' : collectionName.startsWith('attendance') ? 'attendance' : collectionName.startsWith('hall') ? 'hall_tickets' : 'internal_marks';
+        const selectEl = document.getElementById(`${sectionPrefix}-student-select`);
+        const labelEl = document.getElementById(`${sectionPrefix}-label-input`);
+        const linkEl = document.getElementById(`${sectionPrefix}-link-input`);
+
+        const studentUid = selectEl.value;
+        const label = labelEl.value.trim();
+        const link = linkEl.value.trim();
+
+        if (!studentUid || !label || !link) {
+            alert("Please select a student and enter both label and link.");
+            return;
+        }
+
+        const newDocRef = doc(collection(db, collectionName));
+        setDoc(newDocRef, {
+            studentUid: studentUid,
+            label: label,
+            link: link,
+            createdAt: new Date().toISOString()
+        }).then(() => {
+            linkEl.value = "";
+            alert("Link added successfully!");
+            loadStudentSectionLinks(collectionName);
+        }).catch(err => alert("Error: " + err.message));
+    };
+
+    window.loadStudentSectionLinks = function(collectionName) {
+        const sectionPrefix = collectionName.startsWith('exam') ? 'exam' : collectionName.startsWith('supp') ? 'supp' : collectionName.startsWith('attendance') ? 'attendance' : collectionName.startsWith('hall') ? 'hall_tickets' : 'internal_marks';
+        const selectEl = document.getElementById(`${sectionPrefix}-student-select`);
+        const listEl = document.getElementById(`${collectionName}-list`);
+        const studentUid = selectEl ? selectEl.value : '';
+
+        if (!listEl) return;
+        if (!studentUid) {
+            listEl.innerHTML = "<p style='color:#777; font-size:0.9rem;'>Select a student to view their current links.</p>";
+            return;
+        }
+
+        listEl.innerHTML = "<p style='color:#777; font-size:0.9rem;'>Loading links...</p>";
+
+        getDocs(query(collection(db, collectionName), where("studentUid", "==", studentUid))).then((snapshot) => {
+            listEl.innerHTML = "";
+            if (snapshot.empty) {
+                listEl.innerHTML = "<p style='color:#777; font-size:0.9rem;'>No links found for this student.</p>";
+                return;
+            }
+
+            // Convert to array and sort by label or creation date
+            const items = [];
+            snapshot.forEach(d => items.push({ id: d.id, ...d.data() }));
+            items.sort((a, b) => a.label.localeCompare(b.label));
+
+            items.forEach((item) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "manage-item";
+                itemDiv.innerHTML = `
+                    <div class="manage-item-info">
+                        <span>${item.label}</span>
+                        <a href="${item.link}" target="_blank">${item.link}</a>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn-edit-sm" onclick="editLink('${collectionName}', '${item.id}', '${item.link}')" style="background-color: #ffc107; border: none; border-radius: 4px; color: #000; padding: 6px 12px; font-weight: bold; cursor: pointer;">Edit</button>
+                        <button class="btn-danger-sm" onclick="removeSectionLink('${collectionName}', '${item.id}')">Remove</button>
+                    </div>
+                `;
+                listEl.appendChild(itemDiv);
+            });
+        }).catch(err => {
+            listEl.innerHTML = `<p style='color:#dc3545;'>Error loading links: ${err.message}</p>`;
+        });
+    };
+
+    window.removeSectionLink = function(collectionName, docId) {
+        if (confirm("Are you sure you want to remove this link?")) {
+            deleteDoc(doc(db, collectionName, docId)).then(() => {
+                alert("Link removed successfully!");
+                loadStudentSectionLinks(collectionName);
+            }).catch(err => alert("Error: " + err.message));
+        }
+    };
+
+    window.editLink = function(collectionName, docId, currentLink) {
+        const newLink = prompt("Edit Google Drive Link:", currentLink);
+        if (newLink !== null && newLink.trim() !== "") {
+            updateDoc(doc(db, collectionName, docId), {
+                link: newLink.trim()
+            }).then(() => {
+                alert("Link updated successfully!");
+                const isGlobal = ['time_table', 'study_materials', 'internship_details'].includes(collectionName);
+                if (isGlobal) {
+                    loadGlobalSectionLinks(collectionName);
+                } else {
+                    loadStudentSectionLinks(collectionName);
+                }
+            }).catch(err => alert("Error: " + err.message));
+        }
+    };
+
+    // ---- Global Section Management ----
+    window.addGlobalSectionLink = function(collectionName) {
+        const labelEl = document.getElementById(`${collectionName}-label-input`);
+        const linkEl = document.getElementById(`${collectionName}-link-input`);
+
+        const label = labelEl.value.trim();
+        const link = linkEl.value.trim();
+
+        if (!label || !link) {
+            alert("Please enter both label and link.");
+            return;
+        }
+
+        const newDocRef = doc(collection(db, collectionName));
+        setDoc(newDocRef, {
+            label: label,
+            link: link,
+            createdAt: new Date().toISOString()
+        }).then(() => {
+            if (labelEl.tagName.toLowerCase() === 'input') {
+                labelEl.value = "";
+            }
+            linkEl.value = "";
+            alert("Link added successfully!");
+            loadGlobalSectionLinks(collectionName);
+        }).catch(err => alert("Error: " + err.message));
+    };
+
+    window.loadGlobalSectionLinks = function(collectionName) {
+        const listEl = document.getElementById(`${collectionName}-list`);
+        if (!listEl) return;
+
+        listEl.innerHTML = "<p style='color:#777; font-size:0.9rem;'>Loading links...</p>";
+
+        getDocs(collection(db, collectionName)).then((snapshot) => {
+            listEl.innerHTML = "";
+            if (snapshot.empty) {
+                listEl.innerHTML = "<p style='color:#777; font-size:0.9rem;'>No links found in this section.</p>";
+                return;
+            }
+
+            const items = [];
+            snapshot.forEach(d => items.push({ id: d.id, ...d.data() }));
+            items.sort((a, b) => a.label.localeCompare(b.label));
+
+            items.forEach((item) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "manage-item";
+                itemDiv.innerHTML = `
+                    <div class="manage-item-info">
+                        <span>${item.label}</span>
+                        <a href="${item.link}" target="_blank">${item.link}</a>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn-edit-sm" onclick="editLink('${collectionName}', '${item.id}', '${item.link}')" style="background-color: #ffc107; border: none; border-radius: 4px; color: #000; padding: 6px 12px; font-weight: bold; cursor: pointer;">Edit</button>
+                        <button class="btn-danger-sm" onclick="removeGlobalSectionLink('${collectionName}', '${item.id}')">Remove</button>
+                    </div>
+                `;
+                listEl.appendChild(itemDiv);
+            });
+        }).catch(err => {
+            listEl.innerHTML = `<p style='color:#dc3545;'>Error loading links: ${err.message}</p>`;
+        });
+    };
+
+    window.removeGlobalSectionLink = function(collectionName, docId) {
+        if (confirm("Are you sure you want to remove this link?")) {
+            deleteDoc(doc(db, collectionName, docId)).then(() => {
+                alert("Link removed successfully!");
+                loadGlobalSectionLinks(collectionName);
+            }).catch(err => alert("Error: " + err.message));
         }
     };
 </script>

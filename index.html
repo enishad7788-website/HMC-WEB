@@ -334,6 +334,29 @@
     </style>
 </head>
 <body>
+    <!-- Auth Loading Overlay -->
+    <div id="auth-loading-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease;">
+        <div style="border: 4px solid rgba(255,255,255,0.1); border-left-color: #007bff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+        <p style="color: white; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase;">Securing Session...</p>
+    </div>
+    <style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Broadcast Modal Popup -->
+    <div id="broadcast-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; transition: all 0.3s ease;">
+        <div class="links-panel" style="max-width: 400px; width: 100%; text-align: center; margin: 0; position: relative;">
+            <div style="font-size: 2.2rem; color: #ffc107; margin-bottom: 15px;"><i class="fa-solid fa-bullhorn"></i></div>
+            <h2 style="font-size: 1.25rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; color: #fff; margin-bottom: 10px;">Announcement</h2>
+            <div id="broadcast-message" style="font-size: 0.9rem; color: rgba(255,255,255,0.95); margin-top: 15px; margin-bottom: 25px; line-height: 1.5; font-weight: 500; text-align: left; background: rgba(255,255,255,0.06); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); word-break: break-word; max-height: 200px; overflow-y: auto;">
+                No announcement details.
+            </div>
+            <button class="btn" onclick="acknowledgeBroadcast()" style="justify-content: center; background: #28a745; border: 1px solid #218838; width: 100%;">
+                <span>Got It!</span>
+                <i class="fa-solid fa-check" style="margin-left: 10px;"></i>
+            </button>
+        </div>
+    </div>
     <!-- Profile Menu Container -->
     <div id="profile-menu-container" class="profile-menu-container">
         <div id="profile-trigger" class="profile-trigger" onclick="toggleProfileDropdown(event)" style="overflow: hidden; padding: 0;">
@@ -490,7 +513,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, onSnapshot, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCC0CEWZA2vyzIJK5xpZrEGxeikp7cchvA",
@@ -732,6 +755,86 @@
             }
         }
 
+        function renderGlobalList(elementId, items, iconClass) {
+            const listEl = document.getElementById(elementId);
+            if (!listEl) return;
+            listEl.innerHTML = "";
+            if (items.length === 0) {
+                let defaultMsg = "No items published yet.";
+                if (elementId === 'attendance-list') defaultMsg = "No attendance sheets assigned to you.";
+                if (elementId === 'internal-marks-list') defaultMsg = "No internal marks sheets assigned to you.";
+                listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">${defaultMsg}</div>`;
+                return;
+            }
+            items.forEach(item => {
+                const btn = document.createElement('a');
+                btn.className = "btn";
+                btn.href = item.link;
+                btn.target = "_blank";
+                btn.innerHTML = `<span>${item.label}</span><i class="fa-solid ${iconClass}"></i>`;
+                listEl.appendChild(btn);
+            });
+        }
+
+        function loadCachesAndRender() {
+            try {
+                // 1. Student Lists
+                const cachedUsers = localStorage.getItem('hmc_cache_users');
+                const cachedExamResults = localStorage.getItem('hmc_cache_exam_results_uids');
+                const cachedSuppResults = localStorage.getItem('hmc_cache_supp_results_uids');
+                const cachedSemHT = localStorage.getItem('hmc_cache_sem_hall_ticket_links');
+                const cachedSuppHT = localStorage.getItem('hmc_cache_supp_hall_ticket_links');
+
+                if (cachedUsers) allUsers = JSON.parse(cachedUsers);
+                if (cachedExamResults) examResultsUids = new Set(JSON.parse(cachedExamResults));
+                if (cachedSuppResults) suppResultsUids = new Set(JSON.parse(cachedSuppResults));
+                if (cachedSemHT) semHallTicketLinks = JSON.parse(cachedSemHT);
+                if (cachedSuppHT) suppHallTicketLinks = JSON.parse(cachedSuppHT);
+
+                updateStudentListsUI();
+
+                // 2. Global lists
+                const cachedMaterials = localStorage.getItem('hmc_cache_study_materials');
+                if (cachedMaterials) renderGlobalList('study-materials-list', JSON.parse(cachedMaterials), 'fa-book-open');
+
+                const cachedTimetable = localStorage.getItem('hmc_cache_time_table');
+                if (cachedTimetable) renderGlobalList('timetable-list', JSON.parse(cachedTimetable), 'fa-clock');
+
+                const cachedInternships = localStorage.getItem('hmc_cache_internship_details');
+                if (cachedInternships) renderGlobalList('internship-details-list', JSON.parse(cachedInternships), 'fa-briefcase');
+
+                // 3. Student-specific lists
+                const cachedAttendance = localStorage.getItem('hmc_cache_attendance');
+                if (cachedAttendance) renderGlobalList('attendance-list', JSON.parse(cachedAttendance), 'fa-calendar-check');
+
+                const cachedInternalMarks = localStorage.getItem('hmc_cache_internal_marks');
+                if (cachedInternalMarks) renderGlobalList('internal-marks-list', JSON.parse(cachedInternalMarks), 'fa-clipboard-check');
+            } catch (e) {
+                console.error("Error loading cache:", e);
+            }
+        }
+
+        function hideAuthLoadingOverlay() {
+            const overlay = document.getElementById('auth-loading-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 400);
+            }
+        }
+
+        function acknowledgeBroadcast() {
+            const modal = document.getElementById('broadcast-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            if (window.currentBroadcastId) {
+                localStorage.setItem('hmc_last_seen_broadcast', window.currentBroadcastId);
+            }
+        }
+        window.acknowledgeBroadcast = acknowledgeBroadcast;
+
         function initializeRealtimeListeners(currentUid) {
             if (listenersInitialized) return;
             listenersInitialized = true;
@@ -751,6 +854,7 @@
                     if (orderA !== orderB) return orderA - orderB;
                     return a.name.localeCompare(b.name);
                 });
+                localStorage.setItem('hmc_cache_users', JSON.stringify(allUsers));
                 updateStudentListsUI();
             }, (err) => console.error("Error listening to users:", err));
 
@@ -763,6 +867,7 @@
                         examResultsUids.add(data.studentUid);
                     }
                 });
+                localStorage.setItem('hmc_cache_exam_results_uids', JSON.stringify(Array.from(examResultsUids)));
                 updateStudentListsUI();
             }, (err) => console.error("Error listening to exam_results:", err));
 
@@ -775,6 +880,7 @@
                         suppResultsUids.add(data.studentUid);
                     }
                 });
+                localStorage.setItem('hmc_cache_supp_results_uids', JSON.stringify(Array.from(suppResultsUids)));
                 updateStudentListsUI();
             }, (err) => console.error("Error listening to supplementary_results:", err));
 
@@ -792,97 +898,47 @@
                         }
                     }
                 });
+                localStorage.setItem('hmc_cache_sem_hall_ticket_links', JSON.stringify(semHallTicketLinks));
+                localStorage.setItem('hmc_cache_supp_hall_ticket_links', JSON.stringify(suppHallTicketLinks));
                 updateStudentListsUI();
             }, (err) => console.error("Error listening to hall_tickets:", err));
 
             // 5. Global: Study Materials
             studyMaterialsUnsubscribe = onSnapshot(collection(db, "study_materials"), (snapshot) => {
-                const listEl = document.getElementById('study-materials-list');
-                if (!listEl) return;
-                listEl.innerHTML = "";
-                if (snapshot.empty) {
-                    listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No study materials published yet.</div>`;
-                    return;
-                }
                 const items = [];
                 snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
                 items.sort((a, b) => a.label.localeCompare(b.label));
-                items.forEach(item => {
-                    const btn = document.createElement('a');
-                    btn.className = "btn";
-                    btn.href = item.link;
-                    btn.target = "_blank";
-                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-book-open"></i>`;
-                    listEl.appendChild(btn);
-                });
+                localStorage.setItem('hmc_cache_study_materials', JSON.stringify(items));
+                renderGlobalList('study-materials-list', items, 'fa-book-open');
             }, (err) => console.error("Error listening to study_materials:", err));
 
             // 6. Global: Time Table
             timetableUnsubscribe = onSnapshot(collection(db, "time_table"), (snapshot) => {
-                const listEl = document.getElementById('timetable-list');
-                if (!listEl) return;
-                listEl.innerHTML = "";
-                if (snapshot.empty) {
-                    listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No time tables published yet.</div>`;
-                    return;
-                }
                 const items = [];
                 snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
                 items.sort((a, b) => a.label.localeCompare(b.label));
-                items.forEach(item => {
-                    const btn = document.createElement('a');
-                    btn.className = "btn";
-                    btn.href = item.link;
-                    btn.target = "_blank";
-                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-clock"></i>`;
-                    listEl.appendChild(btn);
-                });
+                localStorage.setItem('hmc_cache_time_table', JSON.stringify(items));
+                renderGlobalList('timetable-list', items, 'fa-clock');
             }, (err) => console.error("Error listening to time_table:", err));
 
             // 7. Global: Internship Details
             internshipUnsubscribe = onSnapshot(collection(db, "internship_details"), (snapshot) => {
-                const listEl = document.getElementById('internship-details-list');
-                if (!listEl) return;
-                listEl.innerHTML = "";
-                if (snapshot.empty) {
-                    listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No internship details published yet.</div>`;
-                    return;
-                }
                 const items = [];
                 snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
                 items.sort((a, b) => a.label.localeCompare(b.label));
-                items.forEach(item => {
-                    const btn = document.createElement('a');
-                    btn.className = "btn";
-                    btn.href = item.link;
-                    btn.target = "_blank";
-                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-briefcase"></i>`;
-                    listEl.appendChild(btn);
-                });
+                localStorage.setItem('hmc_cache_internship_details', JSON.stringify(items));
+                renderGlobalList('internship-details-list', items, 'fa-briefcase');
             }, (err) => console.error("Error listening to internship_details:", err));
 
             // 8. Student-Specific: Attendance
             attendanceUnsubscribe = onSnapshot(
                 query(collection(db, "attendance"), where("studentUid", "==", currentUid)),
                 (snapshot) => {
-                    const listEl = document.getElementById('attendance-list');
-                    if (!listEl) return;
-                    listEl.innerHTML = "";
-                    if (snapshot.empty) {
-                        listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No attendance sheets assigned to you.</div>`;
-                        return;
-                    }
                     const items = [];
                     snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
                     items.sort((a, b) => a.label.localeCompare(b.label));
-                    items.forEach(item => {
-                        const btn = document.createElement('a');
-                        btn.className = "btn";
-                        btn.href = item.link;
-                        btn.target = "_blank";
-                        btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-calendar-check"></i>`;
-                        listEl.appendChild(btn);
-                    });
+                    localStorage.setItem('hmc_cache_attendance', JSON.stringify(items));
+                    renderGlobalList('attendance-list', items, 'fa-calendar-check');
                 },
                 (err) => console.error("Error listening to attendance:", err)
             );
@@ -891,26 +947,35 @@
             internalMarksUnsubscribe = onSnapshot(
                 query(collection(db, "internal_marks"), where("studentUid", "==", currentUid)),
                 (snapshot) => {
-                    const listEl = document.getElementById('internal-marks-list');
-                    if (!listEl) return;
-                    listEl.innerHTML = "";
-                    if (snapshot.empty) {
-                        listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No internal marks sheets assigned to you.</div>`;
-                        return;
-                    }
                     const items = [];
                     snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
                     items.sort((a, b) => a.label.localeCompare(b.label));
-                    items.forEach(item => {
-                        const btn = document.createElement('a');
-                        btn.className = "btn";
-                        btn.href = item.link;
-                        btn.target = "_blank";
-                        btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-clipboard-check"></i>`;
-                        listEl.appendChild(btn);
-                    });
+                    localStorage.setItem('hmc_cache_internal_marks', JSON.stringify(items));
+                    renderGlobalList('internal-marks-list', items, 'fa-clipboard-check');
                 },
                 (err) => console.error("Error listening to internal_marks:", err)
+            );
+
+            // 10. Global broadcasts popup listener
+            broadcastsUnsubscribe = onSnapshot(
+                query(collection(db, "broadcasts"), orderBy("createdAt", "desc"), limit(1)),
+                (snapshot) => {
+                    if (snapshot.empty) return;
+                    const docSnap = snapshot.docs[0];
+                    const broadcast = docSnap.data();
+                    const lastSeenId = localStorage.getItem('hmc_last_seen_broadcast');
+                    
+                    if (docSnap.id !== lastSeenId) {
+                        const modal = document.getElementById('broadcast-modal');
+                        const msgEl = document.getElementById('broadcast-message');
+                        if (modal && msgEl) {
+                            msgEl.innerText = broadcast.message;
+                            modal.style.display = 'flex';
+                            window.currentBroadcastId = docSnap.id;
+                        }
+                    }
+                },
+                (err) => console.error("Error listening to broadcasts:", err)
             );
         }
 
@@ -1085,9 +1150,12 @@
                     if (userData.approved === true) {
                         document.getElementById('pending-container').style.display = 'none';
                         unlockDashboard();
+                        loadCachesAndRender(); // Load cached UI instantly
+                        hideAuthLoadingOverlay(); // Hide overlay
                         initializeRealtimeListeners(user.uid);
                     } else if (userData.approved === "rejected") {
                         alert("Your account registration has been rejected by the admin.");
+                        hideAuthLoadingOverlay();
                         logoutUser();
                     } else {
                         // Pending Approval: Hide dashboard and show pending page
@@ -1104,13 +1172,16 @@
                         document.body.style.justifyContent = 'center';
                         document.body.style.paddingTop = '20px';
                         document.body.style.height = '100vh';
+                        hideAuthLoadingOverlay();
                     }
                 } else {
                     alert("User data not found in database.");
+                    hideAuthLoadingOverlay();
                     logoutUser();
                 }
             }, (err) => {
                 console.error("Error listening to user document:", err);
+                hideAuthLoadingOverlay();
             });
         }
 
@@ -1153,11 +1224,13 @@
                 if (internalMarksUnsubscribe) { internalMarksUnsubscribe(); internalMarksUnsubscribe = null; }
                 if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
                 if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
+                if (typeof broadcastsUnsubscribe === "function") { broadcastsUnsubscribe(); broadcastsUnsubscribe = null; }
                 listenersInitialized = false;
 
                 if (localStorage.getItem('hmc_user_authenticated') === 'true') {
                     localStorage.removeItem('hmc_user_authenticated');
                 }
+                hideAuthLoadingOverlay();
                 window.location.href = "login2.html";
             }
         });

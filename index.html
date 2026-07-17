@@ -425,6 +425,9 @@
             <div class="btn" onclick="showSection('internships-section', 'Internship Details')"><span>INTERNSHIP DETAILS</span><i class="fa-solid fa-briefcase"></i></div>
             <a href="https://hmcmanjeri.embase.in/" target="_blank" class="btn"><span>Embase</span><i class="fa-solid fa-database"></i></a>
             <a href="https://student.uoc.ac.in/" target="_blank" class="btn"><span>Student Portal</span><i class="fa-solid fa-user-graduate"></i></a>
+            
+            <!-- Dynamic Custom Buttons Container -->
+            <div id="custom-dynamic-buttons-container"></div>
         </div>
 
         <div id="hall-ticket-options-section" class="section">
@@ -549,16 +552,10 @@
         let suppHallTicketLinks = {};
 
         let userDocUnsubscribe = null;
-        let usersUnsubscribe = null;
-        let examResultsUnsubscribe = null;
-        let suppResultsUnsubscribe = null;
-        let hallTicketsUnsubscribe = null;
-        let studyMaterialsUnsubscribe = null;
-        let timetableUnsubscribe = null;
-        let internshipUnsubscribe = null;
-        let attendanceUnsubscribe = null;
-        let internalMarksUnsubscribe = null;
-        let currentSectionResultsUnsubscribe = null;
+        let usersUnsubscribe, examResultsUnsubscribe, suppResultsUnsubscribe;
+        let hallTicketsUnsubscribe, studyMaterialsUnsubscribe, timetableUnsubscribe;
+        let internshipUnsubscribe, attendanceUnsubscribe, internalMarksUnsubscribe;
+        let currentSectionResultsUnsubscribe, broadcastsUnsubscribe, webButtonsUnsubscribe = null;
         let listenersInitialized = false;
 
         function showSection(sectionId, titleText, studentUid) {
@@ -977,7 +974,71 @@
                 },
                 (err) => console.error("Error listening to broadcasts:", err)
             );
+
+            // 11. Website Buttons
+            webButtonsUnsubscribe = onSnapshot(query(collection(db, "website_buttons"), orderBy("order", "asc")), (snapshot) => {
+                const container = document.getElementById('custom-dynamic-buttons-container');
+                if (!container) return;
+                
+                if (snapshot.empty) {
+                    container.innerHTML = "";
+                    return;
+                }
+
+                const buttons = [];
+                snapshot.forEach(d => buttons.push({ id: d.id, ...d.data() }));
+                
+                const mainButtons = buttons.filter(b => b.parentId === null);
+                let html = '';
+                
+                mainButtons.forEach(main => {
+                    const subs = buttons.filter(b => b.parentId === main.id);
+                    if (subs.length > 0) {
+                        html += `<div class="btn" onclick="toggleAccordion('${main.id}')" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>${main.label}</span>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; transition: transform 0.3s;" id="chevron-${main.id}"></i>
+                                <i class="${main.iconClass}"></i>
+                            </div>
+                        </div>
+                        <div id="accordion-${main.id}" style="display: none; padding-left: 15px; margin-bottom: 15px; border-left: 2px solid rgba(255,255,255,0.2); margin-left: 10px;">`;
+                        
+                        subs.forEach(sub => {
+                            const isUrl = sub.actionLink.startsWith('http');
+                            if (isUrl) {
+                                html += `<a href="${sub.actionLink}" target="_blank" class="btn" style="margin-bottom: 8px;"><span>${sub.label}</span><i class="${sub.iconClass}"></i></a>`;
+                            } else {
+                                html += `<div class="btn" onclick="showSection('${sub.actionLink}', '${sub.label}')" style="margin-bottom: 8px;"><span>${sub.label}</span><i class="${sub.iconClass}"></i></div>`;
+                            }
+                        });
+                        html += `</div>`;
+                    } else {
+                        const isUrl = main.actionLink && main.actionLink.startsWith('http');
+                        if (isUrl) {
+                            html += `<a href="${main.actionLink}" target="_blank" class="btn"><span>${main.label}</span><i class="${main.iconClass}"></i></a>`;
+                        } else {
+                            const action = main.actionLink ? `'${main.actionLink}', '${main.label}'` : `'home-section', 'HMC 24-27'`;
+                            html += `<div class="btn" onclick="showSection(${action})"><span>${main.label}</span><i class="${main.iconClass}"></i></div>`;
+                        }
+                    }
+                });
+                container.innerHTML = html;
+            }, (err) => console.error("Error listening to website_buttons:", err));
         }
+
+        window.toggleAccordion = function(parentId) {
+            const content = document.getElementById('accordion-' + parentId);
+            const chevron = document.getElementById('chevron-' + parentId);
+            if (content) {
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    if(chevron) chevron.style.transform = 'rotate(180deg)';
+                } else {
+                    content.style.display = 'none';
+                    if(chevron) chevron.style.transform = 'rotate(0deg)';
+                }
+            }
+        };
 
         window.onpopstate = function(event) {
             const sections = document.querySelectorAll('.section');
@@ -1115,6 +1176,7 @@
             if (internalMarksUnsubscribe) { internalMarksUnsubscribe(); internalMarksUnsubscribe = null; }
             if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
             if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
+            if (webButtonsUnsubscribe) { webButtonsUnsubscribe(); webButtonsUnsubscribe = null; }
             listenersInitialized = false;
 
             localStorage.removeItem('hmc_user_authenticated');
@@ -1224,6 +1286,7 @@
                 if (internalMarksUnsubscribe) { internalMarksUnsubscribe(); internalMarksUnsubscribe = null; }
                 if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
                 if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
+                if (webButtonsUnsubscribe) { webButtonsUnsubscribe(); webButtonsUnsubscribe = null; }
                 if (typeof broadcastsUnsubscribe === "function") { broadcastsUnsubscribe(); broadcastsUnsubscribe = null; }
                 listenersInitialized = false;
 

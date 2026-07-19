@@ -3,1168 +3,1430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HMC 24-27</title>
-    <link class="profile-img" rel="icon" href="logo.png" type="image/png">
+    <title>HMC 24-27 | Student Portal</title>
+    <meta name="description" content="HMC Student Portal — Access study materials, results, attendance, and academic updates.">
+    <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50:'#eff6ff', 100:'#dbeafe', 200:'#bfdbfe', 300:'#93c5fd', 400:'#60a5fa', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8', 800:'#1e40af', 900:'#1e3a8a' },
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    boxShadow: { card: '0 2px 12px rgba(0,0,0,0.08)', header: '0 4px 24px rgba(37,99,235,0.2)' }
+                }
+            }
+        }
+    </script>
     <style>
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
+        * { font-family: 'Inter', sans-serif; }
+        html, body { overflow-x: hidden; background-color: #f1f5f9; }
+
+        /* ── Sections ── */
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* ── Auth Loading Overlay ── */
+        #auth-loading-overlay {
+            position: fixed; inset: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.4s ease;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        /* Prevent blue underline on all anchor links and their children */
-        a, a * {
-            text-decoration: none !important;
-        }
-
-        .section {
-            display: none;
-            width: 100%;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        body {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-        }
-
-        /* Fixed the width to look perfect on both PC and Mobile like before */
-        .links-panel, #login-container {
-            width: 100%;
-            max-width: 430px; /* Restored the original standard narrow width */
-            box-sizing: border-box;
-            background: rgba(255, 255, 255, 0.11);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            padding: 30px 25px;
-            margin: 20px auto;
-        }
-
-        input, .btn {
-            width: 100%;
-            box-sizing: border-box; 
-        }
-
-        .profile-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-img {
-            width: 85px;
-            height: 85px;
+        /* ── Spinner ── */
+        .spinner {
+            width: 44px; height: 44px;
+            border: 4px solid #dbeafe;
+            border-top-color: #2563eb;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            object-fit: cover;
-            margin-bottom: 10px;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Hero header gradient ── */
+        .hero-header {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);
         }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 900;
-            font-style: italic;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
+        /* ── Feature cards ── */
+        .feature-card {
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
         }
-
-        .description {
-            font-size: 0.85rem;
-            max-width: 400px;
-            line-height: 1.4;
-            color: rgba(255, 255, 255, 0.8);
-            margin: 0 auto;
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(37,99,235,0.18);
         }
+        .feature-card:active { transform: scale(0.97); }
 
-        .btn {
+        /* ── Menu list buttons (in sub-sections) ── */
+        .list-btn {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            background: #fff;
+            border: 1px solid #e2e8f0;
             border-radius: 12px;
-            padding: 14px 18px;
-            margin-bottom: 12px;
-            color: #fff;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            color: #1e40af;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
             text-decoration: none;
-            font-weight: 800;
-            font-style: italic;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: all 0.18s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         }
+        .list-btn:hover { background: #eff6ff; border-color: #93c5fd; transform: translateY(-1px); }
+        .list-btn:active { transform: scale(0.98); }
+        .list-btn i { color: #3b82f6; font-size: 1rem; }
+        /* Alias for existing JS that references .btn class */
+        .btn { display: flex; align-items: center; justify-content: space-between; width: 100%; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; color: #1e40af; font-weight: 600; font-size: 0.875rem; cursor: pointer; text-decoration: none; transition: all 0.18s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .btn span { flex: 1; text-align: left; }
+        .btn i { color: #3b82f6; font-size: 1rem; }
+        .btn:hover { background: #eff6ff; border-color: #93c5fd; transform: translateY(-1px); }
+        .btn:last-child { margin-bottom: 0; }
 
-        .btn:last-child {
-            margin-bottom: 0;
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .btn i {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .home-btn-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
+        /* ── Back home button ── */
         .home-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #2563eb; color: #fff;
+            border: none; border-radius: 20px;
+            padding: 8px 20px; font-size: 0.8rem; font-weight: 700;
+            cursor: pointer; transition: background 0.2s;
         }
+        .home-btn:hover { background: #1d4ed8; }
+        .home-btn-container { display: flex; justify-content: center; margin-top: 18px; }
 
-        .home-btn:hover {
-            background: rgba(255, 255, 255, 0.35);
-        }
+        /* ── Accordion ── */
+        .accordion-content { overflow: hidden; transition: max-height 0.3s ease; }
 
-        .footer-icons {
-            margin-top: 15px;
-            display: flex;
-            gap: 20px;
-        }
-
-        .footer-icon {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.3rem;
-            transition: color 0.3s;
-        }
-
-        .footer-icon:hover {
-            color: #fff;
-        }
-
-        .credits {
-            margin-top: 10px;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-            .links-panel, #login-container {
-                padding: 20px 20px;
-                margin: 10px auto;
-            }
-            h1 {
-                font-size: 1.7rem;
-            }
-            .profile-img {
-                width: 75px;
-                height: 75px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            body {
-                background-attachment: scroll; /* Smooth scrolling on mobile devices */
-            }
-        }
-
-        /* Profile Menu Styles (Matching the existing Glassmorphism theme) */
-        .profile-menu-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: none; /* Hidden until unlocked */
-        }
-
-        .profile-trigger {
-            background: rgba(255, 255, 255, 0.11);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .profile-trigger:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .profile-trigger i {
-            color: #fff;
-            font-size: 1.2rem;
-        }
-
-        .profile-dropdown {
-            position: absolute;
-            top: 55px;
-            right: 0;
-            width: 240px;
-            background: rgba(255, 255, 255, 0.11);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            padding: 20px;
+        /* ── Pending container ── */
+        #pending-container {
+            position: fixed; inset: 0; z-index: 9000;
             display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            animation: fadeIn 0.3s ease;
+            align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ── Profile dropdown ── */
+        #profile-dropdown {
+            position: absolute; top: 58px; right: 0;
+            width: 240px; background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 16px;
+            display: none; flex-direction: column; align-items: center;
+            z-index: 2000;
+            animation: dropIn 0.2s ease;
+        }
+        #profile-dropdown.active { display: flex; }
+        @keyframes dropIn { from { opacity:0; transform: translateY(-8px); } to { opacity:1; transform: translateY(0); } }
+
+        /* ── Bottom nav ── */
+        #bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
+
+        /* ── Section pages padding for bottom nav ── */
+        .page-content { padding-bottom: 80px; }
+
+        /* ── Broadcast modal ── */
+        #broadcast-modal {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 20px;
         }
 
-        .profile-dropdown.active {
-            display: flex;
-        }
+        /* ── Scroll bar styling ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #bfdbfe; border-radius: 4px; }
 
-        .dropdown-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-        }
-
-        .dropdown-avatar i {
-            font-size: 1.4rem;
-            color: #fff;
-        }
-
-        .dropdown-name {
-            font-weight: 800;
-            font-style: italic;
-            text-transform: uppercase;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-            color: #fff;
-        }
-
-        .dropdown-email {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 15px;
-            word-break: break-all;
-        }
-
-        .dropdown-divider {
-            width: 100%;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.15);
-            margin-bottom: 12px;
-        }
-
-        .dropdown-logout-btn {
-            width: 100%;
-            background: rgba(220, 53, 69, 0.2);
-            border: 1px solid rgba(220, 53, 69, 0.4);
-            border-radius: 12px;
-            padding: 12px;
-            color: #ff6b6b;
-            font-weight: 800;
-            font-style: italic;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-logout-btn:hover {
-            background: rgba(220, 53, 69, 0.35);
-            transform: translateY(-2px);
-        }
+        /* ── Progress bar animation ── */
+        .progress-fill { animation: growBar 1.2s ease forwards; }
+        @keyframes growBar { from { width: 0; } }
     </style>
 </head>
-<body>
-    <!-- Auth Loading Overlay -->
-    <div id="auth-loading-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease;">
-        <div style="border: 4px solid rgba(255,255,255,0.1); border-left-color: #007bff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
-        <p style="color: white; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase;">Securing Session...</p>
-    </div>
-    <style>
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+<body class="bg-slate-100 min-h-screen font-sans">
 
-    <!-- Broadcast Modal Popup -->
-    <div id="broadcast-modal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; transition: all 0.3s ease;">
-        <div class="links-panel" style="max-width: 400px; width: 100%; text-align: center; margin: 0; position: relative;">
-            <div style="font-size: 2.2rem; color: #ffc107; margin-bottom: 15px;"><i class="fa-solid fa-bullhorn"></i></div>
-            <h2 style="font-size: 1.25rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; color: #fff; margin-bottom: 10px;">Announcement</h2>
-            <div id="broadcast-message" style="font-size: 0.9rem; color: rgba(255,255,255,0.95); margin-top: 15px; margin-bottom: 25px; line-height: 1.5; font-weight: 500; text-align: left; background: rgba(255,255,255,0.06); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); word-break: break-word; max-height: 200px; overflow-y: auto;">
-                No announcement details.
+<!-- ══════════════════════════════════════════
+     AUTH LOADING OVERLAY
+════════════════════════════════════════════ -->
+<div id="auth-loading-overlay">
+    <div class="spinner"></div>
+    <p class="text-blue-700 font-semibold text-sm tracking-widest uppercase">Securing Session…</p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BROADCAST MODAL
+════════════════════════════════════════════ -->
+<div id="broadcast-modal">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center">
+        <div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-bullhorn text-amber-500 text-2xl"></i>
+        </div>
+        <h2 class="text-lg font-bold text-slate-800 mb-3 uppercase tracking-wide">Announcement</h2>
+        <div id="broadcast-message" class="text-slate-600 text-sm leading-relaxed bg-slate-50 rounded-xl p-4 mb-5 text-left max-h-48 overflow-y-auto border border-slate-100">
+            No announcement details.
+        </div>
+        <button onclick="acknowledgeBroadcast()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-check"></i> Got It!
+        </button>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PENDING APPROVAL SCREEN
+════════════════════════════════════════════ -->
+<div id="pending-container" class="fixed inset-0 z-[9000] flex-col items-center justify-center text-white text-center px-6" style="display:none;">
+    <div class="w-28 h-28 rounded-full bg-white/20 flex items-center justify-center mb-6 mx-auto ring-4 ring-white/30">
+        <img src="main profile.jpg" alt="HMC Logo" class="w-24 h-24 rounded-full object-cover">
+    </div>
+    <h2 class="text-2xl font-black uppercase tracking-wide text-amber-300 mb-3">Waiting for Approval</h2>
+    <p class="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-8">
+        Your account is pending administrator approval. Please check back later or contact your class administrator.
+    </p>
+    <button onclick="logoutUser()" class="bg-red-500 hover:bg-red-600 text-white font-bold px-8 py-3 rounded-full transition text-sm flex items-center gap-2 mx-auto">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+    </button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PROFILE TRIGGER (top-right)
+════════════════════════════════════════════ -->
+<div id="profile-menu-container" style="display:none;" class="fixed top-4 right-4 z-[1500]">
+    <div id="profile-trigger" onclick="toggleProfileDropdown(event)"
+         class="w-11 h-11 rounded-full bg-white shadow-card border-2 border-blue-200 flex items-center justify-center cursor-pointer overflow-hidden">
+        <i class="fa-solid fa-user text-blue-600 text-lg" id="trigger-icon"></i>
+        <img id="trigger-img" style="display:none;" class="w-full h-full object-cover rounded-full">
+    </div>
+    <!-- Dropdown -->
+    <div id="profile-dropdown">
+        <div id="dropdown-avatar" onclick="triggerProfilePicUpload()" title="Change photo"
+             class="w-16 h-16 rounded-full bg-blue-100 border-2 border-blue-300 flex items-center justify-center mb-3 cursor-pointer relative overflow-hidden">
+            <i class="fa-solid fa-user text-blue-500 text-2xl" id="avatar-icon"></i>
+            <img id="avatar-img" style="display:none;" class="w-full h-full object-cover rounded-full">
+            <div class="absolute bottom-0 inset-x-0 bg-black/40 text-white text-[9px] py-0.5 flex justify-center">
+                <i class="fa-solid fa-camera"></i>
             </div>
-            <button class="btn" onclick="acknowledgeBroadcast()" style="justify-content: center; background: #28a745; border: 1px solid #218838; width: 100%;">
-                <span>Got It!</span>
-                <i class="fa-solid fa-check" style="margin-left: 10px;"></i>
+        </div>
+        <input type="file" id="profile-pic-input" accept="image/*" style="display:none;" onchange="handleProfilePicChange(event)">
+        <div id="user-display-name" class="font-bold text-slate-800 text-sm uppercase tracking-wide">Student</div>
+        <div id="user-display-email" class="text-slate-400 text-xs mt-1 mb-4 break-all text-center"></div>
+        <div class="w-full h-px bg-slate-100 mb-3"></div>
+        <button onclick="logoutUser()" class="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2.5 rounded-xl transition text-xs uppercase tracking-wide">
+            <i class="fa-solid fa-sign-out-alt"></i> Log Out
+        </button>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     MAIN DASHBOARD (hidden until auth)
+════════════════════════════════════════════ -->
+<div id="main-dashboard" style="display:none;" class="max-w-lg mx-auto w-full page-content">
+
+    <!-- ── HERO HEADER CARD ── -->
+    <div class="hero-header rounded-b-3xl shadow-header px-5 pt-10 pb-8 text-white relative overflow-hidden">
+        <!-- Decorative circles -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 pointer-events-none"></div>
+        <div class="absolute -bottom-6 -left-6 w-28 h-28 rounded-full bg-white/5 pointer-events-none"></div>
+
+        <div class="flex items-center justify-between mb-6 relative z-10">
+            <div>
+                <p class="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">Welcome back 👋</p>
+                <h1 id="hero-student-name" class="text-2xl font-black tracking-tight leading-tight">Student</h1>
+                <p class="text-blue-200 text-xs mt-1 font-medium"><span id="hero-course">Course</span> · <span id="hero-semester">Semester</span></p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <!-- Notification icon -->
+                <button id="notif-btn" class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center relative hover:bg-white/30 transition">
+                    <i class="fa-solid fa-bell text-white text-sm"></i>
+                    <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-blue-700"></span>
+                </button>
+                <!-- Profile avatar in header -->
+                <div onclick="toggleProfileDropdown(event)"
+                     class="w-12 h-12 rounded-full bg-white/30 border-2 border-white/50 flex items-center justify-center cursor-pointer overflow-hidden">
+                    <i class="fa-solid fa-user text-white text-lg" id="header-avatar-icon"></i>
+                    <img id="header-avatar-img" style="display:none;" class="w-full h-full object-cover rounded-full">
+                </div>
+            </div>
+        </div>
+
+        <!-- Student info row -->
+        <div class="bg-white/15 backdrop-blur-sm rounded-2xl px-4 py-3 flex items-center gap-3 relative z-10">
+            <div class="w-12 h-12 rounded-xl bg-white/25 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <i class="fa-solid fa-graduation-cap text-white text-xl" id="profile-icon-hero"></i>
+                <img id="profile-img-hero" style="display:none;" class="w-full h-full object-cover rounded-xl">
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="font-bold text-white text-sm truncate" id="hero-student-name">Student</div>
+                <div class="text-blue-200 text-xs mt-0.5">HM College, Manjeri</div>
+            </div>
+            <div class="flex-shrink-0 bg-green-400/30 border border-green-300/40 text-green-200 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide">
+                Active
+            </div>
+        </div>
+
+        <!-- Quick search -->
+        <div class="relative mt-4 z-10">
+            <input type="text" id="search-input" placeholder="Search sections, students…"
+                   class="w-full bg-white/20 text-white placeholder-blue-200 border border-white/20 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:bg-white/30 transition">
+            <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-blue-200 text-sm pointer-events-none"></i>
+        </div>
+    </div>
+
+    <!-- ── CONTENT AREA (sections rendered here) ── -->
+    <div class="px-4 pt-5">
+
+        <!-- ╔════════════════════════════╗
+             ║   HOME / DASHBOARD         ║
+             ╚════════════════════════════╝ -->
+        <div id="home-section" class="section active">
+
+            <!-- Academics Grid -->
+            <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">Quick Access</p>
+            <div class="grid grid-cols-3 gap-3 mb-5">
+
+                <button onclick="showSection('exam-names-section','Exam Results')"
+                        class="feature-card bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-card border border-slate-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-graduation-cap text-blue-600"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 text-center leading-tight">Exam Results</span>
+                </button>
+
+                <button onclick="showSection('supp-names-section','Supplementary Exam Result')"
+                        class="feature-card bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-card border border-slate-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-file-invoice text-orange-500"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 text-center leading-tight">Supplementary</span>
+                </button>
+
+                <button onclick="showSection('attendance-section','Attendance')"
+                        class="feature-card bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-card border border-slate-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-check text-green-600"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 text-center leading-tight">Attendance</span>
+                </button>
+
+                <button onclick="showSection('internal-marks-section','Internal Mark')"
+                        class="feature-card bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-card border border-slate-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-clipboard-check text-purple-600"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 text-center leading-tight">Internal Marks</span>
+                </button>
+
+                <button onclick="showSection('notes-section','Study Material / Notes')"
+                        class="feature-card bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-card border border-slate-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-book-open text-sky-600"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 text-center leading-tight">Study Notes</span>
+                </button>
+
+                <button onclick="showSection('timetable-section','Time Table')"
+                        class="feature-card bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-card border border-slate-100 cursor-pointer">
+                    <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-clock text-rose-500"></i>
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 text-center leading-tight">Time Table</span>
+                </button>
+            </div>
+
+            <!-- More Sections -->
+            <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">More Sections</p>
+            <div class="space-y-2 mb-5">
+                <button onclick="showSection('hall-ticket-options-section','Hall Ticket Options')" class="btn">
+                    <span>Hall Ticket</span><i class="fa-solid fa-id-card"></i>
+                </button>
+                <button onclick="showSection('internships-section','Internship Details')" class="btn">
+                    <span>Internship Details</span><i class="fa-solid fa-briefcase"></i>
+                </button>
+                <a href="https://hmcmanjeri.embase.in/" target="_blank" class="btn">
+                    <span>Embase Portal</span><i class="fa-solid fa-database"></i>
+                </a>
+                <a href="https://student.uoc.ac.in/" target="_blank" class="btn">
+                    <span>Student Portal</span><i class="fa-solid fa-user-graduate"></i>
+                </a>
+            </div>
+
+            <!-- Dynamic Custom Buttons Container -->
+            <div id="custom-dynamic-buttons-container" class="space-y-2 mb-5"></div>
+
+            <!-- Info cards row -->
+            <p class="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">Portal Info</p>
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-4 text-white shadow-card">
+                    <i class="fa-solid fa-school mb-2 text-blue-200"></i>
+                    <p class="font-bold text-sm">HM College</p>
+                    <p class="text-blue-200 text-xs">Manjeri, Kerala</p>
+                </div>
+                <div class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-4 text-white shadow-card">
+                    <i class="fa-solid fa-code mb-2 text-slate-300"></i>
+                    <p class="font-bold text-sm">Developed by</p>
+                    <p class="text-slate-300 text-xs">Muhammed Nishad</p>
+                </div>
+            </div>
+
+            <!-- Footer links -->
+            <div class="flex justify-center gap-5 pb-4">
+                <a href="https://www.instagram.com/nii.sh.ad" target="_blank" class="text-slate-400 hover:text-pink-500 transition text-lg">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="mailto:enishad007@gmail.com" class="text-slate-400 hover:text-blue-600 transition text-lg">
+                    <i class="fa-solid fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║   HALL TICKET OPTIONS      ║
+             ╚════════════════════════════╝ -->
+        <div id="hall-ticket-options-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Hall Ticket Options</h2>
+            </div>
+            <div class="btn" onclick="showSection('sem-hall-ticket-students','Sem Exam Students')">
+                <span>Sem Exam Hall Ticket</span><i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div class="btn" onclick="showSection('supp-hall-ticket-students','Supplementary Students')">
+                <span>Supplementary Hall Ticket</span><i class="fa-solid fa-file-invoice"></i>
+            </div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║   SEM HALL TICKET STUDENTS ║
+             ╚════════════════════════════╝ -->
+        <div id="sem-hall-ticket-students" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('hall-ticket-options-section','Hall Ticket Options')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Sem Exam Hall Tickets</h2>
+            </div>
+            <div id="sem-hall-ticket-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║ SUPP HALL TICKET STUDENTS  ║
+             ╚════════════════════════════╝ -->
+        <div id="supp-hall-ticket-students" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('hall-ticket-options-section','Hall Ticket Options')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Supplementary Hall Tickets</h2>
+            </div>
+            <div id="supp-hall-ticket-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║   EXAM NAMES (STUDENTS)    ║
+             ╚════════════════════════════╝ -->
+        <div id="exam-names-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-house text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Exam Results</h2>
+            </div>
+            <div id="exam-students-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  SUPP NAMES (STUDENTS)     ║
+             ╚════════════════════════════╝ -->
+        <div id="supp-names-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-house text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Supplementary Results</h2>
+            </div>
+            <div id="supp-students-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  HALL TICKET VIEW          ║
+             ╚════════════════════════════╝ -->
+        <div id="hall-ticket-view-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('hall-ticket-options-section','Hall Ticket Options')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 id="hall-ticket-view-title" class="font-bold text-slate-800 text-lg">Hall Tickets</h2>
+            </div>
+            <div id="hall-tickets-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  SUPP RESULT VIEW          ║
+             ╚════════════════════════════╝ -->
+        <div id="supp-result-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('supp-names-section','Supplementary Exam Result')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 id="supp-result-title" class="font-bold text-slate-800 text-lg">Supplementary Result</h2>
+            </div>
+            <div id="supp-results-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  SEM RESULT VIEW           ║
+             ╚════════════════════════════╝ -->
+        <div id="sem-result-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('exam-names-section','Exam Results')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 id="sem-result-title" class="font-bold text-slate-800 text-lg">Select Semester</h2>
+            </div>
+            <div id="sem-results-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  ATTENDANCE                ║
+             ╚════════════════════════════╝ -->
+        <div id="attendance-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Attendance Sheets</h2>
+            </div>
+            <div id="attendance-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  TIME TABLE                ║
+             ╚════════════════════════════╝ -->
+        <div id="timetable-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Time Tables</h2>
+            </div>
+            <div id="timetable-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  STUDY MATERIALS           ║
+             ╚════════════════════════════╝ -->
+        <div id="notes-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-house text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Study Materials</h2>
+            </div>
+            <div id="study-materials-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  INTERNAL MARKS            ║
+             ╚════════════════════════════╝ -->
+        <div id="internal-marks-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Internal Marks</h2>
+            </div>
+            <div id="internal-marks-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ╔════════════════════════════╗
+             ║  INTERNSHIPS               ║
+             ╚════════════════════════════╝ -->
+        <div id="internships-section" class="section">
+            <div class="section-header flex items-center gap-3 mb-5">
+                <button onclick="showSection('home-section','HMC 24-27')" class="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </button>
+                <h2 class="font-bold text-slate-800 text-lg">Internship Details</h2>
+            </div>
+            <div id="internship-details-list" class="space-y-2"></div>
+        </div>
+
+    </div><!-- /px-4 -->
+</div><!-- /main-dashboard -->
+
+
+<!-- ══════════════════════════════════════════
+     PROFILE OVERLAY (Sliding Modal)
+════════════════════════════════════════════ -->
+<div id="profile-overlay" class="fixed inset-0 z-[2000] hidden flex-col justify-end bg-slate-900/40 backdrop-blur-sm transition-opacity opacity-0">
+    <div id="profile-overlay-content" class="bg-white w-full max-w-lg mx-auto rounded-t-3xl p-6 transform translate-y-full transition-transform duration-300 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] relative">
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-slate-800">My Profile</h2>
+            <button onclick="closeProfileOverlay()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
-    </div>
-    <!-- Profile Menu Container -->
-    <div id="profile-menu-container" class="profile-menu-container">
-        <div id="profile-trigger" class="profile-trigger" onclick="toggleProfileDropdown(event)" style="overflow: hidden; padding: 0;">
-            <i class="fa-solid fa-user" id="trigger-icon"></i>
-            <img id="trigger-img" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-        </div>
-        <div id="profile-dropdown" class="profile-dropdown">
-            <div class="dropdown-avatar" id="dropdown-avatar" onclick="triggerProfilePicUpload()" style="cursor: pointer; position: relative; overflow: hidden;" title="Click to upload profile photo">
-                <i class="fa-solid fa-user" id="avatar-icon"></i>
-                <img id="avatar-img" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                <div style="position: absolute; bottom: 0; right: 0; left: 0; background: rgba(0,0,0,0.5); padding: 2px 0; font-size: 0.6rem; color: white; display: flex; align-items: center; justify-content: center;">
+        
+        <div class="flex flex-col items-center mb-6">
+            <div onclick="triggerProfilePicUpload()" title="Change photo" class="w-20 h-20 rounded-full bg-blue-100 border-4 border-blue-50 flex items-center justify-center cursor-pointer relative overflow-hidden shadow-sm mb-3">
+                <i class="fa-solid fa-user text-blue-500 text-3xl" id="overlay-avatar-icon"></i>
+                <img id="overlay-avatar-img" style="display:none;" class="w-full h-full object-cover rounded-full">
+                <div class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[10px] py-1 flex justify-center backdrop-blur-md">
                     <i class="fa-solid fa-camera"></i>
                 </div>
             </div>
-            <input type="file" id="profile-pic-input" accept="image/*" style="display: none;" onchange="handleProfilePicChange(event)">
-            
-            <div class="dropdown-name" id="user-display-name">Student</div>
-            <div class="dropdown-email" id="user-display-email"></div>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-logout-btn" onclick="logoutUser()">
-                <span>Log Out</span>
-                <i class="fa-solid fa-sign-out-alt"></i>
+            <p class="text-xs text-slate-400">Tap to change picture</p>
+        </div>
+
+        <div class="space-y-4 mb-8 max-h-[50vh] overflow-y-auto pr-2">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Full Name</label>
+                <input type="text" id="profile-name" readonly class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-slate-600 font-semibold focus:outline-none cursor-not-allowed">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Course</label>
+                    <input type="text" id="profile-course" readonly class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-slate-600 font-semibold focus:outline-none cursor-not-allowed text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Semester</label>
+                    <input type="text" id="profile-semester" readonly class="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-slate-600 font-semibold focus:outline-none cursor-not-allowed text-sm">
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Phone Number</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-slate-400"><i class="fa-solid fa-phone text-sm"></i></span>
+                    <input type="tel" id="profile-phone" placeholder="Enter your phone number" class="w-full p-3 pl-10 bg-white border border-slate-200 rounded-xl text-slate-800 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                </div>
+            </div>
+            <div>
+                <button onclick="sendResetPasswordEmail()" class="w-full py-3 bg-slate-50 hover:bg-slate-100 text-slate-600 font-semibold rounded-xl border border-slate-200 transition text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-key"></i> Reset Password
+                </button>
+            </div>
+        </div>
+
+        <div class="flex gap-3">
+            <button onclick="logoutUser()" class="w-14 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl flex items-center justify-center transition" title="Log Out">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+            <button onclick="saveStudentProfile()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/20 text-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-save"></i> Save Profile
             </button>
         </div>
     </div>
+</div>
 
-    <div id="pending-container" class="links-panel" style="text-align: center; display: none;">
-        <div class="profile-container" style="margin-bottom: 20px;">
-            <img src="main profile.jpg" alt="Group Profile" class="profile-img">
-            <h2 style="font-size: 1.3rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4; color: #ffc107; margin-top: 15px;">
-                Waiting for Approval
-            </h2>
-            <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); margin-top: 15px; line-height: 1.6; font-weight: 500;">
-                Your account registration is currently pending administrator approval. Please check back later or contact your class administrator.
-            </p>
-        </div>
-        <div style="margin-top: 25px;">
-            <button class="btn" onclick="logoutUser()" style="justify-content: center; background: rgba(220, 53, 69, 0.45); border: 1px solid rgba(220, 53, 69, 0.6); width: 100%;">
-                <span>Sign Out</span>
-                <i class="fa-solid fa-right-from-bracket" style="margin-left: 10px;"></i>
-            </button>
-        </div>
+<!-- ══════════════════════════════════════════
+     BOTTOM NAVIGATION BAR
+════════════════════════════════════════════ -->
+<nav id="bottom-nav" style="display:none;"
+     class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] z-[1000]">
+    <div class="max-w-lg mx-auto flex items-center justify-around py-2">
+        <button id="nav-home" onclick="goHome()"
+                class="flex flex-col items-center gap-1 px-5 py-2 rounded-xl transition group">
+            <i class="fa-solid fa-house text-blue-600 text-xl group-hover:scale-110 transition-transform"></i>
+            <span class="text-[10px] font-bold text-blue-600">Home</span>
+        </button>
+        <button onclick="showSection('notes-section','Study Material / Notes')"
+                class="flex flex-col items-center gap-1 px-5 py-2 rounded-xl transition group">
+            <i class="fa-solid fa-book text-slate-400 text-xl group-hover:text-blue-500 group-hover:scale-110 transition"></i>
+            <span class="text-[10px] font-semibold text-slate-400 group-hover:text-blue-500">Materials</span>
+        </button>
+        <button onclick="openProfileOverlay()"
+                class="flex flex-col items-center gap-1 px-5 py-2 rounded-xl transition group">
+            <i class="fa-solid fa-user-circle text-slate-400 text-xl group-hover:text-blue-500 group-hover:scale-110 transition"></i>
+            <span class="text-[10px] font-semibold text-slate-400 group-hover:text-blue-500">Profile</span>
+        </button>
     </div>
+</nav>
 
-    <div class="profile-container" id="main-profile" style="display: none !important;">
-        <img class="profile-img" src="main profile.jpg" alt="Group Profile">
-        <h1 id="main-title">HMC 24-27</h1>
-        <p class="description" id="main-desc">Welcome! This platform is created exclusively for our college students to easily access study materials, notes, and academic updates. Stay connected and learning!</p>
-    </div>
-    <div class="links-panel" id="main-links-panel" style="display: none !important;">
-        <!-- Search Bar -->
-        <div id="search-container" style="margin-bottom: 18px; position: relative;">
-            <input type="text" id="search-input" placeholder="Search buttons, students, results..." 
-                   style="width: 100%; padding: 12px 40px 12px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.08); color: white; outline: none; font-size: 0.95rem; backdrop-filter: blur(5px); box-sizing: border-box;">
-            <i class="fa-solid fa-magnifying-glass" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.6); pointer-events: none;"></i>
-        </div>
 
-        <div id="home-section" class="section active">
-            <div class="btn" onclick="showSection('exam-names-section', 'Exam Results')"><span>Exam Result</span><i class="fa-solid fa-graduation-cap"></i></div>
-            <div class="btn" onclick="showSection('supp-names-section', 'Supplementary Exam Result')"><span>Supplementary Exam Result</span><i class="fa-solid fa-file-invoice"></i></div>
-            <div class="btn" onclick="showSection('attendance-section', 'Attendance')"><span>Attendance</span><i class="fa-solid fa-calendar-check"></i></div>
-            <div class="btn" onclick="showSection('timetable-section', 'Time Table')"><span>Time Table</span><i class="fa-solid fa-clock"></i></div>
-            <div class="btn" onclick="showSection('notes-section', 'Study Material / Notes')"><span>Study Material / Notes</span><i class="fa-solid fa-book-open"></i></div>
-            <div class="btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><span>Hall Ticket</span><i class="fa-solid fa-id-card"></i></div>
-            <div class="btn" onclick="showSection('internal-marks-section', 'Internal Mark')"><span>Internal Mark</span><i class="fa-solid fa-file-invoice"></i></div>
-            <div class="btn" onclick="showSection('internships-section', 'Internship Details')"><span>INTERNSHIP DETAILS</span><i class="fa-solid fa-briefcase"></i></div>
-            <a href="https://hmcmanjeri.embase.in/" target="_blank" class="btn"><span>Embase</span><i class="fa-solid fa-database"></i></a>
-            <a href="https://student.uoc.ac.in/" target="_blank" class="btn"><span>Student Portal</span><i class="fa-solid fa-user-graduate"></i></a>
-            
-            <!-- Dynamic Custom Buttons Container -->
-            <div id="custom-dynamic-buttons-container"></div>
-        </div>
+<!-- ══════════════════════════════════════════
+     FIREBASE + APP LOGIC  (unchanged)
+════════════════════════════════════════════ -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, onSnapshot, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-        <div id="hall-ticket-options-section" class="section">
-            <div class="btn" onclick="showSection('sem-hall-ticket-students', 'Sem Exam Students')"><span>Sem Exam Hall Ticket</span><i class="fa-solid fa-graduation-cap"></i></div>
-            <div class="btn" onclick="showSection('supp-hall-ticket-students', 'Supplementary Students')"><span>Supplementary Hall Ticket</span><i class="fa-solid fa-file-invoice"></i></div>
-            <div class="home-btn-container" style="margin-top: 15px;"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCC0CEWZA2vyzIJK5xpZrEGxeikp7cchvA",
+        authDomain: "hmc-web-7c65f.firebaseapp.com",
+        projectId: "hmc-web-7c65f",
+        storageBucket: "hmc-web-7c65f.firebasestorage.app",
+        messagingSenderId: "360307989861",
+        appId: "1:360307989861:web:970da58dff8e4ea669d58c"
+    };
 
-        <div id="sem-hall-ticket-students" class="section">
-            <div id="sem-hall-ticket-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
-            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        <div id="supp-hall-ticket-students" class="section">
-            <div id="supp-hall-ticket-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
-            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+    const sectionTitles = {
+        'home-section': 'HMC 24-27',
+        'hall-ticket-options-section': 'Hall Ticket Options',
+        'sem-hall-ticket-students': 'Sem Exam Students',
+        'supp-hall-ticket-students': 'Supplementary Students',
+        'exam-names-section': 'Exam Results',
+        'supp-names-section': 'Supplementary Exam Result',
+        'timetable-section': 'Time Table',
+        'notes-section': 'Study Material / Notes',
+        'attendance-section': 'Attendance',
+        'internal-marks-section': 'Internal Mark',
+        'internships-section': 'Internship Details'
+    };
 
-        <div id="exam-names-section" class="section">
-            <div id="exam-students-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
-            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
-        </div>
+    let allUsers = [];
+    let examResultsUids = new Set();
+    let suppResultsUids = new Set();
+    let semHallTicketLinks = {};
+    let suppHallTicketLinks = {};
 
-        <div id="supp-names-section" class="section">
-            <div id="supp-students-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
-            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
-        </div>
+    let userDocUnsubscribe = null;
+    let usersUnsubscribe, examResultsUnsubscribe, suppResultsUnsubscribe;
+    let hallTicketsUnsubscribe, studyMaterialsUnsubscribe, timetableUnsubscribe;
+    let internshipUnsubscribe, attendanceUnsubscribe, internalMarksUnsubscribe;
+    let currentSectionResultsUnsubscribe, broadcastsUnsubscribe, webButtonsUnsubscribe = null;
+    let listenersInitialized = false;
 
-        <div id="hall-ticket-view-section" class="section">
-            <h2 id="hall-ticket-view-title">Hall Tickets</h2>
-            <div id="hall-tickets-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container" style="margin-top: 20px;"><button class="home-btn" onclick="showSection('hall-ticket-options-section', 'Hall Ticket Options')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+    // ── Navigate home helper ──
+    window.goHome = function() {
+        showSection('home-section', 'HMC 24-27');
+    };
 
-        <div id="supp-result-section" class="section">
-            <h2 id="supp-result-title">Supplementary Result</h2>
-            <div id="supp-results-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('supp-names-section', 'Supplementary Exam Result')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+    // ── Update page heading ──
+    function setPageTitle(title) {
+        const el = document.getElementById('main-title');
+        if (el) el.innerText = title;
+    }
 
-        <div id="sem-result-section" class="section">
-            <h2 id="sem-result-title">Select Semester</h2>
-            <div id="sem-results-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('exam-names-section', 'Exam Results')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+    // ══════════════════════════════════════
+    // SHOW SECTION
+    // ══════════════════════════════════════
+    function showSection(sectionId, titleText, studentUid) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(sec => {
+            sec.style.display = 'none';
+            sec.classList.remove('active');
+        });
 
-        <div id="attendance-section" class="section">
-            <h2>Attendance Sheets</h2>
-            <div id="attendance-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+        const activeSection = document.getElementById(sectionId);
+        if (activeSection) {
+            activeSection.style.display = 'block';
+            activeSection.classList.add('active');
+        }
 
-        <div id="timetable-section" class="section">
-            <h2>Time Tables</h2>
-            <div id="timetable-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+        let finalTitle = titleText || sectionTitles[sectionId] || 'HMC 24-27';
 
-        <div id="notes-section" class="section">
-            <h2>Study Materials</h2>
-            <div id="study-materials-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-house"></i></button></div>
-        </div>
+        if (sectionId === 'home-section') {
+            history.pushState({ section: 'home-section', title: finalTitle }, '', window.location.pathname);
+        } else {
+            history.pushState({ section: sectionId, title: finalTitle, studentUid: studentUid }, '', '#' + sectionId);
+        }
 
-        <div id="internal-marks-section" class="section">
-            <h2>Internal Marks</h2>
-            <div id="internal-marks-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
+        setPageTitle(sectionId === 'home-section' ? 'HMC 24-27' : finalTitle);
 
-        <div id="internships-section" class="section">
-            <h2>Internship Details</h2>
-            <div id="internship-details-list" style="display: flex; flex-direction: column; gap: 6px; margin-top: 15px;"></div>
-            <div class="home-btn-container"><button class="home-btn" onclick="showSection('home-section', 'HMC 24-27')"><i class="fa-solid fa-arrow-left"></i> Back</button></div>
-        </div>
-    </div>
-    </div>
+        // Clear search input on section switch
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.value = '';
+            const elements = document.querySelectorAll('.section .btn, .section div[style*="margin-bottom"]');
+            elements.forEach(el => el.style.display = '');
+        }
 
-    <div class="footer-icons">
-        <a href="https://www.instagram.com/nii.sh.ad?igsh=eXUwOXFxbGdmczZp" target="_blank" class="footer-icon"><i class="fa-brands fa-instagram"></i></a>
-        <a href="mailto:enishad007@gmail.com" class="footer-icon"><i class="fa-solid fa-envelope"></i></a>
-    </div>
+        // Clean up any student results listener when switching away
+        if (sectionId !== 'sem-result-section' && sectionId !== 'supp-result-section') {
+            if (currentSectionResultsUnsubscribe) {
+                currentSectionResultsUnsubscribe();
+                currentSectionResultsUnsubscribe = null;
+            }
+        }
 
-    <div class="credits">( 2026 Muhammed Nishad E All rights reserved )</div>
+        if (sectionId === 'sem-result-section') {
+            if (currentSectionResultsUnsubscribe) {
+                currentSectionResultsUnsubscribe();
+                currentSectionResultsUnsubscribe = null;
+            }
+            const targetUid = studentUid || (auth.currentUser ? auth.currentUser.uid : null);
+            const listEl = document.getElementById('sem-results-list');
+            if (listEl) {
+                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b; font-size:0.85rem;'>Loading semester results…</div>";
+                if (targetUid) {
+                    currentSectionResultsUnsubscribe = onSnapshot(
+                        query(collection(db, "exam_results"), where("studentUid", "==", targetUid)),
+                        (snapshot) => {
+                            listEl.innerHTML = "";
+                            if (snapshot.empty) {
+                                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b; font-size:0.85rem;'>No semester results published for this student.</div>";
+                                return;
+                            }
+                            const items = [];
+                            snapshot.forEach(docSnap => items.push(docSnap.data()));
+                            items.sort((a, b) => a.label.localeCompare(b.label));
+                            items.forEach(item => {
+                                const btn = document.createElement('a');
+                                btn.className = "btn";
+                                btn.href = item.link;
+                                btn.target = "_blank";
+                                btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-graduation-cap"></i>`;
+                                listEl.appendChild(btn);
+                            });
+                        },
+                        (err) => {
+                            console.error("Error listening to exam results:", err);
+                            listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#ef4444; font-size:0.85rem;'>Error loading results from database.</div>";
+                        }
+                    );
+                } else {
+                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b; font-size:0.85rem;'>No student selected.</div>";
+                }
+            }
+        }
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, onSnapshot, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+        if (sectionId === 'supp-result-section') {
+            if (currentSectionResultsUnsubscribe) {
+                currentSectionResultsUnsubscribe();
+                currentSectionResultsUnsubscribe = null;
+            }
+            const targetUid = studentUid || (auth.currentUser ? auth.currentUser.uid : null);
+            const listEl = document.getElementById('supp-results-list');
+            if (listEl) {
+                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b; font-size:0.85rem;'>Loading supplementary results…</div>";
+                if (targetUid) {
+                    currentSectionResultsUnsubscribe = onSnapshot(
+                        query(collection(db, "supplementary_results"), where("studentUid", "==", targetUid)),
+                        (snapshot) => {
+                            listEl.innerHTML = "";
+                            if (snapshot.empty) {
+                                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b; font-size:0.85rem;'>No supplementary results published for this student.</div>";
+                                return;
+                            }
+                            const items = [];
+                            snapshot.forEach(docSnap => items.push(docSnap.data()));
+                            items.sort((a, b) => a.label.localeCompare(b.label));
+                            items.forEach(item => {
+                                const btn = document.createElement('a');
+                                btn.className = "btn";
+                                btn.href = item.link;
+                                btn.target = "_blank";
+                                btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-file-invoice"></i>`;
+                                listEl.appendChild(btn);
+                            });
+                        },
+                        (err) => {
+                            console.error("Error listening to supplementary results:", err);
+                            listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#ef4444; font-size:0.85rem;'>Error loading results from database.</div>";
+                        }
+                    );
+                } else {
+                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#64748b; font-size:0.85rem;'>No student selected.</div>";
+                }
+            }
+        }
+    }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCC0CEWZA2vyzIJK5xpZrEGxeikp7cchvA",
-            authDomain: "hmc-web-7c65f.firebaseapp.com",
-            projectId: "hmc-web-7c65f",
-            storageBucket: "hmc-web-7c65f.firebasestorage.app",
-            messagingSenderId: "360307989861",
-            appId: "1:360307989861:web:970da58dff8e4ea669d58c"
+    // ══════════════════════════════════════
+    // STUDENT LISTS UI
+    // ══════════════════════════════════════
+    function updateStudentListsUI() {
+        const examList = document.getElementById('exam-students-list');
+        const suppList = document.getElementById('supp-students-list');
+        const semHTList = document.getElementById('sem-hall-ticket-list');
+        const suppHTList = document.getElementById('supp-hall-ticket-list');
+
+        if (examList) examList.innerHTML = "";
+        if (suppList) suppList.innerHTML = "";
+        if (semHTList) semHTList.innerHTML = "";
+        if (suppHTList) suppHTList.innerHTML = "";
+
+        allUsers.forEach((student) => {
+            const uid = student.uid;
+
+            if (examList && examResultsUids.has(uid)) {
+                const btn = document.createElement('div');
+                btn.className = "btn";
+                btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
+                btn.onclick = () => showSection('sem-result-section', student.name, uid);
+                examList.appendChild(btn);
+            }
+
+            if (suppList && suppResultsUids.has(uid)) {
+                const btn = document.createElement('div');
+                btn.className = "btn";
+                btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
+                btn.onclick = () => showSection('supp-result-section', `${student.name} - Supplementary`, uid);
+                suppList.appendChild(btn);
+            }
+
+            if (semHTList && semHallTicketLinks[uid]) {
+                const btn = document.createElement('a');
+                btn.className = "btn";
+                btn.href = semHallTicketLinks[uid];
+                btn.target = "_blank";
+                btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
+                semHTList.appendChild(btn);
+            }
+
+            if (suppHTList && suppHallTicketLinks[uid]) {
+                const btn = document.createElement('a');
+                btn.className = "btn";
+                btn.href = suppHallTicketLinks[uid];
+                btn.target = "_blank";
+                btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-file-pdf"></i>`;
+                suppHTList.appendChild(btn);
+            }
+        });
+
+        const empty = (list, msg) => {
+            if (list && list.children.length === 0) {
+                list.innerHTML = `<div class="text-center py-8 text-slate-400 text-sm">${msg}</div>`;
+            }
         };
+        empty(examList, 'No student exam results published yet.');
+        empty(suppList, 'No supplementary results published yet.');
+        empty(semHTList, 'No hall tickets published yet.');
+        empty(suppHTList, 'No supplementary hall tickets published yet.');
+    }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    // ══════════════════════════════════════
+    // RENDER GLOBAL LIST
+    // ══════════════════════════════════════
+    function renderGlobalList(elementId, items, iconClass) {
+        const listEl = document.getElementById(elementId);
+        if (!listEl) return;
+        listEl.innerHTML = "";
+        if (items.length === 0) {
+            let msg = "No items published yet.";
+            if (elementId === 'attendance-list') msg = "No attendance sheets assigned to you.";
+            if (elementId === 'internal-marks-list') msg = "No internal marks sheets assigned to you.";
+            listEl.innerHTML = `<div class="text-center py-8 text-slate-400 text-sm">${msg}</div>`;
+            return;
+        }
+        items.forEach(item => {
+            const btn = document.createElement('a');
+            btn.className = "btn";
+            btn.href = item.link;
+            btn.target = "_blank";
+            btn.innerHTML = `<span>${item.label}</span><i class="fa-solid ${iconClass}"></i>`;
+            listEl.appendChild(btn);
+        });
+    }
 
-        const sectionTitles = {
-            'home-section': 'HMC 24-27',
-            'hall-ticket-options-section': 'Hall Ticket Options',
-            'sem-hall-ticket-students': 'Sem Exam Students',
-            'supp-hall-ticket-students': 'Supplementary Students',
-            'exam-names-section': 'Exam Results',
-            'supp-names-section': 'Supplementary Exam Result',
-            'timetable-section': 'Time Table',
-            'notes-section': 'Study Material / Notes',
-            'attendance-section': 'Attendance',
-            'internal-marks-section': 'Internal Mark',
-            'internships-section': 'Internship Details'
-        };
+    // ══════════════════════════════════════
+    // LOAD CACHES AND RENDER INSTANTLY
+    // ══════════════════════════════════════
+    function loadCachesAndRender() {
+        try {
+            const cachedUsers = localStorage.getItem('hmc_cache_users');
+            const cachedExamResults = localStorage.getItem('hmc_cache_exam_results_uids');
+            const cachedSuppResults = localStorage.getItem('hmc_cache_supp_results_uids');
+            const cachedSemHT = localStorage.getItem('hmc_cache_sem_hall_ticket_links');
+            const cachedSuppHT = localStorage.getItem('hmc_cache_supp_hall_ticket_links');
 
-        let allUsers = [];
-        let examResultsUids = new Set();
-        let suppResultsUids = new Set();
-        let semHallTicketLinks = {};
-        let suppHallTicketLinks = {};
+            if (cachedUsers) allUsers = JSON.parse(cachedUsers);
+            if (cachedExamResults) examResultsUids = new Set(JSON.parse(cachedExamResults));
+            if (cachedSuppResults) suppResultsUids = new Set(JSON.parse(cachedSuppResults));
+            if (cachedSemHT) semHallTicketLinks = JSON.parse(cachedSemHT);
+            if (cachedSuppHT) suppHallTicketLinks = JSON.parse(cachedSuppHT);
 
-        let userDocUnsubscribe = null;
-        let usersUnsubscribe, examResultsUnsubscribe, suppResultsUnsubscribe;
-        let hallTicketsUnsubscribe, studyMaterialsUnsubscribe, timetableUnsubscribe;
-        let internshipUnsubscribe, attendanceUnsubscribe, internalMarksUnsubscribe;
-        let currentSectionResultsUnsubscribe, broadcastsUnsubscribe, webButtonsUnsubscribe = null;
-        let listenersInitialized = false;
+            updateStudentListsUI();
 
-        function showSection(sectionId, titleText, studentUid) {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(sec => {
-                sec.style.display = 'none';
-                sec.classList.remove('active');
+            const cachedMaterials = localStorage.getItem('hmc_cache_study_materials');
+            if (cachedMaterials) renderGlobalList('study-materials-list', JSON.parse(cachedMaterials), 'fa-book-open');
+
+            const cachedTimetable = localStorage.getItem('hmc_cache_time_table');
+            if (cachedTimetable) renderGlobalList('timetable-list', JSON.parse(cachedTimetable), 'fa-clock');
+
+            const cachedInternships = localStorage.getItem('hmc_cache_internship_details');
+            if (cachedInternships) renderGlobalList('internship-details-list', JSON.parse(cachedInternships), 'fa-briefcase');
+
+            const cachedAttendance = localStorage.getItem('hmc_cache_attendance');
+            if (cachedAttendance) renderGlobalList('attendance-list', JSON.parse(cachedAttendance), 'fa-calendar-check');
+
+            const cachedInternalMarks = localStorage.getItem('hmc_cache_internal_marks');
+            if (cachedInternalMarks) renderGlobalList('internal-marks-list', JSON.parse(cachedInternalMarks), 'fa-clipboard-check');
+        } catch (e) {
+            console.error("Error loading cache:", e);
+        }
+    }
+
+    // ══════════════════════════════════════
+    // HIDE AUTH OVERLAY
+    // ══════════════════════════════════════
+    function hideAuthLoadingOverlay() {
+        const overlay = document.getElementById('auth-loading-overlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 400);
+        }
+    }
+
+    // ══════════════════════════════════════
+    // BROADCAST ACKNOWLEDGE
+    // ══════════════════════════════════════
+    function acknowledgeBroadcast() {
+        const modal = document.getElementById('broadcast-modal');
+        if (modal) modal.style.display = 'none';
+        if (window.currentBroadcastId) {
+            localStorage.setItem('hmc_last_seen_broadcast', window.currentBroadcastId);
+        }
+    }
+    window.acknowledgeBroadcast = acknowledgeBroadcast;
+
+    // ══════════════════════════════════════
+    // REAL-TIME LISTENERS
+    // ══════════════════════════════════════
+    function initializeRealtimeListeners(currentUid) {
+        if (listenersInitialized) return;
+        listenersInitialized = true;
+
+        // 1. Users list
+        usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+            allUsers = [];
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.approved === true) {
+                    allUsers.push({ uid: docSnap.id, ...data });
+                }
             });
+            allUsers.sort((a, b) => {
+                const orderA = a.displayOrder !== undefined ? Number(a.displayOrder) : 999999;
+                const orderB = b.displayOrder !== undefined ? Number(b.displayOrder) : 999999;
+                if (orderA !== orderB) return orderA - orderB;
+                return a.name.localeCompare(b.name);
+            });
+            localStorage.setItem('hmc_cache_users', JSON.stringify(allUsers));
+            updateStudentListsUI();
+        }, (err) => console.error("Error listening to users:", err));
 
-            const activeSection = document.getElementById(sectionId);
+        // 2. Exam results
+        examResultsUnsubscribe = onSnapshot(collection(db, "exam_results"), (snapshot) => {
+            examResultsUids = new Set();
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.studentUid) examResultsUids.add(data.studentUid);
+            });
+            localStorage.setItem('hmc_cache_exam_results_uids', JSON.stringify(Array.from(examResultsUids)));
+            updateStudentListsUI();
+        }, (err) => console.error("Error listening to exam_results:", err));
+
+        // 3. Supplementary results
+        suppResultsUnsubscribe = onSnapshot(collection(db, "supplementary_results"), (snapshot) => {
+            suppResultsUids = new Set();
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.studentUid) suppResultsUids.add(data.studentUid);
+            });
+            localStorage.setItem('hmc_cache_supp_results_uids', JSON.stringify(Array.from(suppResultsUids)));
+            updateStudentListsUI();
+        }, (err) => console.error("Error listening to supplementary_results:", err));
+
+        // 4. Hall tickets
+        hallTicketsUnsubscribe = onSnapshot(collection(db, "hall_tickets"), (snapshot) => {
+            semHallTicketLinks = {};
+            suppHallTicketLinks = {};
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (data.studentUid && data.link) {
+                    if (data.label === "Sem Exam Hall Ticket") {
+                        semHallTicketLinks[data.studentUid] = data.link;
+                    } else if (data.label === "Supplementary Hall Ticket") {
+                        suppHallTicketLinks[data.studentUid] = data.link;
+                    }
+                }
+            });
+            localStorage.setItem('hmc_cache_sem_hall_ticket_links', JSON.stringify(semHallTicketLinks));
+            localStorage.setItem('hmc_cache_supp_hall_ticket_links', JSON.stringify(suppHallTicketLinks));
+            updateStudentListsUI();
+        }, (err) => console.error("Error listening to hall_tickets:", err));
+
+        // 5. Study Materials
+        studyMaterialsUnsubscribe = onSnapshot(collection(db, "study_materials"), (snapshot) => {
+            const items = [];
+            snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+            items.sort((a, b) => a.label.localeCompare(b.label));
+            localStorage.setItem('hmc_cache_study_materials', JSON.stringify(items));
+            renderGlobalList('study-materials-list', items, 'fa-book-open');
+        }, (err) => console.error("Error listening to study_materials:", err));
+
+        // 6. Time Table
+        timetableUnsubscribe = onSnapshot(collection(db, "time_table"), (snapshot) => {
+            const items = [];
+            snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+            items.sort((a, b) => a.label.localeCompare(b.label));
+            localStorage.setItem('hmc_cache_time_table', JSON.stringify(items));
+            renderGlobalList('timetable-list', items, 'fa-clock');
+        }, (err) => console.error("Error listening to time_table:", err));
+
+        // 7. Internship Details
+        internshipUnsubscribe = onSnapshot(collection(db, "internship_details"), (snapshot) => {
+            const items = [];
+            snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+            items.sort((a, b) => a.label.localeCompare(b.label));
+            localStorage.setItem('hmc_cache_internship_details', JSON.stringify(items));
+            renderGlobalList('internship-details-list', items, 'fa-briefcase');
+        }, (err) => console.error("Error listening to internship_details:", err));
+
+        // 8. Attendance (student-specific)
+        attendanceUnsubscribe = onSnapshot(
+            query(collection(db, "attendance"), where("studentUid", "==", currentUid)),
+            (snapshot) => {
+                const items = [];
+                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+                items.sort((a, b) => a.label.localeCompare(b.label));
+                localStorage.setItem('hmc_cache_attendance', JSON.stringify(items));
+                renderGlobalList('attendance-list', items, 'fa-calendar-check');
+            },
+            (err) => console.error("Error listening to attendance:", err)
+        );
+
+        // 9. Internal Marks (student-specific)
+        internalMarksUnsubscribe = onSnapshot(
+            query(collection(db, "internal_marks"), where("studentUid", "==", currentUid)),
+            (snapshot) => {
+                const items = [];
+                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
+                items.sort((a, b) => a.label.localeCompare(b.label));
+                localStorage.setItem('hmc_cache_internal_marks', JSON.stringify(items));
+                renderGlobalList('internal-marks-list', items, 'fa-clipboard-check');
+            },
+            (err) => console.error("Error listening to internal_marks:", err)
+        );
+
+        // 10. Broadcasts
+        broadcastsUnsubscribe = onSnapshot(
+            query(collection(db, "broadcasts"), orderBy("createdAt", "desc"), limit(1)),
+            (snapshot) => {
+                if (snapshot.empty) return;
+                const docSnap = snapshot.docs[0];
+                const broadcast = docSnap.data();
+                const lastSeenId = localStorage.getItem('hmc_last_seen_broadcast');
+                if (docSnap.id !== lastSeenId) {
+                    const modal = document.getElementById('broadcast-modal');
+                    const msgEl = document.getElementById('broadcast-message');
+                    if (modal && msgEl) {
+                        msgEl.innerText = broadcast.message;
+                        modal.style.display = 'flex';
+                        window.currentBroadcastId = docSnap.id;
+                    }
+                }
+            },
+            (err) => console.error("Error listening to broadcasts:", err)
+        );
+
+        // 11. Website Buttons (custom dynamic)
+        webButtonsUnsubscribe = onSnapshot(query(collection(db, "website_buttons"), orderBy("order", "asc")), (snapshot) => {
+            const container = document.getElementById('custom-dynamic-buttons-container');
+            if (!container) return;
+
+            if (snapshot.empty) {
+                container.innerHTML = "";
+                return;
+            }
+
+            const buttons = [];
+            snapshot.forEach(d => buttons.push({ id: d.id, ...d.data() }));
+
+            const mainButtons = buttons.filter(b => b.parentId === null);
+            let html = '';
+
+            mainButtons.forEach(main => {
+                const subs = buttons.filter(b => b.parentId === main.id);
+                if (subs.length > 0) {
+                    html += `<div class="btn" onclick="toggleAccordion('${main.id}')" style="justify-content:space-between;">
+                        <span>${main.label}</span>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <i class="fa-solid fa-chevron-down" style="font-size:0.75rem;transition:transform 0.3s;" id="chevron-${main.id}"></i>
+                            <i class="${main.iconClass}"></i>
+                        </div>
+                    </div>
+                    <div id="accordion-${main.id}" style="display:none;margin-left:12px;padding-left:12px;border-left:2px solid #bfdbfe;margin-bottom:10px;">`;
+                    subs.forEach(sub => {
+                        const isUrl = sub.actionLink && sub.actionLink.startsWith('http');
+                        if (isUrl) {
+                            html += `<a href="${sub.actionLink}" target="_blank" class="btn"><span>${sub.label}</span><i class="${sub.iconClass}"></i></a>`;
+                        } else {
+                            html += `<div class="btn" onclick="showSection('${sub.actionLink}','${sub.label}')"><span>${sub.label}</span><i class="${sub.iconClass}"></i></div>`;
+                        }
+                    });
+                    html += `</div>`;
+                } else {
+                    const isUrl = main.actionLink && main.actionLink.startsWith('http');
+                    if (isUrl) {
+                        html += `<a href="${main.actionLink}" target="_blank" class="btn"><span>${main.label}</span><i class="${main.iconClass}"></i></a>`;
+                    } else {
+                        const action = main.actionLink ? `'${main.actionLink}','${main.label}'` : `'home-section','HMC 24-27'`;
+                        html += `<div class="btn" onclick="showSection(${action})"><span>${main.label}</span><i class="${main.iconClass}"></i></div>`;
+                    }
+                }
+            });
+            container.innerHTML = html;
+        }, (err) => console.error("Error listening to website_buttons:", err));
+    }
+
+    // ══════════════════════════════════════
+    // ACCORDION TOGGLE
+    // ══════════════════════════════════════
+    window.toggleAccordion = function(parentId) {
+        const content = document.getElementById('accordion-' + parentId);
+        const chevron = document.getElementById('chevron-' + parentId);
+        if (content) {
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+            } else {
+                content.style.display = 'none';
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+    };
+
+    // ══════════════════════════════════════
+    // POPSTATE
+    // ══════════════════════════════════════
+    window.onpopstate = function(event) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(sec => {
+            sec.style.display = 'none';
+            sec.classList.remove('active');
+        });
+
+        if (event.state && event.state.section) {
+            const activeSection = document.getElementById(event.state.section);
             if (activeSection) {
                 activeSection.style.display = 'block';
                 activeSection.classList.add('active');
             }
-
-            let finalTitle = titleText || sectionTitles[sectionId] || 'HMC 24-27';
-            
-            if (sectionId === 'home-section') {
-                history.pushState({ section: 'home-section', title: finalTitle }, '', window.location.pathname);
+            setPageTitle(event.state.section === 'home-section' ? 'HMC 24-27' : (event.state.title || 'HMC 24-27'));
+            if (event.state.section === 'sem-result-section') {
+                showSection('sem-result-section', event.state.title, event.state.studentUid);
+            } else if (event.state.section === 'supp-result-section') {
+                showSection('supp-result-section', event.state.title, event.state.studentUid);
             } else {
-                history.pushState({ section: sectionId, title: finalTitle, studentUid: studentUid }, '', '#' + sectionId);
-            }
-
-            const mainTitle = document.getElementById('main-title');
-            if (mainTitle) {
-                mainTitle.innerText = finalTitle;
-            }
-
-            // Clear search input on section switch
-            const searchInput = document.getElementById('search-input');
-            if (searchInput) {
-                searchInput.value = '';
-                // Reset visibility of all buttons/elements
-                const elements = document.querySelectorAll('.section .btn, .section div[style*="margin-bottom"]');
-                elements.forEach(el => el.style.display = '');
-            }
-
-            // Clean up any student results listener when switching away
-            if (sectionId !== 'sem-result-section' && sectionId !== 'supp-result-section') {
                 if (currentSectionResultsUnsubscribe) {
                     currentSectionResultsUnsubscribe();
                     currentSectionResultsUnsubscribe = null;
                 }
             }
-
-            if (sectionId === 'sem-result-section') {
-                if (currentSectionResultsUnsubscribe) {
-                    currentSectionResultsUnsubscribe();
-                    currentSectionResultsUnsubscribe = null;
-                }
-                const targetUid = studentUid || (auth.currentUser ? auth.currentUser.uid : null);
-                const listEl = document.getElementById('sem-results-list');
-                if (listEl) {
-                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>Loading semester results...</div>";
-                    if (targetUid) {
-                        currentSectionResultsUnsubscribe = onSnapshot(
-                            query(collection(db, "exam_results"), where("studentUid", "==", targetUid)),
-                            (snapshot) => {
-                                listEl.innerHTML = "";
-                                if (snapshot.empty) {
-                                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No semester results published for this student.</div>";
-                                    return;
-                                }
-                                const items = [];
-                                snapshot.forEach(docSnap => items.push(docSnap.data()));
-                                items.sort((a, b) => a.label.localeCompare(b.label));
-                                items.forEach(item => {
-                                    const btn = document.createElement('a');
-                                    btn.className = "btn";
-                                    btn.href = item.link;
-                                    btn.target = "_blank";
-                                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-graduation-cap"></i>`;
-                                    listEl.appendChild(btn);
-                                });
-                            },
-                            (err) => {
-                                console.error("Error listening to exam results:", err);
-                                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#ff6b6b; font-size:0.9rem;'>Error loading results from database.</div>";
-                            }
-                        );
-                    } else {
-                        listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No student selected.</div>";
-                    }
-                }
+        } else {
+            const homeSection = document.getElementById('home-section');
+            if (homeSection) {
+                homeSection.style.display = 'block';
+                homeSection.classList.add('active');
             }
-
-            if (sectionId === 'supp-result-section') {
-                if (currentSectionResultsUnsubscribe) {
-                    currentSectionResultsUnsubscribe();
-                    currentSectionResultsUnsubscribe = null;
-                }
-                const targetUid = studentUid || (auth.currentUser ? auth.currentUser.uid : null);
-                const listEl = document.getElementById('supp-results-list');
-                if (listEl) {
-                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>Loading supplementary results...</div>";
-                    if (targetUid) {
-                        currentSectionResultsUnsubscribe = onSnapshot(
-                            query(collection(db, "supplementary_results"), where("studentUid", "==", targetUid)),
-                            (snapshot) => {
-                                listEl.innerHTML = "";
-                                if (snapshot.empty) {
-                                    listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No supplementary results published for this student.</div>";
-                                    return;
-                                }
-                                const items = [];
-                                snapshot.forEach(docSnap => items.push(docSnap.data()));
-                                items.sort((a, b) => a.label.localeCompare(b.label));
-                                items.forEach(item => {
-                                    const btn = document.createElement('a');
-                                    btn.className = "btn";
-                                    btn.href = item.link;
-                                    btn.target = "_blank";
-                                    btn.innerHTML = `<span>${item.label}</span><i class="fa-solid fa-file-invoice"></i>`;
-                                    listEl.appendChild(btn);
-                                });
-                            },
-                            (err) => {
-                                console.error("Error listening to supplementary results:", err);
-                                listEl.innerHTML = "<div style='text-align:center; padding:15px; color:#ff6b6b; font-size:0.9rem;'>Error loading results from database.</div>";
-                            }
-                        );
-                    } else {
-                        listEl.innerHTML = "<div style='text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;'>No student selected.</div>";
-                    }
-                }
+            setPageTitle('HMC 24-27');
+            if (currentSectionResultsUnsubscribe) {
+                currentSectionResultsUnsubscribe();
+                currentSectionResultsUnsubscribe = null;
             }
         }
 
-        function updateStudentListsUI() {
-            const examList = document.getElementById('exam-students-list');
-            const suppList = document.getElementById('supp-students-list');
-            const semHTList = document.getElementById('sem-hall-ticket-list');
-            const suppHTList = document.getElementById('supp-hall-ticket-list');
-
-            if (examList) examList.innerHTML = "";
-            if (suppList) suppList.innerHTML = "";
-            if (semHTList) semHTList.innerHTML = "";
-            if (suppHTList) suppHTList.innerHTML = "";
-
-            allUsers.forEach((student) => {
-                const uid = student.uid;
-
-                // 1. Exam Results List (only if they have exam results assigned)
-                if (examList && examResultsUids.has(uid)) {
-                    const btn = document.createElement('div');
-                    btn.className = "btn";
-                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
-                    btn.onclick = () => showSection('sem-result-section', student.name, uid);
-                    examList.appendChild(btn);
-                }
-
-                // 2. Supplementary Results List (only if they have supplementary results assigned)
-                if (suppList && suppResultsUids.has(uid)) {
-                    const btn = document.createElement('div');
-                    btn.className = "btn";
-                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
-                    btn.onclick = () => showSection('supp-result-section', `${student.name} - Supplementary`, uid);
-                    suppList.appendChild(btn);
-                }
-
-                // 3. Sem Hall Ticket List (only if they have a sem hall ticket assigned)
-                if (semHTList && semHallTicketLinks[uid]) {
-                    const btn = document.createElement('a');
-                    btn.className = "btn";
-                    btn.href = semHallTicketLinks[uid];
-                    btn.target = "_blank";
-                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-user"></i>`;
-                    semHTList.appendChild(btn);
-                }
-
-                // 4. Supp Hall Ticket List (only if they have a supp hall ticket assigned)
-                if (suppHTList && suppHallTicketLinks[uid]) {
-                    const btn = document.createElement('a');
-                    btn.className = "btn";
-                    btn.href = suppHallTicketLinks[uid];
-                    btn.target = "_blank";
-                    btn.innerHTML = `<span>${student.name}</span><i class="fa-solid fa-file-pdf"></i>`;
-                    suppHTList.appendChild(btn);
-                }
-            });
-
-            // If lists are empty, display a placeholder
-            if (examList && examList.children.length === 0) {
-                examList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No student exam results published yet.</div>`;
-            }
-            if (suppList && suppList.children.length === 0) {
-                suppList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No supplementary results published yet.</div>`;
-            }
-            if (semHTList && semHTList.children.length === 0) {
-                semHTList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No hall tickets published yet.</div>`;
-            }
-            if (suppHTList && suppHTList.children.length === 0) {
-                suppHTList.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">No supplementary hall tickets published yet.</div>`;
-            }
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.value = '';
+            const elements = document.querySelectorAll('.section .btn, .section div[style*="margin-bottom"]');
+            elements.forEach(el => el.style.display = '');
         }
+    };
 
-        function renderGlobalList(elementId, items, iconClass) {
-            const listEl = document.getElementById(elementId);
-            if (!listEl) return;
-            listEl.innerHTML = "";
-            if (items.length === 0) {
-                let defaultMsg = "No items published yet.";
-                if (elementId === 'attendance-list') defaultMsg = "No attendance sheets assigned to you.";
-                if (elementId === 'internal-marks-list') defaultMsg = "No internal marks sheets assigned to you.";
-                listEl.innerHTML = `<div style="text-align:center; padding:15px; color:rgba(255,255,255,0.6); font-size:0.9rem;">${defaultMsg}</div>`;
-                return;
-            }
-            items.forEach(item => {
-                const btn = document.createElement('a');
-                btn.className = "btn";
-                btn.href = item.link;
-                btn.target = "_blank";
-                btn.innerHTML = `<span>${item.label}</span><i class="fa-solid ${iconClass}"></i>`;
-                listEl.appendChild(btn);
-            });
+    // ══════════════════════════════════════
+    // UNLOCK DASHBOARD
+    // ══════════════════════════════════════
+    function unlockDashboard() {
+        const dashboard = document.getElementById('main-dashboard');
+        if (dashboard) dashboard.style.display = 'block';
+
+        const bottomNav = document.getElementById('bottom-nav');
+        if (bottomNav) bottomNav.style.display = 'block';
+
+        const profileMenu = document.getElementById('profile-menu-container');
+        if (profileMenu) profileMenu.style.display = 'block';
+
+        const displayName = localStorage.getItem('hmc_user_name') || 'Student';
+        const displayEmail = localStorage.getItem('hmc_user_email') || '';
+
+        const nameEl = document.getElementById('user-display-name');
+        const emailEl = document.getElementById('user-display-email');
+        const heroNameEl = document.getElementById('hero-student-name');
+        if (nameEl) nameEl.innerText = displayName;
+        if (emailEl) emailEl.innerText = displayEmail;
+        if (heroNameEl) heroNameEl.innerText = displayName;
+
+        const savedPic = localStorage.getItem('hmc_user_profile_pic');
+        if (savedPic) updateAvatarUI(savedPic);
+    }
+
+    // ══════════════════════════════════════
+    // PROFILE DROPDOWN
+    // ══════════════════════════════════════
+    function toggleProfileDropdown(event) {
+        if (event) event.stopPropagation();
+        const dropdown = document.getElementById('profile-dropdown');
+        if (dropdown) dropdown.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('profile-dropdown');
+        const container = document.getElementById('profile-menu-container');
+        const headerAvatar = document.getElementById('header-avatar-img');
+        const headerAvatarIcon = document.getElementById('header-avatar-icon');
+        if (container && !container.contains(event.target)
+            && event.target !== headerAvatar
+            && event.target !== headerAvatarIcon) {
+            if (dropdown) dropdown.classList.remove('active');
         }
+    });
 
-        function loadCachesAndRender() {
+    // ══════════════════════════════════════
+    // DOM CONTENT LOADED CHECK
+    // ══════════════════════════════════════
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('login') === 'success') {
+            localStorage.setItem('hmc_user_authenticated', 'true');
             try {
-                // 1. Student Lists
-                const cachedUsers = localStorage.getItem('hmc_cache_users');
-                const cachedExamResults = localStorage.getItem('hmc_cache_exam_results_uids');
-                const cachedSuppResults = localStorage.getItem('hmc_cache_supp_results_uids');
-                const cachedSemHT = localStorage.getItem('hmc_cache_sem_hall_ticket_links');
-                const cachedSuppHT = localStorage.getItem('hmc_cache_supp_hall_ticket_links');
+                history.replaceState({ section: 'home-section', title: 'HMC 24-27' }, '', window.location.pathname);
+            } catch(e) { console.log("Running locally"); }
+        } else if (localStorage.getItem('hmc_user_authenticated') !== 'true') {
+            window.location.href = "login2.html";
+        }
+    });
 
-                if (cachedUsers) allUsers = JSON.parse(cachedUsers);
-                if (cachedExamResults) examResultsUids = new Set(JSON.parse(cachedExamResults));
-                if (cachedSuppResults) suppResultsUids = new Set(JSON.parse(cachedSuppResults));
-                if (cachedSemHT) semHallTicketLinks = JSON.parse(cachedSemHT);
-                if (cachedSuppHT) suppHallTicketLinks = JSON.parse(cachedSuppHT);
+    // ══════════════════════════════════════
+    // LOGOUT
+    // ══════════════════════════════════════
+    function logoutUser() {
+        if (usersUnsubscribe) { usersUnsubscribe(); usersUnsubscribe = null; }
+        if (examResultsUnsubscribe) { examResultsUnsubscribe(); examResultsUnsubscribe = null; }
+        if (suppResultsUnsubscribe) { suppResultsUnsubscribe(); suppResultsUnsubscribe = null; }
+        if (hallTicketsUnsubscribe) { hallTicketsUnsubscribe(); hallTicketsUnsubscribe = null; }
+        if (studyMaterialsUnsubscribe) { studyMaterialsUnsubscribe(); studyMaterialsUnsubscribe = null; }
+        if (timetableUnsubscribe) { timetableUnsubscribe(); timetableUnsubscribe = null; }
+        if (internshipUnsubscribe) { internshipUnsubscribe(); internshipUnsubscribe = null; }
+        if (attendanceUnsubscribe) { attendanceUnsubscribe(); attendanceUnsubscribe = null; }
+        if (internalMarksUnsubscribe) { internalMarksUnsubscribe(); internalMarksUnsubscribe = null; }
+        if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
+        if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
+        if (webButtonsUnsubscribe) { webButtonsUnsubscribe(); webButtonsUnsubscribe = null; }
+        if (typeof broadcastsUnsubscribe === "function") { broadcastsUnsubscribe(); broadcastsUnsubscribe = null; }
+        listenersInitialized = false;
 
-                updateStudentListsUI();
+        localStorage.removeItem('hmc_user_authenticated');
+        localStorage.removeItem('hmc_user_name');
+        localStorage.removeItem('hmc_user_email');
+        localStorage.removeItem('hmc_user_profile_pic');
 
-                // 2. Global lists
-                const cachedMaterials = localStorage.getItem('hmc_cache_study_materials');
-                if (cachedMaterials) renderGlobalList('study-materials-list', JSON.parse(cachedMaterials), 'fa-book-open');
+        signOut(auth).then(() => {
+            window.location.href = "login2.html";
+        }).catch(() => {
+            window.location.href = "login2.html";
+        });
+    }
 
-                const cachedTimetable = localStorage.getItem('hmc_cache_time_table');
-                if (cachedTimetable) renderGlobalList('timetable-list', JSON.parse(cachedTimetable), 'fa-clock');
-
-                const cachedInternships = localStorage.getItem('hmc_cache_internship_details');
-                if (cachedInternships) renderGlobalList('internship-details-list', JSON.parse(cachedInternships), 'fa-briefcase');
-
-                // 3. Student-specific lists
-                const cachedAttendance = localStorage.getItem('hmc_cache_attendance');
-                if (cachedAttendance) renderGlobalList('attendance-list', JSON.parse(cachedAttendance), 'fa-calendar-check');
-
-                const cachedInternalMarks = localStorage.getItem('hmc_cache_internal_marks');
-                if (cachedInternalMarks) renderGlobalList('internal-marks-list', JSON.parse(cachedInternalMarks), 'fa-clipboard-check');
-            } catch (e) {
-                console.error("Error loading cache:", e);
-            }
+    // ══════════════════════════════════════
+    // STUDENT LISTENER (approvals)
+    // ══════════════════════════════════════
+    function setupStudentListener(user) {
+        if (userDocUnsubscribe) {
+            userDocUnsubscribe();
+            userDocUnsubscribe = null;
         }
 
-        function hideAuthLoadingOverlay() {
-            const overlay = document.getElementById('auth-loading-overlay');
-            if (overlay) {
-                overlay.style.opacity = '0';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 400);
-            }
-        }
+        userDocUnsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
 
-        function acknowledgeBroadcast() {
-            const modal = document.getElementById('broadcast-modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-            if (window.currentBroadcastId) {
-                localStorage.setItem('hmc_last_seen_broadcast', window.currentBroadcastId);
-            }
-        }
-        window.acknowledgeBroadcast = acknowledgeBroadcast;
-
-        function initializeRealtimeListeners(currentUid) {
-            if (listenersInitialized) return;
-            listenersInitialized = true;
-
-            // 1. Users list
-            usersUnsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
-                allUsers = [];
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.approved === true) {
-                        allUsers.push({ uid: docSnap.id, ...data });
-                    }
-                });
-                allUsers.sort((a, b) => {
-                    const orderA = a.displayOrder !== undefined ? Number(a.displayOrder) : 999999;
-                    const orderB = b.displayOrder !== undefined ? Number(b.displayOrder) : 999999;
-                    if (orderA !== orderB) return orderA - orderB;
-                    return a.name.localeCompare(b.name);
-                });
-                localStorage.setItem('hmc_cache_users', JSON.stringify(allUsers));
-                updateStudentListsUI();
-            }, (err) => console.error("Error listening to users:", err));
-
-            // 2. Exam results
-            examResultsUnsubscribe = onSnapshot(collection(db, "exam_results"), (snapshot) => {
-                examResultsUids = new Set();
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.studentUid) {
-                        examResultsUids.add(data.studentUid);
-                    }
-                });
-                localStorage.setItem('hmc_cache_exam_results_uids', JSON.stringify(Array.from(examResultsUids)));
-                updateStudentListsUI();
-            }, (err) => console.error("Error listening to exam_results:", err));
-
-            // 3. Supplementary results
-            suppResultsUnsubscribe = onSnapshot(collection(db, "supplementary_results"), (snapshot) => {
-                suppResultsUids = new Set();
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.studentUid) {
-                        suppResultsUids.add(data.studentUid);
-                    }
-                });
-                localStorage.setItem('hmc_cache_supp_results_uids', JSON.stringify(Array.from(suppResultsUids)));
-                updateStudentListsUI();
-            }, (err) => console.error("Error listening to supplementary_results:", err));
-
-            // 4. Hall tickets
-            hallTicketsUnsubscribe = onSnapshot(collection(db, "hall_tickets"), (snapshot) => {
-                semHallTicketLinks = {};
-                suppHallTicketLinks = {};
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.studentUid && data.link) {
-                        if (data.label === "Sem Exam Hall Ticket") {
-                            semHallTicketLinks[data.studentUid] = data.link;
-                        } else if (data.label === "Supplementary Hall Ticket") {
-                            suppHallTicketLinks[data.studentUid] = data.link;
-                        }
-                    }
-                });
-                localStorage.setItem('hmc_cache_sem_hall_ticket_links', JSON.stringify(semHallTicketLinks));
-                localStorage.setItem('hmc_cache_supp_hall_ticket_links', JSON.stringify(suppHallTicketLinks));
-                updateStudentListsUI();
-            }, (err) => console.error("Error listening to hall_tickets:", err));
-
-            // 5. Global: Study Materials
-            studyMaterialsUnsubscribe = onSnapshot(collection(db, "study_materials"), (snapshot) => {
-                const items = [];
-                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
-                items.sort((a, b) => a.label.localeCompare(b.label));
-                localStorage.setItem('hmc_cache_study_materials', JSON.stringify(items));
-                renderGlobalList('study-materials-list', items, 'fa-book-open');
-            }, (err) => console.error("Error listening to study_materials:", err));
-
-            // 6. Global: Time Table
-            timetableUnsubscribe = onSnapshot(collection(db, "time_table"), (snapshot) => {
-                const items = [];
-                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
-                items.sort((a, b) => a.label.localeCompare(b.label));
-                localStorage.setItem('hmc_cache_time_table', JSON.stringify(items));
-                renderGlobalList('timetable-list', items, 'fa-clock');
-            }, (err) => console.error("Error listening to time_table:", err));
-
-            // 7. Global: Internship Details
-            internshipUnsubscribe = onSnapshot(collection(db, "internship_details"), (snapshot) => {
-                const items = [];
-                snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
-                items.sort((a, b) => a.label.localeCompare(b.label));
-                localStorage.setItem('hmc_cache_internship_details', JSON.stringify(items));
-                renderGlobalList('internship-details-list', items, 'fa-briefcase');
-            }, (err) => console.error("Error listening to internship_details:", err));
-
-            // 8. Student-Specific: Attendance
-            attendanceUnsubscribe = onSnapshot(
-                query(collection(db, "attendance"), where("studentUid", "==", currentUid)),
-                (snapshot) => {
-                    const items = [];
-                    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
-                    items.sort((a, b) => a.label.localeCompare(b.label));
-                    localStorage.setItem('hmc_cache_attendance', JSON.stringify(items));
-                    renderGlobalList('attendance-list', items, 'fa-calendar-check');
-                },
-                (err) => console.error("Error listening to attendance:", err)
-            );
-
-            // 9. Student-Specific: Internal Marks
-            internalMarksUnsubscribe = onSnapshot(
-                query(collection(db, "internal_marks"), where("studentUid", "==", currentUid)),
-                (snapshot) => {
-                    const items = [];
-                    snapshot.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
-                    items.sort((a, b) => a.label.localeCompare(b.label));
-                    localStorage.setItem('hmc_cache_internal_marks', JSON.stringify(items));
-                    renderGlobalList('internal-marks-list', items, 'fa-clipboard-check');
-                },
-                (err) => console.error("Error listening to internal_marks:", err)
-            );
-
-            // 10. Global broadcasts popup listener
-            broadcastsUnsubscribe = onSnapshot(
-                query(collection(db, "broadcasts"), orderBy("createdAt", "desc"), limit(1)),
-                (snapshot) => {
-                    if (snapshot.empty) return;
-                    const docSnap = snapshot.docs[0];
-                    const broadcast = docSnap.data();
-                    const lastSeenId = localStorage.getItem('hmc_last_seen_broadcast');
-                    
-                    if (docSnap.id !== lastSeenId) {
-                        const modal = document.getElementById('broadcast-modal');
-                        const msgEl = document.getElementById('broadcast-message');
-                        if (modal && msgEl) {
-                            msgEl.innerText = broadcast.message;
-                            modal.style.display = 'flex';
-                            window.currentBroadcastId = docSnap.id;
-                        }
-                    }
-                },
-                (err) => console.error("Error listening to broadcasts:", err)
-            );
-
-            // 11. Website Buttons
-            webButtonsUnsubscribe = onSnapshot(query(collection(db, "website_buttons"), orderBy("order", "asc")), (snapshot) => {
-                const container = document.getElementById('custom-dynamic-buttons-container');
-                if (!container) return;
-                
-                if (snapshot.empty) {
-                    container.innerHTML = "";
-                    return;
+                localStorage.setItem('hmc_user_name', userData.name);
+                localStorage.setItem('hmc_user_email', userData.email);
+                if (userData.profilePic) {
+                    localStorage.setItem('hmc_user_profile_pic', userData.profilePic);
+                    updateAvatarUI(userData.profilePic);
                 }
 
-                const buttons = [];
-                snapshot.forEach(d => buttons.push({ id: d.id, ...d.data() }));
-                
-                const mainButtons = buttons.filter(b => b.parentId === null);
-                let html = '';
-                
-                mainButtons.forEach(main => {
-                    const subs = buttons.filter(b => b.parentId === main.id);
-                    if (subs.length > 0) {
-                        html += `<div class="btn" onclick="toggleAccordion('${main.id}')" style="display: flex; justify-content: space-between; align-items: center;">
-                            <span>${main.label}</span>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; transition: transform 0.3s;" id="chevron-${main.id}"></i>
-                                <i class="${main.iconClass}"></i>
-                            </div>
-                        </div>
-                        <div id="accordion-${main.id}" style="display: none; padding-left: 15px; margin-bottom: 15px; border-left: 2px solid rgba(255,255,255,0.2); margin-left: 10px;">`;
-                        
-                        subs.forEach(sub => {
-                            const isUrl = sub.actionLink.startsWith('http');
-                            if (isUrl) {
-                                html += `<a href="${sub.actionLink}" target="_blank" class="btn" style="margin-bottom: 8px;"><span>${sub.label}</span><i class="${sub.iconClass}"></i></a>`;
-                            } else {
-                                html += `<div class="btn" onclick="showSection('${sub.actionLink}', '${sub.label}')" style="margin-bottom: 8px;"><span>${sub.label}</span><i class="${sub.iconClass}"></i></div>`;
-                            }
-                        });
-                        html += `</div>`;
-                    } else {
-                        const isUrl = main.actionLink && main.actionLink.startsWith('http');
-                        if (isUrl) {
-                            html += `<a href="${main.actionLink}" target="_blank" class="btn"><span>${main.label}</span><i class="${main.iconClass}"></i></a>`;
-                        } else {
-                            const action = main.actionLink ? `'${main.actionLink}', '${main.label}'` : `'home-section', 'HMC 24-27'`;
-                            html += `<div class="btn" onclick="showSection(${action})"><span>${main.label}</span><i class="${main.iconClass}"></i></div>`;
-                        }
-                    }
-                });
-                container.innerHTML = html;
-            }, (err) => console.error("Error listening to website_buttons:", err));
-        }
-
-        window.toggleAccordion = function(parentId) {
-            const content = document.getElementById('accordion-' + parentId);
-            const chevron = document.getElementById('chevron-' + parentId);
-            if (content) {
-                if (content.style.display === 'none') {
-                    content.style.display = 'block';
-                    if(chevron) chevron.style.transform = 'rotate(180deg)';
+                if (userData.approved === true) {
+                    document.getElementById('pending-container').style.display = 'none';
+                    unlockDashboard();
+                    loadCachesAndRender();
+                    hideAuthLoadingOverlay();
+                    initializeRealtimeListeners(user.uid);
+                } else if (userData.approved === "rejected") {
+                    alert("Your account registration has been rejected by the admin.");
+                    hideAuthLoadingOverlay();
+                    logoutUser();
                 } else {
-                    content.style.display = 'none';
-                    if(chevron) chevron.style.transform = 'rotate(0deg)';
-                }
-            }
-        };
+                    // Pending
+                    const dashboard = document.getElementById('main-dashboard');
+                    if (dashboard) dashboard.style.display = 'none';
+                    const bottomNav = document.getElementById('bottom-nav');
+                    if (bottomNav) bottomNav.style.display = 'none';
+                    const profileMenu = document.getElementById('profile-menu-container');
+                    if (profileMenu) profileMenu.style.display = 'none';
 
-        window.onpopstate = function(event) {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(sec => {
-                sec.style.display = 'none';
-                sec.classList.remove('active');
-            });
+                    const pending = document.getElementById('pending-container');
+                    if (pending) pending.style.display = 'flex';
 
-            const mainTitle = document.getElementById('main-title');
-
-            if (event.state && event.state.section) {
-                const activeSection = document.getElementById(event.state.section);
-                if (activeSection) {
-                    activeSection.style.display = 'block';
-                    activeSection.classList.add('active');
-                }
-                if (mainTitle && event.state.title) {
-                    mainTitle.innerText = event.state.title;
-                }
-                if (event.state.section === 'sem-result-section') {
-                    showSection('sem-result-section', event.state.title, event.state.studentUid);
-                } else if (event.state.section === 'supp-result-section') {
-                    showSection('supp-result-section', event.state.title, event.state.studentUid);
-                } else {
-                    if (currentSectionResultsUnsubscribe) {
-                        currentSectionResultsUnsubscribe();
-                        currentSectionResultsUnsubscribe = null;
-                    }
+                    hideAuthLoadingOverlay();
                 }
             } else {
-                const homeSection = document.getElementById('home-section');
-                if (homeSection) {
-                    homeSection.style.display = 'block';
-                    homeSection.classList.add('active');
-                }
-                if (mainTitle) {
-                    mainTitle.innerText = 'HMC 24-27';
-                }
-                if (currentSectionResultsUnsubscribe) {
-                    currentSectionResultsUnsubscribe();
-                    currentSectionResultsUnsubscribe = null;
-                }
+                alert("User data not found in database.");
+                hideAuthLoadingOverlay();
+                logoutUser();
             }
-
-            // Clear search when popping state
-            const searchInput = document.getElementById('search-input');
-            if (searchInput) {
-                searchInput.value = '';
-                const elements = document.querySelectorAll('.section .btn, .section div[style*="margin-bottom"]');
-                elements.forEach(el => el.style.display = '');
-            }
-        };
-
-        // Helper function to show main dashboard content panel
-        function unlockDashboard() {
-            document.getElementById('main-profile').style.setProperty('display', 'block', 'important');
-            document.getElementById('main-links-panel').style.setProperty('display', 'block', 'important');
-            
-            // Show top-right profile button
-            const profileMenu = document.getElementById('profile-menu-container');
-            if (profileMenu) {
-                profileMenu.style.display = 'block';
-            }
-            
-            // Display user details in the dropdown
-            const displayName = localStorage.getItem('hmc_user_name') || 'Student';
-            const displayEmail = localStorage.getItem('hmc_user_email') || '';
-            document.getElementById('user-display-name').innerText = displayName;
-            document.getElementById('user-display-email').innerText = displayEmail;
-
-            // Load saved profile picture if available in local storage
-            const savedPic = localStorage.getItem('hmc_user_profile_pic');
-            if (savedPic) {
-                updateAvatarUI(savedPic);
-            }
-
-            document.body.style.display = 'flex';
-            document.body.style.flexDirection = 'column';
-            document.body.style.alignItems = 'center';
-            document.body.style.justifyContent = 'flex-start';
-            document.body.style.paddingTop = '60px';
-            document.body.style.height = 'auto';
-        }
-
-        // Toggle profile dropdown menu
-        function toggleProfileDropdown(event) {
-            event.stopPropagation();
-            const dropdown = document.getElementById('profile-dropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('active');
-            }
-        }
-
-        // Close dropdown when clicking anywhere else
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('profile-dropdown');
-            const container = document.getElementById('profile-menu-container');
-            if (container && !container.contains(event.target)) {
-                if (dropdown) {
-                    dropdown.classList.remove('active');
-                }
-            }
+        }, (err) => {
+            console.error("Error listening to user document:", err);
+            hideAuthLoadingOverlay();
         });
+    }
 
-        // Check Firebase Login tokens and state on DOM loading
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            // 1. If redirected with login parameter, save session token
-            if (urlParams.get('login') === 'success') {
-                localStorage.setItem('hmc_user_authenticated', 'true');
-                // Clean URL to avoid issues
-                try {
-                    history.replaceState({ section: 'home-section', title: 'HMC 24-27' }, '', window.location.pathname);
-                } catch(e) { 
-                    console.log("Running locally"); 
+    // ══════════════════════════════════════
+    // AUTH STATE CHANGED
+    // ══════════════════════════════════════
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            let isAdmin = (user.email === "enishad7788@gmail.com");
+            getDoc(doc(db, "users", user.uid)).then((docSnap) => {
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    if (userData.role === 'admin' || userData.isAdmin === true) isAdmin = true;
                 }
-            } 
-            // 2. If not logged in, redirect immediately to login2.html
-            else if (localStorage.getItem('hmc_user_authenticated') !== 'true') {
-                window.location.href = "login2.html";
-            }
-        });
-
-        function logoutUser() {
-            // Clean up all active listeners
+                if (isAdmin) {
+                    window.location.href = "admin.html";
+                } else {
+                    setupStudentListener(user);
+                }
+            }).catch((err) => {
+                console.error("Error verifying admin status:", err);
+                if (isAdmin) {
+                    window.location.href = "admin.html";
+                } else {
+                    setupStudentListener(user);
+                }
+            });
+        } else {
             if (usersUnsubscribe) { usersUnsubscribe(); usersUnsubscribe = null; }
             if (examResultsUnsubscribe) { examResultsUnsubscribe(); examResultsUnsubscribe = null; }
             if (suppResultsUnsubscribe) { suppResultsUnsubscribe(); suppResultsUnsubscribe = null; }
@@ -1177,213 +1439,120 @@
             if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
             if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
             if (webButtonsUnsubscribe) { webButtonsUnsubscribe(); webButtonsUnsubscribe = null; }
+            if (typeof broadcastsUnsubscribe === "function") { broadcastsUnsubscribe(); broadcastsUnsubscribe = null; }
             listenersInitialized = false;
 
-            localStorage.removeItem('hmc_user_authenticated');
-            localStorage.removeItem('hmc_user_name');
-            localStorage.removeItem('hmc_user_email');
-            localStorage.removeItem('hmc_user_profile_pic');
-            
-            signOut(auth).then(() => {
-                window.location.href = "login2.html";
-            }).catch(err => {
-                window.location.href = "login2.html";
-            });
-        }
-
-        // Setup database listener for student dashboard validation
-        function setupStudentListener(user) {
-            if (userDocUnsubscribe) {
-                userDocUnsubscribe();
-                userDocUnsubscribe = null;
+            if (localStorage.getItem('hmc_user_authenticated') === 'true') {
+                localStorage.removeItem('hmc_user_authenticated');
             }
+            hideAuthLoadingOverlay();
+            window.location.href = "login2.html";
+        }
+    });
 
-            userDocUnsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    
-                    localStorage.setItem('hmc_user_name', userData.name);
-                    localStorage.setItem('hmc_user_email', userData.email);
-                    if (userData.profilePic) {
-                        localStorage.setItem('hmc_user_profile_pic', userData.profilePic);
-                        updateAvatarUI(userData.profilePic);
-                    }
+    // ══════════════════════════════════════
+    // PROFILE PICTURE UPLOAD
+    // ══════════════════════════════════════
+    function triggerProfilePicUpload() {
+        const fileInput = document.getElementById('profile-pic-input');
+        if (fileInput) fileInput.click();
+    }
 
-                    if (userData.approved === true) {
-                        document.getElementById('pending-container').style.display = 'none';
-                        unlockDashboard();
-                        loadCachesAndRender(); // Load cached UI instantly
-                        hideAuthLoadingOverlay(); // Hide overlay
-                        initializeRealtimeListeners(user.uid);
-                    } else if (userData.approved === "rejected") {
-                        alert("Your account registration has been rejected by the admin.");
-                        hideAuthLoadingOverlay();
-                        logoutUser();
-                    } else {
-                        // Pending Approval: Hide dashboard and show pending page
-                        document.getElementById('main-profile').style.setProperty('display', 'none', 'important');
-                        document.getElementById('main-links-panel').style.setProperty('display', 'none', 'important');
-                        const profileMenu = document.getElementById('profile-menu-container');
-                        if (profileMenu) profileMenu.style.display = 'none';
-                        
-                        document.getElementById('pending-container').style.display = 'block';
-                        
-                        document.body.style.display = 'flex';
-                        document.body.style.flexDirection = 'column';
-                        document.body.style.alignItems = 'center';
-                        document.body.style.justifyContent = 'center';
-                        document.body.style.paddingTop = '20px';
-                        document.body.style.height = '100vh';
-                        hideAuthLoadingOverlay();
-                    }
-                } else {
-                    alert("User data not found in database.");
-                    hideAuthLoadingOverlay();
-                    logoutUser();
-                }
-            }, (err) => {
-                console.error("Error listening to user document:", err);
-                hideAuthLoadingOverlay();
-            });
+    function handleProfilePicChange(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (file.size > 1.5 * 1024 * 1024) {
+            alert("Please select an image smaller than 1.5 MB.");
+            return;
         }
 
-        // Listen to Auth state, monitor approval status and initialize real-time listeners
-        onAuthStateChanged(auth, (user) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64String = e.target.result;
+            localStorage.setItem('hmc_user_profile_pic', base64String);
+            updateAvatarUI(base64String);
+
+            const user = auth.currentUser;
             if (user) {
-                // Check if the authenticated user is actually the admin first
-                let isAdmin = (user.email === "enishad7788@gmail.com");
-                getDoc(doc(db, "users", user.uid)).then((docSnap) => {
-                    if (docSnap.exists()) {
-                        const userData = docSnap.data();
-                        if (userData.role === 'admin' || userData.isAdmin === true) {
-                            isAdmin = true;
-                        }
-                    }
-                    
-                    if (isAdmin) {
-                        // Redirect admin to admin.html to avoid signing them out on student validation failures
-                        window.location.href = "admin.html";
-                    } else {
-                        setupStudentListener(user);
-                    }
-                }).catch((err) => {
-                    console.error("Error verifying admin status:", err);
-                    if (isAdmin) {
-                        window.location.href = "admin.html";
-                    } else {
-                        setupStudentListener(user);
-                    }
+                updateDoc(doc(db, "users", user.uid), {
+                    profilePic: base64String
+                }).then(() => {
+                    console.log("Profile picture updated in database successfully!");
+                }).catch(err => {
+                    alert("Database sync failed: " + err.message);
                 });
-            } else {
-                if (usersUnsubscribe) { usersUnsubscribe(); usersUnsubscribe = null; }
-                if (examResultsUnsubscribe) { examResultsUnsubscribe(); examResultsUnsubscribe = null; }
-                if (suppResultsUnsubscribe) { suppResultsUnsubscribe(); suppResultsUnsubscribe = null; }
-                if (hallTicketsUnsubscribe) { hallTicketsUnsubscribe(); hallTicketsUnsubscribe = null; }
-                if (studyMaterialsUnsubscribe) { studyMaterialsUnsubscribe(); studyMaterialsUnsubscribe = null; }
-                if (timetableUnsubscribe) { timetableUnsubscribe(); timetableUnsubscribe = null; }
-                if (internshipUnsubscribe) { internshipUnsubscribe(); internshipUnsubscribe = null; }
-                if (attendanceUnsubscribe) { attendanceUnsubscribe(); attendanceUnsubscribe = null; }
-                if (internalMarksUnsubscribe) { internalMarksUnsubscribe(); internalMarksUnsubscribe = null; }
-                if (currentSectionResultsUnsubscribe) { currentSectionResultsUnsubscribe(); currentSectionResultsUnsubscribe = null; }
-                if (userDocUnsubscribe) { userDocUnsubscribe(); userDocUnsubscribe = null; }
-                if (webButtonsUnsubscribe) { webButtonsUnsubscribe(); webButtonsUnsubscribe = null; }
-                if (typeof broadcastsUnsubscribe === "function") { broadcastsUnsubscribe(); broadcastsUnsubscribe = null; }
-                listenersInitialized = false;
+            }
+        };
+        reader.readAsDataURL(file);
+    }
 
-                if (localStorage.getItem('hmc_user_authenticated') === 'true') {
-                    localStorage.removeItem('hmc_user_authenticated');
+    function updateAvatarUI(imageSrc) {
+        // Top-right trigger
+        const triggerIcon = document.getElementById('trigger-icon');
+        const triggerImg  = document.getElementById('trigger-img');
+        if (triggerIcon && triggerImg) {
+            triggerIcon.style.display = 'none';
+            triggerImg.src = imageSrc;
+            triggerImg.style.display = 'block';
+        }
+        // Dropdown avatar
+        const avatarIcon = document.getElementById('avatar-icon');
+        const avatarImg  = document.getElementById('avatar-img');
+        if (avatarIcon && avatarImg) {
+            avatarIcon.style.display = 'none';
+            avatarImg.src = imageSrc;
+            avatarImg.style.display = 'block';
+        }
+        // Hero header avatar
+        const headerAvatarIcon = document.getElementById('header-avatar-icon');
+        const headerAvatarImg  = document.getElementById('header-avatar-img');
+        if (headerAvatarIcon && headerAvatarImg) {
+            headerAvatarIcon.style.display = 'none';
+            headerAvatarImg.src = imageSrc;
+            headerAvatarImg.style.display = 'block';
+        }
+        // Hero profile icon
+        const profileIconHero = document.getElementById('profile-icon-hero');
+        const profileImgHero  = document.getElementById('profile-img-hero');
+        if (profileIconHero && profileImgHero) {
+            profileIconHero.style.display = 'none';
+            profileImgHero.src = imageSrc;
+            profileImgHero.style.display = 'block';
+        }
+    }
+
+    // ══════════════════════════════════════
+    // SEARCH FILTER
+    // ══════════════════════════════════════
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const q = this.value.toLowerCase().trim();
+            const activeSection = document.querySelector('.section.active');
+            if (!activeSection) return;
+
+            const elements = activeSection.querySelectorAll('.btn, div[style*="margin-bottom"]');
+            elements.forEach(el => {
+                const text = el.innerText || el.textContent || '';
+                if (text.toLowerCase().includes(q)) {
+                    el.style.display = '';
+                } else {
+                    if (el.classList.contains('home-btn-container') || el.querySelector('.home-btn')) return;
+                    el.style.display = 'none';
                 }
-                hideAuthLoadingOverlay();
-                window.location.href = "login2.html";
-            }
-        });
-
-        // Trigger profile picture upload file selector
-        function triggerProfilePicUpload() {
-            const fileInput = document.getElementById('profile-pic-input');
-            if (fileInput) {
-                fileInput.click();
-            }
-        }
-
-        // Handle profile picture select
-        function handleProfilePicChange(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > 1.5 * 1024 * 1024) {
-                alert("Please select an image smaller than 1.5 MB.");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64String = e.target.result;
-                localStorage.setItem('hmc_user_profile_pic', base64String);
-                updateAvatarUI(base64String);
-
-                const user = auth.currentUser;
-                if (user) {
-                    updateDoc(doc(db, "users", user.uid), {
-                        profilePic: base64String
-                    }).then(() => {
-                        console.log("Profile picture updated in database successfully!");
-                    }).catch(err => {
-                        alert("Database sync failed: " + err.message);
-                    });
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Update avatar image elements in DOM
-        function updateAvatarUI(imageSrc) {
-            const triggerIcon = document.getElementById('trigger-icon');
-            const triggerImg  = document.getElementById('trigger-img');
-            const avatarIcon  = document.getElementById('avatar-icon');
-            const avatarImg   = document.getElementById('avatar-img');
-
-            if (triggerIcon && triggerImg) {
-                triggerIcon.style.display = 'none';
-                triggerImg.src = imageSrc;
-                triggerImg.style.display = 'block';
-            }
-            if (avatarIcon && avatarImg) {
-                avatarIcon.style.display = 'none';
-                avatarImg.src = imageSrc;
-                avatarImg.style.display = 'block';
-            }
-        }
-
-        // Search Filter logic
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const query = this.value.toLowerCase().trim();
-                const activeSection = document.querySelector('.section.active');
-                if (!activeSection) return;
-
-                const elements = activeSection.querySelectorAll('.btn, div[style*="margin-bottom"]');
-                elements.forEach(el => {
-                    const text = el.innerText || el.textContent || '';
-                    if (text.toLowerCase().includes(query)) {
-                        el.style.display = '';
-                    } else {
-                        if (el.classList.contains('home-btn-container') || el.querySelector('.home-btn')) {
-                            return;
-                        }
-                        el.style.display = 'none';
-                    }
-                });
             });
-        }
+        });
+    }
 
-        // Expose functions globally for inline HTML event handlers
-        window.showSection = showSection;
-        window.toggleProfileDropdown = toggleProfileDropdown;
-        window.logoutUser = logoutUser;
-        window.triggerProfilePicUpload = triggerProfilePicUpload;
-        window.handleProfilePicChange = handleProfilePicChange;
-    </script>
+    // ══════════════════════════════════════
+    // EXPOSE GLOBALS
+    // ══════════════════════════════════════
+    window.showSection = showSection;
+    window.toggleProfileDropdown = toggleProfileDropdown;
+    window.logoutUser = logoutUser;
+    window.triggerProfilePicUpload = triggerProfilePicUpload;
+    window.handleProfilePicChange = handleProfilePicChange;
+</script>
 </body>
 </html>
